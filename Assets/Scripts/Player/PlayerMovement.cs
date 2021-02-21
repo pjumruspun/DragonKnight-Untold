@@ -5,10 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement Instance { get; private set; }
+
     [SerializeField]
     private bool drawJumpingRay = false;
     [SerializeField]
     private float baseMovementSpeed = 3.0f;
+    [SerializeField]
+    private float dragonGlidingSpeed = 8.0f;
     [SerializeField]
     private float jumpingForce = 5.0f;
     [SerializeField]
@@ -26,6 +30,32 @@ public class PlayerMovement : MonoBehaviour
     }
     private MovementState movementState = MovementState.Idle;
 
+    public bool IsGrounded()
+    {
+        Vector2 position = transform.position;
+        Vector2 direction = Vector2.down;
+        float distance = distanceToGround;
+        if (drawJumpingRay)
+        {
+            Debug.DrawRay(position, direction * distance, Color.green);
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
+        return hit.collider != null;
+    }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            DestroyImmediate(gameObject);
+        }
+    }
+
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
@@ -40,10 +70,10 @@ public class PlayerMovement : MonoBehaviour
         EventPublisher.PlayerJump -= Jump;
     }
 
-    // Update for monitoring input
+    // Update for listening to input
     private void Update()
     {
-        ProcessInput();
+        ListenInput();
     }
 
     // FixedUpdate for any physics related events
@@ -54,16 +84,16 @@ public class PlayerMovement : MonoBehaviour
         ProcessPlayerLanding();
     }
 
-    private void ProcessInput()
+    private void ListenInput()
     {
         // Jump
-        if (Input.GetKeyDown(KeyCode.W) && IsGrounded())
+        if (InputManager.Up && IsGrounded())
         {
             jumpKeyPressed = true;
         }
 
         // Right
-        if (Input.GetKey(KeyCode.D))
+        if (InputManager.Right)
         {
             movementState = MovementState.Right;
             // Turn the character facing right
@@ -71,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Left
-        if (Input.GetKey(KeyCode.A))
+        if (InputManager.Left)
         {
             movementState = MovementState.Left;
             // Turn left
@@ -79,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Stop moving if not pressing
-        if (!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+        if (!InputManager.Right && !InputManager.Left)
         {
             movementState = MovementState.Idle;
         }
@@ -104,7 +134,17 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
-        float velocityX = horizontalMovement * baseMovementSpeed;
+        float velocityX = 0.0f;
+        if (PlayerAbilities.Instance.IsDragonForm && !IsGrounded())
+        {
+            // The dragon is gliding
+            velocityX = horizontalMovement * dragonGlidingSpeed;
+        }
+        else
+        {
+            velocityX = horizontalMovement * baseMovementSpeed;
+        }
+
         rb2D.velocity = new Vector2(velocityX, rb2D.velocity.y);
     }
 
@@ -131,25 +171,10 @@ public class PlayerMovement : MonoBehaviour
         if (!lastFrameWasGrounded && IsGrounded())
         {
             // Means that player just landed on the ground
-            Debug.Log("Landed");
             EventPublisher.TriggerPlayerLand();
         }
 
         lastFrameWasGrounded = IsGrounded();
-    }
-
-    private bool IsGrounded()
-    {
-        Vector2 position = transform.position;
-        Vector2 direction = Vector2.down;
-        float distance = distanceToGround;
-        if (drawJumpingRay)
-        {
-            Debug.DrawRay(position, direction * distance, Color.green);
-        }
-
-        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
-        return hit.collider != null;
     }
 
     private void TurnRight(bool right)
