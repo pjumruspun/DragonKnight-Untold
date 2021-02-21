@@ -17,11 +17,27 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask groundLayer = 1 << groundLayerIndex;
     private const int groundLayerIndex = 7; // Layer "Ground"
     private bool jumpKeyPressed = false;
-    private float horizontalMovement = 0.0f;
+    private bool lastFrameWasGrounded = false;
+    private enum MovementState
+    {
+        Right,
+        Left,
+        Idle
+    }
+    private MovementState movementState = MovementState.Idle;
 
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
+
+        // Subscribe
+        EventPublisher.PlayerJump += Jump;
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe
+        EventPublisher.PlayerJump -= Jump;
     }
 
     // Update for monitoring input
@@ -35,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     {
         ProcessMovement();
         ProcessJump();
+        ProcessPlayerLanding();
     }
 
     private void ProcessInput()
@@ -48,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
         // Right
         if (Input.GetKey(KeyCode.D))
         {
-            horizontalMovement = 1.0f;
+            movementState = MovementState.Right;
             // Turn the character facing right
             TurnRight(true);
         }
@@ -56,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
         // Left
         if (Input.GetKey(KeyCode.A))
         {
-            horizontalMovement = -1.0f;
+            movementState = MovementState.Left;
             // Turn left
             TurnRight(false);
         }
@@ -64,13 +81,29 @@ public class PlayerMovement : MonoBehaviour
         // Stop moving if not pressing
         if (!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
         {
-            horizontalMovement = 0.0f;
+            movementState = MovementState.Idle;
         }
     }
 
     private void ProcessMovement()
     {
         // Move according to input
+        float horizontalMovement = 0.0f;
+        switch (movementState)
+        {
+            case MovementState.Right:
+                horizontalMovement = 1.0f;
+                EventPublisher.TriggerPlayerRun();
+                break;
+            case MovementState.Left:
+                horizontalMovement = -1.0f;
+                EventPublisher.TriggerPlayerRun();
+                break;
+            default:
+                EventPublisher.TriggerPlayerStop();
+                break;
+        }
+
         float velocityX = horizontalMovement * baseMovementSpeed;
         rb2D.velocity = new Vector2(velocityX, rb2D.velocity.y);
     }
@@ -79,13 +112,33 @@ public class PlayerMovement : MonoBehaviour
     {
         if (jumpKeyPressed)
         {
-            // Jump
-            rb2D.velocity = new Vector2(rb2D.velocity.x, jumpingForce);
-            jumpKeyPressed = false;
+            // Trigger player jump
+            EventPublisher.TriggerPlayerJump();
         }
     }
 
-    public bool IsGrounded()
+    private void Jump()
+    {
+        // Jump
+        rb2D.velocity = new Vector2(rb2D.velocity.x, jumpingForce);
+        jumpKeyPressed = false;
+    }
+
+    private void ProcessPlayerLanding()
+    {
+        // If last frame wasn't on ground,
+        // but this frame is
+        if (!lastFrameWasGrounded && IsGrounded())
+        {
+            // Means that player just landed on the ground
+            Debug.Log("Landed");
+            EventPublisher.TriggerPlayerLand();
+        }
+
+        lastFrameWasGrounded = IsGrounded();
+    }
+
+    private bool IsGrounded()
     {
         Vector2 position = transform.position;
         Vector2 direction = Vector2.down;
