@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 500538367555941621}
   - component: {fileID: 500538367555941624}
   - component: {fileID: 500538367555941620}
+  - component: {fileID: 8228665814043902127}
   - component: {fileID: 500538367555941622}
   - component: {fileID: 500538367555941623}
   m_Layer: 6
@@ -153,6 +154,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ddd0e757454652969fa921727c8de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8228665814043902127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a8459e836a543f587bd569b1d1b80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &500538367555941622
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -193,5 +206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawJumpingRay: 0
   baseMovementSpeed: 3
+  maxDragonJumpCount: 3
+  dragonGlidingSpeed: 8
   jumpingForce: 7
   distanceToGround: 0.6
+  glideFallingSpeed: 1

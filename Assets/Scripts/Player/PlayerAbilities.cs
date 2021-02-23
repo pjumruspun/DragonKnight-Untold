@@ -2,27 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAbilities : MonoBehaviour
+public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 {
-    public static PlayerAbilities Instance { get; private set; }
     public bool IsDragonForm => isDragonForm;
 
     [SerializeField]
     private float primaryAttackRate = 2.0f;
     private float timeSinceLastPrimaryAttack = 0.0f;
     private bool isDragonForm = false;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            DestroyImmediate(gameObject);
-        }
-    }
 
     private void Start()
     {
@@ -42,8 +29,13 @@ public class PlayerAbilities : MonoBehaviour
     private void Update()
     {
         ProcessDeltaTime();
-        ListenToAttackEvent();
-        ListenToShapeshiftEvent();
+
+        // If the player is still alive
+        if (!PlayerHealth.Instance.IsDead)
+        {
+            ListenToAttackEvent();
+            ListenToShapeshiftEvent();
+        }
     }
 
     private void ProcessDeltaTime()
@@ -56,6 +48,7 @@ public class PlayerAbilities : MonoBehaviour
         bool readyToAttack = timeSinceLastPrimaryAttack >= 1.0f / primaryAttackRate;
         if (InputManager.PrimaryAttack && readyToAttack)
         {
+            // Player attacks here
             EventPublisher.TriggerPlayerPrimaryAttack();
         }
     }
@@ -64,6 +57,7 @@ public class PlayerAbilities : MonoBehaviour
     {
         if (InputManager.Shapeshift)
         {
+            // Player transforms here
             isDragonForm = !isDragonForm;
             EventPublisher.TriggerPlayerShapeshift();
         }
