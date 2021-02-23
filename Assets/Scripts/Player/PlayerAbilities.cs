@@ -77,6 +77,6 @@ public class PlayerAbilities : MonoBehaviour
 
     private void Shapeshift()
     {
-        Debug.Log($"Dragon form: {isDragonForm}");
+        // Debug.Log($"Dragon form: {isDragonForm}");
     }
 }

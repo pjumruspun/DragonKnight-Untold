@@ -14,13 +14,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float dragonGlidingSpeed = 8.0f;
     [SerializeField]
-    private float jumpingForce = 5.0f;
+    private float jumpingForce = 7.0f;
     [SerializeField]
     private float distanceToGround = 0.6f;
+    [SerializeField]
+    private float glideFallingSpeed = 1.0f;
+    private const float expandedColliderFactor = 1.0f; // 1.0f = full collider size
     private Rigidbody2D rb2D;
     private LayerMask groundLayer = 1 << groundLayerIndex;
     private const int groundLayerIndex = 7; // Layer "Ground"
     private bool jumpKeyPressed = false;
+    private bool jumpKeyHold = false;
+    private bool isGrounded = false;
     private bool lastFrameWasGrounded = false;
     private enum MovementState
     {
@@ -35,13 +40,51 @@ public class PlayerMovement : MonoBehaviour
         Vector2 position = transform.position;
         Vector2 direction = Vector2.down;
         float distance = distanceToGround;
-        if (drawJumpingRay)
-        {
-            Debug.DrawRay(position, direction * distance, Color.green);
-        }
 
-        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
-        return hit.collider != null;
+        if (TryGetComponent<BoxCollider2D>(out BoxCollider2D col))
+        {
+            // Shoot 3 rays according to the size of the box collider
+            float colliderSizeX = col.size.x;
+
+            // Expander is expandedColliderFactor % of the collider size
+            Vector2 expander = Vector2.right * colliderSizeX * expandedColliderFactor / 2;
+            Vector2 positionRight = position + expander;
+            Vector2 positionLeft = position - expander;
+
+            if (drawJumpingRay)
+            {
+                // Draw ray left, center, and right
+                Debug.DrawRay(positionRight, direction * distance, Color.green);
+                Debug.DrawRay(position, direction * distance, Color.green);
+                Debug.DrawRay(positionLeft, direction * distance, Color.blue);
+            }
+
+            // Raycast to the ground layer only
+            RaycastHit2D hitLeft = Physics2D.Raycast(positionLeft, direction, distance, groundLayer);
+            RaycastHit2D hitCenter = Physics2D.Raycast(position, direction, distance, groundLayer);
+            RaycastHit2D hitRight = Physics2D.Raycast(positionRight, direction, distance, groundLayer);
+
+            // Grounded if left OR right OR center touches with the ground
+            return hitLeft.collider != null || hitRight.collider != null || hitCenter.collider != null;
+        }
+        else
+        {
+            // Cannot find collider, shoot ray only from the center
+            if (drawJumpingRay)
+            {
+                Debug.DrawRay(position, direction * distance, Color.red);
+            }
+
+            // Raycast to the ground layer only
+            RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
+            return hit.collider != null;
+        }
+    }
+
+    private void UpdateIsGrounded()
+    {
+        // Caching IsGrounded() for each frame
+        isGrounded = IsGrounded();
     }
 
     private void Awake()
@@ -74,6 +117,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         ListenInput();
+        UpdateIsGrounded();
     }
 
     // FixedUpdate for any physics related events
@@ -82,14 +126,25 @@ public class PlayerMovement : MonoBehaviour
         ProcessMovement();
         ProcessJump();
         ProcessPlayerLanding();
+        ProcessGlide();
     }
 
     private void ListenInput()
     {
         // Jump
-        if (InputManager.Up && IsGrounded())
+        if (InputManager.Up)
         {
             jumpKeyPressed = true;
+        }
+
+        // Glide
+        if (InputManager.HoldUp)
+        {
+            jumpKeyHold = true;
+        }
+        else
+        {
+            jumpKeyHold = false;
         }
 
         // Right
@@ -135,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         float velocityX = 0.0f;
-        if (PlayerAbilities.Instance.IsDragonForm && !IsGrounded())
+        if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
         {
             // The dragon is gliding
             velocityX = horizontalMovement * dragonGlidingSpeed;
@@ -150,10 +205,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessJump()
     {
-        if (jumpKeyPressed)
+        if (!isGrounded)
+        {
+            jumpKeyPressed = false;
+        }
+
+        if (jumpKeyPressed && isGrounded)
         {
             // Trigger player jump
             EventPublisher.TriggerPlayerJump();
+        }
+    }
+
+    private void ProcessGlide()
+    {
+        // If jump key is hold and player is in the air
+        // With falling speed more than glide falling speed
+        // And if player is in dragon mode
+        if (jumpKeyHold && !isGrounded && rb2D.velocity.y < glideFallingSpeed && PlayerAbilities.Instance.IsDragonForm)
+        {
+            // Set the falling speed to glide falling speed
+            rb2D.velocity = new Vector2(rb2D.velocity.x, -glideFallingSpeed);
         }
     }
 
@@ -161,20 +233,20 @@ public class PlayerMovement : MonoBehaviour
     {
         // Jump
         rb2D.velocity = new Vector2(rb2D.velocity.x, jumpingForce);
-        jumpKeyPressed = false;
+        // jumpKeyPressed = false;
     }
 
     private void ProcessPlayerLanding()
     {
         // If last frame wasn't on ground,
         // but this frame is
-        if (!lastFrameWasGrounded && IsGrounded())
+        if (!lastFrameWasGrounded && isGrounded)
         {
             // Means that player just landed on the ground
             EventPublisher.TriggerPlayerLand();
         }
 
-        lastFrameWasGrounded = IsGrounded();
+        lastFrameWasGrounded = isGrounded;
     }
 
     private void TurnRight(bool right)
