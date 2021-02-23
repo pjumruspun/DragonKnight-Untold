@@ -8,11 +8,15 @@ public class PlayerHealth : Health
     public static PlayerHealth Instance { get; private set; }
 
     [SerializeField]
+    private float playerMaxHealth = 200.0f;
+    [SerializeField]
     private BoxCollider2D playerCollider;
 
     override protected void Start()
     {
+        maxHealth = playerMaxHealth;
         base.Start();
+        HandleHealthChange();
         collider2D = GetComponent<BoxCollider2D>();
         if (playerCollider != null)
         {
@@ -22,13 +26,11 @@ public class PlayerHealth : Health
 
     protected override void HandleHealthChange()
     {
-        base.HandleHealthChange();
         EventPublisher.TriggerPlayerHealthChange();
     }
 
     override protected void HandleDeath()
     {
-        base.HandleDeath();
         // Trigger player death
         EventPublisher.TriggerPlayerDead();
     }
@@ -49,7 +51,7 @@ public class PlayerHealth : Health
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            float health = TakeDamage(24.0f);
+            float health = TakeDamage(4.78f);
         }
     }
 }

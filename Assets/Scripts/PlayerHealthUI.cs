@@ -38,6 +38,6 @@ public class PlayerHealthUI : MonoBehaviour
     {
         float currentHealth = PlayerHealth.Instance.CurrentHealth;
         float maxHealth = PlayerHealth.Instance.MaxHealth;
-        hpText.text = $"{currentHealth}/{maxHealth}";
+        hpText.text = $"{Mathf.Ceil(currentHealth)}/{maxHealth}";
     }
 }

@@ -9,7 +9,7 @@ public abstract class Health : MonoBehaviour, IHealth
     public float CurrentHealth => currentHealth;
     public bool IsDead => currentHealth <= 0;
 
-    protected float maxHealth = 100.0f;
+    protected float maxHealth = 100;
     protected float currentHealth;
     protected Collider2D collider2D;
 
@@ -31,17 +31,9 @@ public abstract class Health : MonoBehaviour, IHealth
         return currentHealth;
     }
 
-    protected virtual void HandleHealthChange()
-    {
-        // Trigger generic take damage here
-        // Probably has nothing here to be honest
-    }
+    protected abstract void HandleHealthChange();
 
-    protected virtual void HandleDeath()
-    {
-        // Trigger generic death here
-        // Probably has nothing here to be honest
-    }
+    protected abstract void HandleDeath();
 
     protected virtual void Start()
     {
