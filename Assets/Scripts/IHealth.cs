@@ -1,5 +1,7 @@
 public interface IHealth
 {
-    int MaxHealth { get; }
-    int CurrentHealth { get; set; }
+    float MaxHealth { get; }
+    float CurrentHealth { get; }
+
+    void TakeDamage(float damage);
 }

@@ -2,35 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAbilities : MonoBehaviour
+public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 {
-    public static PlayerAbilities Instance { get; private set; }
     public bool IsDragonForm => isDragonForm;
 
     [SerializeField]
-    private float primaryAttackRate = 2.0f;
+    private PlayerConfig config;
+    [SerializeField]
+    private PlayerAttackHitbox swordPrimaryHitbox;
+    [SerializeField]
+    private float primaryAttackDamage;
+    private float primaryAttackRate;
     private float timeSinceLastPrimaryAttack = 0.0f;
     private bool isDragonForm = false;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            DestroyImmediate(gameObject);
-        }
-    }
-
     private void Start()
     {
+        SetPlayerAttributes();
         timeSinceLastPrimaryAttack = 1.0f / primaryAttackRate;
 
         // Subscribe
         EventPublisher.PlayerPrimaryAttack += PrimaryAttack;
         EventPublisher.PlayerShapeshift += Shapeshift;
+    }
+
+    private void SetPlayerAttributes()
+    {
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        WeaponConfig weaponConfig = playerConfig.SwordConfig; // This should change depends on weapon type
+        primaryAttackRate = weaponConfig.primaryAttackRate;
+        primaryAttackDamage = weaponConfig.primaryAttackDamage;
     }
 
     private void OnDestroy()
@@ -42,8 +43,13 @@ public class PlayerAbilities : MonoBehaviour
     private void Update()
     {
         ProcessDeltaTime();
-        ListenToAttackEvent();
-        ListenToShapeshiftEvent();
+
+        // If the player is still alive
+        if (!PlayerHealth.Instance.IsDead)
+        {
+            ListenToAttackEvent();
+            ListenToShapeshiftEvent();
+        }
     }
 
     private void ProcessDeltaTime()
@@ -56,6 +62,7 @@ public class PlayerAbilities : MonoBehaviour
         bool readyToAttack = timeSinceLastPrimaryAttack >= 1.0f / primaryAttackRate;
         if (InputManager.PrimaryAttack && readyToAttack)
         {
+            // Player attacks here
             EventPublisher.TriggerPlayerPrimaryAttack();
         }
     }
@@ -64,6 +71,7 @@ public class PlayerAbilities : MonoBehaviour
     {
         if (InputManager.Shapeshift)
         {
+            // Player transforms here
             isDragonForm = !isDragonForm;
             EventPublisher.TriggerPlayerShapeshift();
         }
@@ -72,6 +80,19 @@ public class PlayerAbilities : MonoBehaviour
     private void PrimaryAttack()
     {
         // Debug.Log("Primary attack");
+        foreach (Collider2D enemyCollider in swordPrimaryHitbox.HitColliders)
+        {
+            GameObject enemyObject = enemyCollider.gameObject;
+            if (enemyObject.TryGetComponent<EnemyHealth>(out EnemyHealth enemyHealth))
+            {
+                // Damage the enemy here
+                enemyHealth.TakeDamage(primaryAttackDamage);
+            }
+            else
+            {
+                Debug.LogAssertion($"gameObject {enemyCollider.gameObject.name} does not have EnemyHealth attached to.");
+            }
+        }
         timeSinceLastPrimaryAttack = 0.0f;
     }
 

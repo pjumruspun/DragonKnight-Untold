@@ -11,6 +11,8 @@ public class EventPublisher
     public delegate void OnPlayerStop();
     public delegate void OnPlayerPrimaryAttack();
     public delegate void OnPlayerShapeshift();
+    public delegate void OnPlayerHealthChange();
+    public delegate void OnPlayerDead();
 
     public static event OnPlayerJump PlayerJump;
     public static event OnPlayerLand PlayerLand;
@@ -18,6 +20,9 @@ public class EventPublisher
     public static event OnPlayerStop PlayerStop;
     public static event OnPlayerPrimaryAttack PlayerPrimaryAttack;
     public static event OnPlayerShapeshift PlayerShapeshift;
+    public static event OnPlayerHealthChange PlayerHealthChange;
+    public static event OnPlayerDead PlayerDead;
+
 
     public static void TriggerPlayerJump()
     {
@@ -47,5 +52,15 @@ public class EventPublisher
     public static void TriggerPlayerShapeshift()
     {
         PlayerShapeshift?.Invoke();
+    }
+
+    public static void TriggerPlayerHealthChange()
+    {
+        PlayerHealthChange?.Invoke();
+    }
+
+    public static void TriggerPlayerDead()
+    {
+        PlayerDead?.Invoke();
     }
 }

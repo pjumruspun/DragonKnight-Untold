@@ -18,6 +18,7 @@ public class PlayerAnimation : MonoBehaviour
         EventPublisher.PlayerRun += PlayRunAnimation;
         EventPublisher.PlayerStop += PlayIdleAnimation;
         EventPublisher.PlayerShapeshift += PlayShapeshiftAnimation;
+        EventPublisher.PlayerDead += PlayDeadAnimation;
     }
 
     private void Update()
@@ -34,6 +35,7 @@ public class PlayerAnimation : MonoBehaviour
         EventPublisher.PlayerRun -= PlayRunAnimation;
         EventPublisher.PlayerStop -= PlayIdleAnimation;
         EventPublisher.PlayerShapeshift -= PlayShapeshiftAnimation;
+        EventPublisher.PlayerDead -= PlayDeadAnimation;
     }
 
     private void PlayPrimaryAttackAnimation()
@@ -78,5 +80,10 @@ public class PlayerAnimation : MonoBehaviour
             animator.SetBool("DragonForm", false);
             animator.SetTrigger("DragonDown");
         }
+    }
+
+    private void PlayDeadAnimation()
+    {
+        animator.SetTrigger("Dead");
     }
 }

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoSingleton<PlayerMovement>
 {
-    public static PlayerMovement Instance { get; private set; }
-
     [SerializeField]
     private bool drawJumpingRay = false;
     [SerializeField]
@@ -90,18 +88,6 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = IsGrounded();
     }
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            DestroyImmediate(gameObject);
-        }
-    }
-
     private void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -128,10 +114,14 @@ public class PlayerMovement : MonoBehaviour
     // FixedUpdate for any physics related events
     private void FixedUpdate()
     {
-        ProcessMovement();
-        ProcessJump();
-        ProcessPlayerLanding();
-        ProcessGlide();
+        if (!PlayerHealth.Instance.IsDead)
+        {
+            ProcessFlipping();
+            ProcessMovement();
+            ProcessJump();
+            ProcessPlayerLanding();
+            ProcessGlide();
+        }
     }
 
     private void ListenInput()
@@ -156,22 +146,35 @@ public class PlayerMovement : MonoBehaviour
         if (InputManager.Right)
         {
             movementState = MovementState.Right;
-            // Turn the character facing right
-            TurnRight(true);
         }
 
         // Left
         if (InputManager.Left)
         {
             movementState = MovementState.Left;
-            // Turn left
-            TurnRight(false);
         }
 
         // Stop moving if not pressing
         if (!InputManager.Right && !InputManager.Left)
         {
             movementState = MovementState.Idle;
+        }
+    }
+
+    private void ProcessFlipping()
+    {
+        switch (movementState)
+        {
+            case MovementState.Right:
+                // Turn the character facing right
+                TurnRight(true);
+                break;
+            case MovementState.Left:
+                // Turn left
+                TurnRight(false);
+                break;
+            default:
+                break;
         }
     }
 

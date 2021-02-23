@@ -3,35 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Health : MonoBehaviour, IHealth
+public abstract class Health : MonoBehaviour, IHealth
 {
-    public int MaxHealth => maxHealth;
-    public int CurrentHealth
+    public float MaxHealth => maxHealth;
+    public float CurrentHealth => currentHealth;
+    public bool IsDead => currentHealth <= 0;
+
+    protected float maxHealth = 100;
+    protected float currentHealth;
+    protected Collider2D collider2D;
+
+    public virtual void TakeDamage(float damage)
     {
-        get => currentHealth;
-        set
+        if (!IsDead)
         {
-            currentHealth -= value;
-            if (currentHealth < 0)
+            // Returns health after taking damage
+            currentHealth -= damage;
+            if (currentHealth < 0.0f)
             {
-                currentHealth = 0;
+                currentHealth = 0.0f;
+                HandleDeath();
             }
 
-            // Trigger player death here
+            HandleHealthChange();
         }
     }
 
-    private int maxHealth = 100;
-    private int currentHealth;
-    private BoxCollider2D collider2D;
+    protected abstract void HandleHealthChange();
 
-    private void Awake()
+    protected abstract void HandleDeath();
+
+    protected virtual void Start()
     {
         currentHealth = maxHealth;
-    }
-
-    private void Start()
-    {
-        collider2D = GetComponent<BoxCollider2D>();
+        HandleHealthChange();
     }
 }
