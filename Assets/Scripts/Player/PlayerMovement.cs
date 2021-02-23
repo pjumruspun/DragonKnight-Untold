@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float baseMovementSpeed = 3.0f;
     [SerializeField]
+    private int maxDragonJumpCount = 3;
+    private int dragonJumpCount = 0;
+    [SerializeField]
     private float dragonGlidingSpeed = 8.0f;
     [SerializeField]
     private float jumpingForce = 7.0f;
@@ -105,12 +108,14 @@ public class PlayerMovement : MonoBehaviour
 
         // Subscribe
         EventPublisher.PlayerJump += Jump;
+        EventPublisher.PlayerLand += ResetDragonJumpCount;
     }
 
     private void OnDestroy()
     {
         // Unsubscribe
         EventPublisher.PlayerJump -= Jump;
+        EventPublisher.PlayerLand -= ResetDragonJumpCount;
     }
 
     // Update for listening to input
@@ -205,15 +210,42 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessJump()
     {
-        if (!isGrounded)
-        {
-            jumpKeyPressed = false;
-        }
+        // if (!isGrounded)
+        // {
+        //     jumpKeyPressed = false;
+        // }
 
-        if (jumpKeyPressed && isGrounded)
+        if (jumpKeyPressed)
         {
-            // Trigger player jump
-            EventPublisher.TriggerPlayerJump();
+            if (PlayerAbilities.Instance.IsDragonForm)
+            {
+                // Player is in dragon form and wants to jump
+                if (dragonJumpCount < maxDragonJumpCount)
+                {
+                    EventPublisher.TriggerPlayerJump();
+                    ++dragonJumpCount;
+                }
+                else
+                {
+                    // Player cannot jump, reset the jumpKeyPressed variable
+                    // So that player doesn't queue up jumping action
+                    jumpKeyPressed = false;
+                }
+            }
+            else
+            {
+                if (isGrounded)
+                {
+                    // Player is in human form and wants to jump
+                    EventPublisher.TriggerPlayerJump();
+                }
+                else
+                {
+                    // Player cannot jump, reset the jumpKeyPressed variable
+                    // So that player doesn't queue up jumping action
+                    jumpKeyPressed = false;
+                }
+            }
         }
     }
 
@@ -233,7 +265,13 @@ public class PlayerMovement : MonoBehaviour
     {
         // Jump
         rb2D.velocity = new Vector2(rb2D.velocity.x, jumpingForce);
-        // jumpKeyPressed = false;
+        jumpKeyPressed = false;
+    }
+
+    private void ResetDragonJumpCount()
+    {
+        // Triggered when player lands
+        dragonJumpCount = 0;
     }
 
     private void ProcessPlayerLanding()
