@@ -1302,6 +1302,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 500538367555941617, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
     - target: {fileID: 500538367555941619, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1346,6 +1350,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 500538367555941620, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: humanAnimator
+      value: 
+      objectReference: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
+    - target: {fileID: 500538367555941620, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: dragonAnimator
+      value: 
+      objectReference: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
 --- !u!1001 &8689765250962155152

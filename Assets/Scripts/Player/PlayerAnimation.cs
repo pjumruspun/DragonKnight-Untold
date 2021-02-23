@@ -5,11 +5,19 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimation : MonoBehaviour
 {
+    [SerializeField]
+    private RuntimeAnimatorController dragonAnimator;
+
+    [SerializeField]
+    private RuntimeAnimatorController humanAnimator;
+
     private Animator animator;
+
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        animator.runtimeAnimatorController = humanAnimator as RuntimeAnimatorController;
 
         // Subscribe
         EventPublisher.PlayerPrimaryAttack += PlayPrimaryAttackAnimation;
@@ -24,6 +32,10 @@ public class PlayerAnimation : MonoBehaviour
     private void Update()
     {
         animator.SetBool("Midair", !PlayerMovement.Instance.IsGrounded());
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            animator.runtimeAnimatorController = dragonAnimator as RuntimeAnimatorController;
+        }
     }
 
     private void OnDestroy()
@@ -40,20 +52,20 @@ public class PlayerAnimation : MonoBehaviour
 
     private void PlayPrimaryAttackAnimation()
     {
-        animator.SetTrigger("SwordAttack");
+        animator.SetTrigger("PrimaryAttack");
     }
 
     private void PlayJumpAnimation()
     {
         // Reset to make sure the landing animation
         // is performed smoothly
-        animator.ResetTrigger("SwordLand");
-        animator.SetTrigger("SwordJump");
+        // animator.ResetTrigger("SwordLand");
+        animator.SetTrigger("Jump");
     }
 
     private void PlayLandAnimation()
     {
-        animator.SetTrigger("SwordLand");
+        // animator.SetTrigger("SwordLand");
     }
 
     private void PlayRunAnimation()
@@ -71,14 +83,14 @@ public class PlayerAnimation : MonoBehaviour
         if (PlayerAbilities.Instance.IsDragonForm)
         {
             // Player just transformed into a dragon
-            animator.SetBool("DragonForm", true);
-            animator.SetTrigger("DragonUp");
+            // animator.SetBool("DragonForm", true);
+            animator.runtimeAnimatorController = dragonAnimator as RuntimeAnimatorController;
         }
         else
         {
             // Player just transformed into a human
-            animator.SetBool("DragonForm", false);
-            animator.SetTrigger("DragonDown");
+            // animator.SetBool("DragonForm", false);
+            animator.runtimeAnimatorController = humanAnimator as RuntimeAnimatorController;
         }
     }
 
