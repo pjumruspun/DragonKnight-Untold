@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float glideFallingSpeed = 1.0f;
     private const float expandedColliderFactor = 1.0f; // 1.0f = full collider size
-    private Rigidbody2D rb2D;
+    private Rigidbody2D rigidbody2D;
     private LayerMask groundLayer = 1 << groundLayerIndex;
     private const int groundLayerIndex = 7; // Layer "Ground"
     private bool jumpKeyPressed = false;
@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        rb2D = GetComponent<Rigidbody2D>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
 
         // Subscribe
         EventPublisher.PlayerJump += Jump;
@@ -205,7 +205,7 @@ public class PlayerMovement : MonoBehaviour
             velocityX = horizontalMovement * baseMovementSpeed;
         }
 
-        rb2D.velocity = new Vector2(velocityX, rb2D.velocity.y);
+        rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
     }
 
     private void ProcessJump()
@@ -254,17 +254,17 @@ public class PlayerMovement : MonoBehaviour
         // If jump key is hold and player is in the air
         // With falling speed more than glide falling speed
         // And if player is in dragon mode
-        if (jumpKeyHold && !isGrounded && rb2D.velocity.y < glideFallingSpeed && PlayerAbilities.Instance.IsDragonForm)
+        if (jumpKeyHold && !isGrounded && rigidbody2D.velocity.y < glideFallingSpeed && PlayerAbilities.Instance.IsDragonForm)
         {
             // Set the falling speed to glide falling speed
-            rb2D.velocity = new Vector2(rb2D.velocity.x, -glideFallingSpeed);
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, -glideFallingSpeed);
         }
     }
 
     private void Jump()
     {
         // Jump
-        rb2D.velocity = new Vector2(rb2D.velocity.x, jumpingForce);
+        rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpingForce);
         jumpKeyPressed = false;
     }
 

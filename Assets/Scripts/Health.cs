@@ -34,10 +34,4 @@ public class Health : MonoBehaviour, IHealth
     {
         collider2D = GetComponent<BoxCollider2D>();
     }
-
-    // Update is called once per frame
-    private void Update()
-    {
-
-    }
 }
