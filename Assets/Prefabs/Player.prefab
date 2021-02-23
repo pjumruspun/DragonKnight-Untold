@@ -1,5 +1,80 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1937013505
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937013506}
+  - component: {fileID: 1937013508}
+  - component: {fileID: 1937013507}
+  m_Layer: 9
+  m_Name: SwordPrimaryHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1937013506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937013505}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.51, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 500538367555941619}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &1937013508
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937013505}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.3636354, y: 0.64593405}
+      - {x: -0.9414871, y: 0.4908347}
+      - {x: -0.36769012, y: 0.10007143}
+      - {x: -0.3023015, y: -0.6059929}
+      - {x: 0.42510647, y: -0.6176299}
+      - {x: 0.4917276, y: 0.27073973}
+--- !u!114 &1937013507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937013505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 725dc0ba48e204855a0ac0e7a484beab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &500538367555941616
 GameObject:
   m_ObjectHideFlags: 0
@@ -34,7 +109,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.004, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1937013506}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,7 +152,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -825998113
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 17d87b932c61d444b9851b5217747aee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -141,7 +217,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b48dd630d844813ab07c0a1a6fd360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  primaryAttackRate: 2
+  config:
+    MaxHealth: 200
+    SwordConfig:
+      Type: 0
+      primaryAttackDamage: 0
+      primaryAttackRate: 1
+      secondaryAttackDamage: 0
+      secondaryAttackRate: 1
+  swordPrimaryHitbox: {fileID: 1937013507}
+  primaryAttackDamage: 0
 --- !u!114 &500538367555941620
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -39,6 +39,7 @@ public class ObjectPool
         {
             if (!pooledObject.activeInHierarchy)
             {
+                pooledObject.SetActive(true);
                 return pooledObject;
             }
         }
