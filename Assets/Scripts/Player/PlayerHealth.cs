@@ -16,7 +16,6 @@ public class PlayerHealth : Health
     {
         maxHealth = playerMaxHealth;
         base.Start();
-        HandleHealthChange();
         collider2D = GetComponent<BoxCollider2D>();
         if (playerCollider != null)
         {
@@ -35,6 +34,12 @@ public class PlayerHealth : Health
         EventPublisher.TriggerPlayerDead();
     }
 
+    private void SetPlayerAttributes()
+    {
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        playerMaxHealth = playerConfig.MaxHealth;
+    }
+
     private void Awake()
     {
         if (Instance == null)
@@ -51,7 +56,7 @@ public class PlayerHealth : Health
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            float health = TakeDamage(4.78f);
+            TakeDamage(4.78f);
         }
     }
 }

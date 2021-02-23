@@ -13,7 +13,7 @@ public abstract class Health : MonoBehaviour, IHealth
     protected float currentHealth;
     protected Collider2D collider2D;
 
-    public float TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         if (!IsDead)
         {
@@ -27,8 +27,6 @@ public abstract class Health : MonoBehaviour, IHealth
 
             HandleHealthChange();
         }
-
-        return currentHealth;
     }
 
     protected abstract void HandleHealthChange();
@@ -38,5 +36,6 @@ public abstract class Health : MonoBehaviour, IHealth
     protected virtual void Start()
     {
         currentHealth = maxHealth;
+        HandleHealthChange();
     }
 }
