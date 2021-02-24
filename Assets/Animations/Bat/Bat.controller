@@ -36,7 +36,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Slime_Dead
+  m_Name: Bat_Dead
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -49,12 +49,24 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b5c83aafff870453c84313a36c73388a, type: 2}
+  m_Motion: {fileID: 7400000, guid: 4bb2c29672bc547c39d715a36331bdfb, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-4986194946624299727
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59283634047e24d73affa8da609a6554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-4779649059029822758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -99,13 +111,13 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Slime_Chase
+  m_Name: Bat_Chase
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1120083702411776103}
   m_StateMachineBehaviours:
-  - {fileID: 2501993931508597083}
+  - {fileID: 2646405276706561247}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -114,7 +126,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a41434663f6574be7bf8537aa9b86bcd, type: 2}
+  m_Motion: {fileID: 7400000, guid: ce8d9d9e763984d96a0fc38d60f844a8, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -126,7 +138,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Slime
+  m_Name: Bat
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Dead
@@ -135,13 +147,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Chase
+  - m_Name: Patrol
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Patrol
+  - m_Name: Chase
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -223,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f70f78f42c79d45cab64675ff7807d16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5096065512366803070
+--- !u!114 &2646405276706561247
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -232,7 +244,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fa4629f79f20494d91d099fa58b1064, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e8388de2e6a54721bd90a45917a64d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1102 &5618176340268197761
@@ -242,13 +254,13 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Slime_Patrol
+  m_Name: Bat_Patrol
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8533552698841128980}
   m_StateMachineBehaviours:
-  - {fileID: 5096065512366803070}
+  - {fileID: -4986194946624299727}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -257,7 +269,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 293c95746a65c4e14a397a2fe3d4487c, type: 2}
+  m_Motion: {fileID: 7400000, guid: ce8d9d9e763984d96a0fc38d60f844a8, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

@@ -22,8 +22,6 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private float glideFallingSpeed = 1.0f;
     private const float expandedColliderFactor = 1.0f; // 1.0f = full collider size
     private Rigidbody2D rigidbody2D;
-    private LayerMask groundLayer = 1 << groundLayerIndex;
-    private const int groundLayerIndex = 7; // Layer "Ground"
     private bool jumpKeyPressed = false;
     private bool jumpKeyHold = false;
     private bool isGrounded = false;
@@ -36,6 +34,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     }
     private MovementState movementState = MovementState.Idle;
 
+    // This could be cached and put private
+    // Letting other classes access through property instead
     public bool IsGrounded()
     {
         Vector2 position = transform.position;
@@ -61,9 +61,9 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             // Raycast to the ground layer only
-            RaycastHit2D hitLeft = Physics2D.Raycast(positionLeft, direction, distance, groundLayer);
-            RaycastHit2D hitCenter = Physics2D.Raycast(position, direction, distance, groundLayer);
-            RaycastHit2D hitRight = Physics2D.Raycast(positionRight, direction, distance, groundLayer);
+            RaycastHit2D hitLeft = Physics2D.Raycast(positionLeft, direction, distance, Layers.GroundLayer);
+            RaycastHit2D hitCenter = Physics2D.Raycast(position, direction, distance, Layers.GroundLayer);
+            RaycastHit2D hitRight = Physics2D.Raycast(positionRight, direction, distance, Layers.GroundLayer);
 
             // Grounded if left OR right OR center touches with the ground
             return hitLeft.collider != null || hitRight.collider != null || hitCenter.collider != null;
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             // Raycast to the ground layer only
-            RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
+            RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, Layers.GroundLayer);
             return hit.collider != null;
         }
     }

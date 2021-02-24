@@ -7,10 +7,38 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Animator))]
 public class Enemy : Health
 {
+    public float EnemyBaseSpeed => enemyBaseSpeed;
+    public float RandomSpeedFactor => randomSpeedFactor;
+    public float ChasingRange => chasingRange;
+    public float ChasingInterval => chasingInterval;
+    public bool CanSeeThroughWalls => canSeeThroughWalls;
+    public Transform GroundDetector => groundDetector;
+    [HideInInspector]
+    public bool ShouldChase { get; set; }
+
+    // Enemy AI parameters
+    [SerializeField]
+    private float enemyBaseSpeed = 1.5f;
+    [SerializeField]
+    private float randomSpeedFactor = 0.5f; // Actual speed = Base speed +- random factor
+    [SerializeField]
+    private float chasingRange = 6.0f;
+    [SerializeField]
+    private float chasingInterval = 0.5f; // Chasing every ? seconds
+    [SerializeField]
+    private bool canSeeThroughWalls = false;
+
+    // Enemy AI ground detection system for patroling
+    [SerializeField]
+    private Transform groundDetector;
+
+    // Health system
     [SerializeField]
     private float enemyMaxHealth = 150.0f;
     [SerializeField]
     private Slider hpBar;
+
+    // Animation
     private EnemyAnimation enemyAnimation;
 
     public override void TakeDamage(float damage)
@@ -39,6 +67,9 @@ public class Enemy : Health
 
     protected override void HandleDeath()
     {
+        // Disable health bar
+        hpBar.gameObject.SetActive(false);
+
         // Play Dead animation
         enemyAnimation.PlayDeadAnimation();
 
