@@ -18,7 +18,6 @@ public class PlayerAnimation : MonoBehaviour
     // Base
     private Animator animator;
 
-
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -55,6 +54,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void PlayPrimaryAttackAnimation()
     {
+        // Need to accelerate the animation
         animator.SetTrigger("PrimaryAttack");
     }
 
@@ -73,6 +73,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void PlayRunAnimation()
     {
+        // Need to accelerate the animation
         animator.SetBool("Running", true);
     }
 

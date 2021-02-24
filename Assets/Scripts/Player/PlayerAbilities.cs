@@ -9,8 +9,12 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     [SerializeField]
     private PlayerAttackHitbox swordPrimaryHitbox;
     [SerializeField]
+    private PlayerAttackHitbox dragonPrimaryHitbox;
+    [SerializeField]
     private float primaryAttackDamage;
     private float primaryAttackRate;
+    private float dragonPrimaryAttackDamage = 56.2f;
+    private float dragonPrimaryAttackRate = 3.0f;
     private float timeSinceLastPrimaryAttack = 0.0f;
     private bool isDragonForm = false;
     private PlayerClass playerClass;
@@ -79,7 +83,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void ListenToAttackEvent()
     {
-        bool readyToAttack = timeSinceLastPrimaryAttack >= 1.0f / primaryAttackRate;
+        float attackRate = IsDragonForm ? dragonPrimaryAttackRate : primaryAttackRate;
+        bool readyToAttack = timeSinceLastPrimaryAttack >= 1.0f / attackRate;
         if (InputManager.PrimaryAttack && readyToAttack)
         {
             // Player attacks here
@@ -100,19 +105,23 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private void PrimaryAttack()
     {
         // Debug.Log("Primary attack");
-        foreach (Collider2D enemyCollider in swordPrimaryHitbox.HitColliders)
+        PlayerAttackHitbox desiredHitbox = IsDragonForm ? dragonPrimaryHitbox : swordPrimaryHitbox; // Sword hitbox will need to change
+        float attackDamage = IsDragonForm ? dragonPrimaryAttackDamage : primaryAttackDamage;
+
+        foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
         {
             GameObject enemyObject = enemyCollider.gameObject;
-            if (enemyObject.TryGetComponent<EnemyHealth>(out EnemyHealth enemyHealth))
+            if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
             {
                 // Damage the enemy here
-                enemyHealth.TakeDamage(primaryAttackDamage);
+                enemy.TakeDamage(attackDamage);
             }
             else
             {
                 Debug.LogAssertion($"gameObject {enemyCollider.gameObject.name} does not have EnemyHealth attached to.");
             }
         }
+
         timeSinceLastPrimaryAttack = 0.0f;
     }
 

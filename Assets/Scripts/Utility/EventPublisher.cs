@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EventPublisher
 {
-    // Player stuff
+    // Player delegates
     public delegate void OnPlayerJump();
     public delegate void OnPlayerLand();
     public delegate void OnPlayerRun();
@@ -15,6 +15,7 @@ public class EventPublisher
     public delegate void OnPlayerDead();
     public delegate void OnPlayerChangeClass(PlayerClass pc);
 
+    // Player events
     public static event OnPlayerJump PlayerJump;
     public static event OnPlayerLand PlayerLand;
     public static event OnPlayerRun PlayerRun;
