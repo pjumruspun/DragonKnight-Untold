@@ -217,14 +217,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b48dd630d844813ab07c0a1a6fd360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config:
-    MaxHealth: 200
-    SwordConfig:
-      Type: 0
-      primaryAttackDamage: 0
-      primaryAttackRate: 1
-      secondaryAttackDamage: 0
-      secondaryAttackRate: 1
   swordPrimaryHitbox: {fileID: 1937013507}
   primaryAttackDamage: 0
 --- !u!114 &500538367555941620
@@ -239,8 +231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ddd0e757454652969fa921727c8de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragonAnimator: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
-  humanAnimator: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
+  nightController: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
+  archerController: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
+  swordController: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
 --- !u!114 &8228665814043902127
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1093,9 +1093,15 @@ MonoBehaviour:
   playerConfig:
     MaxHealth: 200
     SwordConfig:
-      Type: 0
+      playerClass: 0
       primaryAttackDamage: 37.2
       primaryAttackRate: 2
+      secondaryAttackDamage: 0
+      secondaryAttackRate: 1
+    ArcherConfig:
+      playerClass: 1
+      primaryAttackDamage: 28.4
+      primaryAttackRate: 3
       secondaryAttackDamage: 0
       secondaryAttackRate: 1
 --- !u!4 &982162385
@@ -1302,10 +1308,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 500538367555941617, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
     - target: {fileID: 500538367555941619, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1351,13 +1353,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 500538367555941620, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
-      propertyPath: humanAnimator
-      value: 
-      objectReference: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
-    - target: {fileID: 500538367555941620, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
-      propertyPath: dragonAnimator
+      propertyPath: nightController
       value: 
       objectReference: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
+    - target: {fileID: 500538367555941620, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: swordController
+      value: 
+      objectReference: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
+    - target: {fileID: 500538367555941620, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: archerController
+      value: 
+      objectReference: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
 --- !u!1001 &8689765250962155152

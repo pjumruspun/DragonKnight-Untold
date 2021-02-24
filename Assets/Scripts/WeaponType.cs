@@ -1,5 +1,5 @@
-public enum WeaponType
+public enum PlayerClass
 {
     Sword,
-    Bow
+    Archer
 }

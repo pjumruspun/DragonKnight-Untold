@@ -56,7 +56,7 @@ public class PlayerHealth : Health
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            TakeDamage(4.78f);
+            TakeDamage(40.78f);
         }
     }
 }

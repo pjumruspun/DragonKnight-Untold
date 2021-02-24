@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class WeaponConfig
+public class ClassConfig
 {
     // Contains information of each weapon
-    public WeaponType Type;
+    public PlayerClass playerClass;
     public float primaryAttackDamage;
     public float primaryAttackRate = 1.0f;
     public float secondaryAttackDamage;

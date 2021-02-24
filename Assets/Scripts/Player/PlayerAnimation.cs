@@ -5,19 +5,24 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimation : MonoBehaviour
 {
+    // Dragon animators
     [SerializeField]
-    private RuntimeAnimatorController dragonAnimator;
+    private RuntimeAnimatorController nightController;
 
+    // Human animators
     [SerializeField]
-    private RuntimeAnimatorController humanAnimator;
+    private RuntimeAnimatorController archerController;
+    [SerializeField]
+    private RuntimeAnimatorController swordController;
 
+    // Base
     private Animator animator;
 
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        animator.runtimeAnimatorController = humanAnimator as RuntimeAnimatorController;
+        animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
 
         // Subscribe
         EventPublisher.PlayerPrimaryAttack += PlayPrimaryAttackAnimation;
@@ -27,15 +32,12 @@ public class PlayerAnimation : MonoBehaviour
         EventPublisher.PlayerStop += PlayIdleAnimation;
         EventPublisher.PlayerShapeshift += PlayShapeshiftAnimation;
         EventPublisher.PlayerDead += PlayDeadAnimation;
+        EventPublisher.PlayerChangeClass += ChangeHumanAnimator;
     }
 
     private void Update()
     {
         animator.SetBool("Midair", !PlayerMovement.Instance.IsGrounded());
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            animator.runtimeAnimatorController = dragonAnimator as RuntimeAnimatorController;
-        }
     }
 
     private void OnDestroy()
@@ -48,6 +50,7 @@ public class PlayerAnimation : MonoBehaviour
         EventPublisher.PlayerStop -= PlayIdleAnimation;
         EventPublisher.PlayerShapeshift -= PlayShapeshiftAnimation;
         EventPublisher.PlayerDead -= PlayDeadAnimation;
+        EventPublisher.PlayerChangeClass -= ChangeHumanAnimator;
     }
 
     private void PlayPrimaryAttackAnimation()
@@ -84,18 +87,34 @@ public class PlayerAnimation : MonoBehaviour
         {
             // Player just transformed into a dragon
             // animator.SetBool("DragonForm", true);
-            animator.runtimeAnimatorController = dragonAnimator as RuntimeAnimatorController;
+            animator.runtimeAnimatorController = nightController as RuntimeAnimatorController;
         }
         else
         {
             // Player just transformed into a human
             // animator.SetBool("DragonForm", false);
-            animator.runtimeAnimatorController = humanAnimator as RuntimeAnimatorController;
+            animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
         }
     }
 
     private void PlayDeadAnimation()
     {
         animator.SetTrigger("Dead");
+    }
+
+    private void ChangeHumanAnimator(PlayerClass playerClass)
+    {
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
+                break;
+            case PlayerClass.Archer:
+                animator.runtimeAnimatorController = archerController as RuntimeAnimatorController;
+                break;
+            default:
+                Debug.LogAssertion($"Invalid playerClass: {playerClass}");
+                break;
+        }
     }
 }
