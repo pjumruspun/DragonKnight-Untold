@@ -23,6 +23,7 @@ public class PlayerSkills : System.IDisposable
     private ObjectPool arrows;
     private ObjectPool swordWaves;
     private PlayerMovement movement;
+    private PlayerStats stats;
 
     public PlayerSkills(Transform transform, PlayerAttackHitbox dragonPrimaryHitbox, PlayerAttackHitbox swordPrimaryHitbox, GameObject arrowPrefab, GameObject swordWavePrefab)
     {
@@ -176,7 +177,8 @@ public class PlayerSkills : System.IDisposable
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile arrow))
         {
             arrow.SetDirection(forwardVector);
-            arrow.SetDamage(damage);
+            stats.CalculateDamage(damage, out float finalDamage, out bool crit);
+            arrow.SetDamage(finalDamage, crit);
         }
         else
         {
@@ -197,7 +199,8 @@ public class PlayerSkills : System.IDisposable
                 if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
                     // Damage the enemy here
-                    enemy.TakeDamage(attackDamage);
+                    stats.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
+                    enemy.TakeDamage(finalDamage, crit);
                 }
                 else
                 {
@@ -233,12 +236,14 @@ public class PlayerSkills : System.IDisposable
                 ClassConfig swordConfig = playerConfig.SwordConfig;
                 skillDamage = swordConfig.skillDamage;
                 skillCooldown = swordConfig.skillCooldown;
+                stats = new PlayerStats(swordConfig.atk, swordConfig.agi, swordConfig.vit, swordConfig.tal, swordConfig.luk);
                 // Secondary here too
                 break;
             case PlayerClass.Archer:
                 ClassConfig archerConfig = playerConfig.ArcherConfig;
                 skillDamage = archerConfig.skillDamage;
                 skillCooldown = archerConfig.skillCooldown;
+                stats = new PlayerStats(archerConfig.atk, archerConfig.agi, archerConfig.vit, archerConfig.tal, archerConfig.luk);
                 // Secondary here too
                 break;
             default:

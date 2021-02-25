@@ -371,7 +371,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatingDamagePrefab: {fileID: 413647044697630453, guid: 20c727b23cc0047b68b76ec5f7c877d9, type: 3}
+  critFloatingDamagePrefab: {fileID: 4959378005110300329, guid: 66385d4bc25e84d358fbcfecb64c8ee6, type: 3}
   floatingDamagePoolSize: 10
+  critFloatingDamagePoolSize: 100
   secondsToDespawn: 2
 --- !u!4 &423058547
 Transform:
@@ -5496,6 +5498,11 @@ MonoBehaviour:
       - 1
       - 1
       - 1
+      atk: 10
+      agi: 10
+      vit: 10
+      tal: 10
+      luk: 50
     ArcherConfig:
       playerClass: 1
       skillDamage:
@@ -5508,6 +5515,11 @@ MonoBehaviour:
       - 0.1
       - 1
       - 1
+      atk: 10
+      agi: 10
+      vit: 30
+      tal: 10
+      luk: 10
     NightDragonConfig:
       dragonAttackDamage:
       - 30
@@ -5901,10 +5913,6 @@ PrefabInstance:
     - target: {fileID: 500538367555941616, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 500538367555941617, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 500538367555941619, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
       propertyPath: m_RootOrder

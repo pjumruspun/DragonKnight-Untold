@@ -74,8 +74,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             {
                 ChangeClass(PlayerClass.Sword);
             }
-
-            Debug.Log(playerSkills.SkillDamage);
         }
 
         // If the player is still alive

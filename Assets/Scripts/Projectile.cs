@@ -23,6 +23,7 @@ public class Projectile : MonoBehaviour
     private float totalTraveledDistance = 0.0f;
     private Vector2 direction;
     private float damage;
+    private bool crit;
 
     public void SetDirection(Vector2 direction)
     {
@@ -30,9 +31,10 @@ public class Projectile : MonoBehaviour
         HandleRotation();
     }
 
-    public void SetDamage(float damage)
+    public void SetDamage(float damage, bool crit)
     {
         this.damage = damage;
+        this.crit = crit;
     }
 
     private void HandleFlip()
@@ -56,7 +58,6 @@ public class Projectile : MonoBehaviour
     {
         // Improved version of HandleFlip()
         float degree = Vector2.Angle(Vector2.right, direction);
-        Debug.Log(degree);
         degree = -degree;
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, degree);
     }
@@ -101,7 +102,7 @@ public class Projectile : MonoBehaviour
                 if (other.gameObject.layer == Layers.enemyLayerIndex && other.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
                     // Deals damage to enemy
-                    enemy.TakeDamage(damage);
+                    enemy.TakeDamage(damage, crit);
                 }
                 break;
             case Target.Player:

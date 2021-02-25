@@ -47,15 +47,21 @@ public class Enemy : Health
     // Other stuff
     private Rigidbody2D rigidbody2D;
 
+    // Adapter method
+    public void TakeDamage(float damage, bool crit)
+    {
+        if (!IsDead)
+        {
+            TakeDamage(damage);
+            // Show floating damage number
+            FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
+            HandleHealthChange();
+        }
+    }
+
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-        // Show floating damage number
-        if (!IsDead)
-        {
-            FloatingDamageManager.Instance.Spawn(damage, transform.position);
-            HandleHealthChange();
-        }
     }
 
     public void AdjustRotation()
