@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
     public void SetDirection(Vector2 direction)
     {
         this.direction = direction;
-        HandleFlip();
+        HandleRotation();
     }
 
     public void SetDamage(float damage)
@@ -50,6 +50,15 @@ public class Projectile : MonoBehaviour
             // If right, then flip right
             transform.localScale = new Vector3(Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
         }
+    }
+
+    private void HandleRotation()
+    {
+        // Improved version of HandleFlip()
+        float degree = Vector2.Angle(Vector2.right, direction);
+        Debug.Log(degree);
+        degree = -degree;
+        transform.rotation = Quaternion.Euler(0.0f, 0.0f, degree);
     }
 
     private void Start()

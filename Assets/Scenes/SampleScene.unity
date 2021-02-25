@@ -5492,8 +5492,8 @@ MonoBehaviour:
       - 20
       - 20
       skillCooldown:
-      - 0.5
-      - 2
+      - 1
+      - 1
       - 1
       - 1
     ArcherConfig:
@@ -5505,7 +5505,7 @@ MonoBehaviour:
       - 20
       skillCooldown:
       - 1
-      - 1
+      - 0.1
       - 1
       - 1
     NightDragonConfig:
@@ -5520,6 +5520,13 @@ MonoBehaviour:
       - 1
       - 1
       jumpCount: 3
+    AdditionalConfigs:
+      SwordSkill2DelayTime: 0.2
+      SwordSkill2LockMovementTime: 0.4
+      ArcherSkill2ArrowCount: 10
+      ArcherSkill2Interval: 0.02
+      ArcherSkill2LockMovementTime: 0.3
+      ArcherSkill2ForceVector: {x: 5, y: 5}
 --- !u!4 &982162385
 Transform:
   m_ObjectHideFlags: 0
@@ -5894,6 +5901,10 @@ PrefabInstance:
     - target: {fileID: 500538367555941616, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 500538367555941617, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 500538367555941619, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
       propertyPath: m_RootOrder

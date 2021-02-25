@@ -37,7 +37,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private void Start()
     {
         // Initialize player skills
-        playerSkills = new PlayerSkills(dragonPrimaryHitbox, swordPrimaryHitbox, arrowPrefab, swordWavePrefab);
+        playerSkills = new PlayerSkills(transform, dragonPrimaryHitbox, swordPrimaryHitbox, arrowPrefab, swordWavePrefab);
         // Initialize player starting class, player will get to choose this later
         ChangeClass(PlayerClass.Sword);
 

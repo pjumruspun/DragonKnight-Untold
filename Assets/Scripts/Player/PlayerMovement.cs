@@ -37,6 +37,10 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private bool lastFrameWasGrounded = false;
     private MovementState movementState = MovementState.Idle;
     private MovementState turn = MovementState.Right;
+    private bool isFlipLockedBySkills = false;
+    private bool isMovementLockedBySkills = false;
+    private bool isJumpLockedBySkills = false;
+    private bool stopAllMovement = false;
 
     // This could be cached and put private
     // Letting other classes access through property instead
@@ -86,6 +90,45 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         }
     }
 
+    public void AddForceBySkill(Vector2 force)
+    {
+        rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
+
+    public void LockMovementBySkill(float duration, bool stopAllMovement = false) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement));
+
+    public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
+
+    private IEnumerator LockFlipBySkillPrivate(float duration)
+    {
+        isFlipLockedBySkills = true;
+        yield return new WaitForSeconds(duration);
+        isFlipLockedBySkills = false;
+    }
+
+    private IEnumerator LockMovementBySkillPrivate(float duration, bool stopAllMovement)
+    {
+        // Disable old movement
+        rigidbody2D.velocity = Vector2.zero;
+
+        // Stop all movement?
+        this.stopAllMovement = stopAllMovement;
+
+        isMovementLockedBySkills = true;
+        yield return new WaitForSeconds(duration);
+        isMovementLockedBySkills = false;
+        this.stopAllMovement = false;
+    }
+
+    private IEnumerator LockJumpBySkillPrivate(float duration)
+    {
+        isJumpLockedBySkills = true;
+        yield return new WaitForSeconds(duration);
+        isJumpLockedBySkills = false;
+    }
+
     private void UpdateIsGrounded()
     {
         // Caching IsGrounded() for each frame
@@ -125,6 +168,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             ProcessJump();
             ProcessPlayerLanding();
             ProcessGlide();
+            ProcessStopAllMovement();
         }
     }
 
@@ -167,52 +211,59 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void ProcessFlipping()
     {
-        switch (movementState)
+        // If player skill isn't locking player's direction
+        if (!isFlipLockedBySkills)
         {
-            case MovementState.Right:
-                // Turn the character facing right
-                Turn(movementState);
-                break;
-            case MovementState.Left:
-                // Turn left
-                Turn(movementState);
-                break;
-            default:
-                break;
+            switch (movementState)
+            {
+                case MovementState.Right:
+                    // Turn the character facing right
+                    Turn(movementState);
+                    break;
+                case MovementState.Left:
+                    // Turn left
+                    Turn(movementState);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
     private void ProcessMovement()
     {
-        // Move according to input
-        float horizontalMovement = 0.0f;
-        switch (movementState)
+        if (!isMovementLockedBySkills)
         {
-            case MovementState.Right:
-                horizontalMovement = 1.0f;
-                EventPublisher.TriggerPlayerRun();
-                break;
-            case MovementState.Left:
-                horizontalMovement = -1.0f;
-                EventPublisher.TriggerPlayerRun();
-                break;
-            default:
-                EventPublisher.TriggerPlayerStop();
-                break;
-        }
+            // Move according to input
+            float horizontalMovement = 0.0f;
+            switch (movementState)
+            {
+                case MovementState.Right:
+                    horizontalMovement = 1.0f;
+                    EventPublisher.TriggerPlayerRun();
+                    break;
+                case MovementState.Left:
+                    horizontalMovement = -1.0f;
+                    EventPublisher.TriggerPlayerRun();
+                    break;
+                default:
+                    EventPublisher.TriggerPlayerStop();
+                    break;
+            }
 
-        float velocityX = 0.0f;
-        if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
-        {
-            // The dragon is gliding
-            velocityX = horizontalMovement * dragonGlidingSpeed;
-        }
-        else
-        {
-            velocityX = horizontalMovement * baseMovementSpeed;
-        }
+            float velocityX = 0.0f;
+            if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
+            {
+                // The dragon is gliding
+                velocityX = horizontalMovement * dragonGlidingSpeed;
+            }
+            else
+            {
+                velocityX = horizontalMovement * baseMovementSpeed;
+            }
 
-        rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+            rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+        }
     }
 
     private void ProcessJump()
@@ -222,7 +273,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         //     jumpKeyPressed = false;
         // }
 
-        if (jumpKeyPressed)
+        if (jumpKeyPressed && !isJumpLockedBySkills)
         {
             if (PlayerAbilities.Instance.IsDragonForm)
             {
@@ -265,6 +316,14 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         {
             // Set the falling speed to glide falling speed
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, -glideFallingSpeed);
+        }
+    }
+
+    private void ProcessStopAllMovement()
+    {
+        if (stopAllMovement)
+        {
+            rigidbody2D.velocity = Vector2.zero;
         }
     }
 

@@ -20,7 +20,7 @@ public class ObjectPool
     {
         this.objectToPool = objectToPool;
         this.poolSize = initialPoolSize;
-        pooledObjects = new List<GameObject>(poolSize);
+        pooledObjects = new List<GameObject>();
         for (int _ = 0; _ < poolSize; ++_)
         {
             GameObject instantiatedObj = GameObject.Instantiate(objectToPool);
@@ -35,13 +35,28 @@ public class ObjectPool
     /// <returns>Pooled GameObject.</returns>
     public GameObject SpawnObject()
     {
-        foreach (GameObject pooledObject in pooledObjects)
+        GameObject objectToSpawn = GetFirstActiveObject();
+        if (objectToSpawn)
         {
-            if (!pooledObject.activeInHierarchy)
-            {
-                pooledObject.SetActive(true);
-                return pooledObject;
-            }
+            return objectToSpawn;
+        }
+
+        // If reaches here it means that we need to increase size
+        // 2 times the old size
+        for (int _ = 0; _ < poolSize; ++_)
+        {
+            GameObject instantiatedObj = GameObject.Instantiate(objectToPool);
+            instantiatedObj.SetActive(false);
+            pooledObjects.Add(instantiatedObj);
+        }
+
+        poolSize *= 2;
+
+        // Now we can Get first active object again
+        objectToSpawn = GetFirstActiveObject();
+        if (objectToSpawn)
+        {
+            return objectToSpawn;
         }
 
         throw new System.IndexOutOfRangeException();
@@ -71,5 +86,19 @@ public class ObjectPool
         pooledObject.transform.position = position;
         pooledObject.transform.rotation = quaternion;
         return pooledObject;
+    }
+
+    private GameObject GetFirstActiveObject()
+    {
+        foreach (GameObject pooledObject in pooledObjects)
+        {
+            if (!pooledObject.activeInHierarchy)
+            {
+                pooledObject.SetActive(true);
+                return pooledObject;
+            }
+        }
+
+        return null;
     }
 }

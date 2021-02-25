@@ -115,7 +115,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void PlayDeadAnimation()
     {
-        animator.SetTrigger("Dead");
+        animator.SetBool("Dead", true);
     }
 
     private void ChangeHumanAnimator(PlayerClass playerClass)

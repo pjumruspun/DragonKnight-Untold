@@ -10,4 +10,5 @@ public class PlayerConfig
     public ClassConfig SwordConfig;
     public ClassConfig ArcherConfig;
     public DragonConfig NightDragonConfig;
+    public AdditionalSkillConfigs AdditionalConfigs;
 }
