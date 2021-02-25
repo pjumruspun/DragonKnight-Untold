@@ -35,7 +35,7 @@ public class EnemyBehavior : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        AdjustRotation();
+        enemy.AdjustRotation();
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -87,20 +87,5 @@ public class EnemyBehavior : StateMachineBehaviour
         return gameObject.TryGetComponent<PlayerAbilities>(out _);
     }
 
-    private void AdjustRotation()
-    {
-        float x = transform.localScale.x;
-        if (rigidbody2D.velocity.x < -0.01f)
-        {
-            // Is going left
-            x = -Mathf.Abs(x);
-        }
-        else if (rigidbody2D.velocity.x > 0.01f)
-        {
-            // Is going right
-            x = Mathf.Abs(x);
-        }
 
-        transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
-    }
 }

@@ -11,6 +11,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     [SerializeField]
     private PlayerAttackHitbox dragonPrimaryHitbox;
     [SerializeField]
+    private GameObject arrowPrefab;
+    [SerializeField]
     private float primaryAttackDamage;
     private float primaryAttackRate;
     private float dragonPrimaryAttackDamage = 56.2f;
@@ -66,6 +68,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             {
                 ChangeClass(PlayerClass.Sword);
             }
+
+            Debug.Log(primaryAttackDamage);
         }
 
         // If the player is still alive
@@ -104,23 +108,77 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void PrimaryAttack()
     {
-        // Debug.Log("Primary attack");
-        PlayerAttackHitbox desiredHitbox = IsDragonForm ? dragonPrimaryHitbox : swordPrimaryHitbox; // Sword hitbox will need to change
-        float attackDamage = IsDragonForm ? dragonPrimaryAttackDamage : primaryAttackDamage;
+        if (IsDragonForm)
+        {
+            // Dragon Primary Attack
+            AttackWithHitbox(dragonPrimaryHitbox, dragonPrimaryAttackDamage);
+        }
+        else
+        {
+            // Player Primary Attack
+            switch (playerClass)
+            {
+                case PlayerClass.Sword:
+                    AttackWithHitbox(swordPrimaryHitbox, primaryAttackDamage);
+                    break;
+                case PlayerClass.Archer:
+                    // Spawn arrow
+                    GameObject spawnedObject = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
+                    if (spawnedObject.TryGetComponent<Projectile>(out Projectile arrow))
+                    {
+                        arrow.SetDirection(GetForwardVector());
+                        arrow.SetDamage(primaryAttackDamage);
+                    }
+                    else
+                    {
+                        throw new System.InvalidOperationException();
+                    }
+                    break;
+                default:
+                    throw new System.NotImplementedException();
 
+            }
+        }
+    }
+
+    public void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage)
+    {
+        HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
+        // Debug.Log(desiredHitbox.HitColliders.Count);
+        Debug.Log($"Before: {desiredHitbox.HitColliders.Count}");
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
         {
-            GameObject enemyObject = enemyCollider.gameObject;
-            if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
+            bool objectIsActive = enemyCollider.gameObject.activeInHierarchy;
+            bool isReallyAnEnemy = enemyCollider.gameObject.layer == Layers.enemyLayerIndex;
+            if (objectIsActive && isReallyAnEnemy)
             {
-                // Damage the enemy here
-                enemy.TakeDamage(attackDamage);
+                GameObject enemyObject = enemyCollider.gameObject;
+                if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
+                {
+                    // Damage the enemy here
+                    enemy.TakeDamage(attackDamage);
+                }
+                else
+                {
+                    // The enemy is dead, clear it from set
+                    Debug.LogAssertion($"gameObject {enemyCollider.gameObject.name} does not have EnemyHealth attached to.");
+                }
             }
             else
             {
-                Debug.LogAssertion($"gameObject {enemyCollider.gameObject.name} does not have EnemyHealth attached to.");
+                // Keep track of colliders to remove
+                collidersToRemove.Add(enemyCollider);
             }
         }
+
+        Debug.Log($"After iterated: {desiredHitbox.HitColliders.Count}");
+        // Remove the unrelated colliders
+        foreach (Collider2D unrelatedCollider in collidersToRemove)
+        {
+            desiredHitbox.HitColliders.Remove(unrelatedCollider);
+        }
+
+        Debug.Log($"After remove: {desiredHitbox.HitColliders.Count}");
 
         timeSinceLastPrimaryAttack = 0.0f;
     }
@@ -152,7 +210,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
                 // Secondary here too
                 break;
             case PlayerClass.Archer:
-                ClassConfig archerConfig = playerConfig.SwordConfig;
+                ClassConfig archerConfig = playerConfig.ArcherConfig;
                 primaryAttackDamage = archerConfig.primaryAttackDamage;
                 primaryAttackRate = archerConfig.primaryAttackRate;
                 // Secondary here too
@@ -160,6 +218,21 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             default:
                 Debug.LogAssertion($"Invalid playerClass: {playerClass}");
                 break;
+        }
+    }
+
+    private Vector2 GetForwardVector()
+    {
+        switch (PlayerMovement.Instance.TurnDirection)
+        {
+            case PlayerMovement.MovementState.Right:
+                return transform.right;
+            case PlayerMovement.MovementState.Left:
+                return -transform.right;
+            case PlayerMovement.MovementState.Idle:
+                throw new System.InvalidOperationException();
+            default:
+                throw new System.NotImplementedException();
         }
     }
 }

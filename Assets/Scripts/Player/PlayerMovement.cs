@@ -5,6 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoSingleton<PlayerMovement>
 {
+    public enum MovementState
+    {
+        Right,
+        Left,
+        Idle
+    }
+
+    public MovementState TurnDirection => turn;
+
     [SerializeField]
     private bool drawJumpingRay = false;
     [SerializeField]
@@ -26,13 +35,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private bool jumpKeyHold = false;
     private bool isGrounded = false;
     private bool lastFrameWasGrounded = false;
-    private enum MovementState
-    {
-        Right,
-        Left,
-        Idle
-    }
     private MovementState movementState = MovementState.Idle;
+    private MovementState turn = MovementState.Right;
 
     // This could be cached and put private
     // Letting other classes access through property instead
@@ -167,11 +171,11 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         {
             case MovementState.Right:
                 // Turn the character facing right
-                TurnRight(true);
+                Turn(movementState);
                 break;
             case MovementState.Left:
                 // Turn left
-                TurnRight(false);
+                Turn(movementState);
                 break;
             default:
                 break;
@@ -290,18 +294,24 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         lastFrameWasGrounded = isGrounded;
     }
 
-    private void TurnRight(bool right)
+    private void Turn(MovementState side)
     {
         float x = 0.0f;
-        if (right)
+        switch (side)
         {
-            x = Mathf.Abs(transform.localScale.x);
-        }
-        else
-        {
-            x = -Mathf.Abs(transform.localScale.x);
+            case MovementState.Right:
+                x = Mathf.Abs(transform.localScale.x);
+                break;
+            case MovementState.Left:
+                x = -Mathf.Abs(transform.localScale.x);
+                break;
+            case MovementState.Idle:
+                throw new System.InvalidOperationException();
+            default:
+                throw new System.NotImplementedException();
         }
 
+        turn = side;
         transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
     }
 }

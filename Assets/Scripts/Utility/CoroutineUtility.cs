@@ -17,4 +17,10 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
     {
         StopCoroutine(coroutine);
     }
+
+    public IEnumerator HideAfterSeconds(GameObject objectToHide, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        objectToHide.SetActive(false);
+    }
 }

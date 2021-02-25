@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // This class will handle both HP bar update and health update
+[RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 public class Enemy : Health
 {
@@ -37,9 +38,14 @@ public class Enemy : Health
     private float enemyMaxHealth = 150.0f;
     [SerializeField]
     private Slider hpBar;
+    [SerializeField]
+    private float secondsToDespawn = 2.0f;
 
     // Animation
     private EnemyAnimation enemyAnimation;
+
+    // Other stuff
+    private Rigidbody2D rigidbody2D;
 
     public override void TakeDamage(float damage)
     {
@@ -52,8 +58,33 @@ public class Enemy : Health
         }
     }
 
+    public void AdjustRotation()
+    {
+        float enemyX = transform.localScale.x;
+        float hpBarX = hpBar.transform.localScale.x;
+
+        if (rigidbody2D.velocity.x < -0.01f)
+        {
+            // Is going left
+            enemyX = -Mathf.Abs(enemyX);
+            // Need to flip hp bar as well
+            hpBarX = -Mathf.Abs(hpBarX);
+        }
+        else if (rigidbody2D.velocity.x > 0.01f)
+        {
+            // Is going right
+            enemyX = Mathf.Abs(enemyX);
+            // Need to flip hp bar as well
+            hpBarX = Mathf.Abs(hpBarX);
+        }
+
+        hpBar.transform.localScale = new Vector3(hpBarX, hpBar.transform.localScale.y, hpBar.transform.localScale.z);
+        transform.localScale = new Vector3(enemyX, transform.localScale.y, transform.localScale.z);
+    }
+
     protected override void Start()
     {
+        rigidbody2D = GetComponent<Rigidbody2D>();
         enemyAnimation = new EnemyAnimation(GetComponent<Animator>());
         maxHealth = enemyMaxHealth;
         base.Start();
@@ -74,6 +105,6 @@ public class Enemy : Health
         enemyAnimation.PlayDeadAnimation();
 
         // Destroy object in x seconds?
-        Destroy(gameObject, 2.0f);
+        StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(gameObject, secondsToDespawn));
     }
 }

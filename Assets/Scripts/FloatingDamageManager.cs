@@ -25,17 +25,11 @@ public class FloatingDamageManager : MonoSingleton<FloatingDamageManager>
             Debug.LogAssertion($"Failed to get TextMesh component from {floatingDamage.name} GameObject.");
         }
 
-        StartCoroutine(HideAfterSeconds(floatingDamage, secondsToDespawn));
+        StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(floatingDamage, secondsToDespawn));
     }
 
     private void Start()
     {
         floatingDamagePool = new ObjectPool(floatingDamagePrefab, floatingDamagePoolSize);
-    }
-
-    private IEnumerator HideAfterSeconds(GameObject objectToHide, float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        objectToHide.SetActive(false);
     }
 }
