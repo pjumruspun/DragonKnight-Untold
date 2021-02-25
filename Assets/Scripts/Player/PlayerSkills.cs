@@ -25,6 +25,9 @@ public class PlayerSkills : System.IDisposable
     private PlayerMovement movement;
     private PlayerStats stats;
 
+    // for testing
+    private float dragonSuperArmorAttack = 30.0f;
+
     public PlayerSkills(Transform transform, PlayerAttackHitbox dragonPrimaryHitbox, PlayerAttackHitbox swordPrimaryHitbox, GameObject arrowPrefab, GameObject swordWavePrefab)
     {
         // Cache
@@ -63,7 +66,7 @@ public class PlayerSkills : System.IDisposable
         {
             // Dragon Primary Attack
             // Night dragon is just a place holder for now
-            AttackWithHitbox(dragonPrimaryHitbox, playerConfig.NightDragonConfig.dragonAttackDamage[0]);
+            AttackWithHitbox(dragonPrimaryHitbox, playerConfig.NightDragonConfig.dragonAttackDamage[0], dragonSuperArmorAttack);
         }
         else
         {
@@ -189,7 +192,7 @@ public class PlayerSkills : System.IDisposable
         }
     }
 
-    private void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage)
+    private void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage, float superArmorDamage = 0.0f)
     {
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
@@ -203,7 +206,7 @@ public class PlayerSkills : System.IDisposable
                 {
                     // Damage the enemy here
                     stats.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
-                    enemy.TakeDamage(finalDamage, crit);
+                    enemy.TakeDamage(finalDamage, crit, superArmorDamage);
                 }
                 else
                 {
