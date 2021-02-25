@@ -2,14 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Stats
+{
+    // For easy referencing
+    public int atk;
+    public int agi;
+    public int vit;
+    public int tal;
+    public int luk;
+
+    public Stats(int atk, int agi, int vit, int tal, int luk)
+    {
+        this.atk = atk;
+        this.agi = agi;
+        this.vit = vit;
+        this.tal = tal;
+        this.luk = luk;
+    }
+}
+
 public class PlayerStats
 {
     // Visible stats
-    private int atk = 0;
-    private int agi = 0;
-    private int vit = 0;
-    private int tal = 0;
-    private int luk = 0;
+    Stats stats;
 
     // Hidden stats
     private float critDamage = 1.5f;
@@ -17,26 +32,20 @@ public class PlayerStats
 
     public PlayerStats()
     {
-
+        stats = new Stats(0, 0, 0, 0, 0);
     }
 
-    public PlayerStats(int atk, int agi, int vit, int tal, int luk)
+    // Assign but not create
+    public void AssignStats(Stats stats)
     {
-        this.atk = atk;
-        this.agi = agi;
-        this.vit = vit;
-        this.tal = tal;
-        this.luk = luk;
+        this.stats = stats;
     }
 
-    // Assign stats but not create new object
-    public void AssignStats(int atk, int agi, int vit, int tal, int luk)
+    // Static version because PlayerHealth needs it
+    public static float CalculateMaxHealth(float baseHealth, int inputVit)
     {
-        this.atk = atk;
-        this.agi = agi;
-        this.vit = vit;
-        this.tal = tal;
-        this.luk = luk;
+        // Health +5% per vit
+        return (1 + inputVit * 0.05f) * baseHealth;
     }
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
@@ -44,7 +53,7 @@ public class PlayerStats
         float random = Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
-        float damage = baseDamage * (1 + 0.03f * atk);
+        float damage = baseDamage * (1 + 0.03f * stats.atk);
 
         // Handle crit
         if (random < CalculateCritChance() && canCrit)
@@ -61,13 +70,14 @@ public class PlayerStats
         }
     }
 
-    public float CalculateCritChance()
-    {
-        return luk * 0.02f;
-    }
-
     public override string ToString()
     {
-        return $"ATK: {atk}\t AGI: {agi}\t VIT: {vit}\t TAL: {tal}\t LUK: {luk}";
+        return $"ATK: {stats.atk}\t AGI: {stats.agi}\t VIT: {stats.vit}\t TAL: {stats.tal}\t LUK: {stats.luk}";
+    }
+
+    private float CalculateCritChance()
+    {
+        // Simple 2% crit chance per luk for now
+        return stats.luk * 0.02f;
     }
 }

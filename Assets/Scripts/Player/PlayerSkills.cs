@@ -32,6 +32,9 @@ public class PlayerSkills : System.IDisposable
         configs = playerConfig.AdditionalConfigs;
         movement = PlayerMovement.Instance;
 
+        // Init player stats
+        stats = new PlayerStats();
+
         this.transform = transform;
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.swordPrimaryHitbox = swordPrimaryHitbox;
@@ -42,13 +45,13 @@ public class PlayerSkills : System.IDisposable
         swordWaves = new ObjectPool(swordWavePrefab, 20);
 
         // Subscribe
-        EventPublisher.PlayerChangeClass += AdjustStats;
+        EventPublisher.PlayerChangeClass += AdjustClassAttributes;
     }
 
     public void Dispose()
     {
         // Destructor, call on garbage collects
-        EventPublisher.PlayerChangeClass -= AdjustStats;
+        EventPublisher.PlayerChangeClass -= AdjustClassAttributes;
     }
 
     public void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector) // Player position for arrow spawning position
@@ -222,7 +225,7 @@ public class PlayerSkills : System.IDisposable
         }
     }
 
-    private void AdjustStats(PlayerClass playerClass)
+    private void AdjustClassAttributes(PlayerClass playerClass)
     {
         // This should be put in Adjust dragon stats function once it's implemented
         dragonAttackDamage = this.playerConfig.NightDragonConfig.dragonAttackDamage;
@@ -236,20 +239,29 @@ public class PlayerSkills : System.IDisposable
                 ClassConfig swordConfig = playerConfig.SwordConfig;
                 skillDamage = swordConfig.skillDamage;
                 skillCooldown = swordConfig.skillCooldown;
-                stats = new PlayerStats(swordConfig.atk, swordConfig.agi, swordConfig.vit, swordConfig.tal, swordConfig.luk);
+                AdjustStats(new Stats(swordConfig.atk, swordConfig.agi, swordConfig.vit, swordConfig.tal, swordConfig.luk));
                 // Secondary here too
                 break;
             case PlayerClass.Archer:
                 ClassConfig archerConfig = playerConfig.ArcherConfig;
                 skillDamage = archerConfig.skillDamage;
                 skillCooldown = archerConfig.skillCooldown;
-                stats = new PlayerStats(archerConfig.atk, archerConfig.agi, archerConfig.vit, archerConfig.tal, archerConfig.luk);
+                AdjustStats(new Stats(archerConfig.atk, archerConfig.agi, archerConfig.vit, archerConfig.tal, archerConfig.luk));
                 // Secondary here too
                 break;
             default:
                 Debug.LogAssertion($"Invalid playerClass: {playerClass}");
                 break;
         }
+    }
+
+    private void AdjustStats(Stats stats)
+    {
+        this.stats.AssignStats(stats);
+        // Notify stats changed
+        EventPublisher.TriggerPlayerStatsChange(stats);
+        // Health might update
+        EventPublisher.TriggerPlayerHealthChange();
     }
 
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
