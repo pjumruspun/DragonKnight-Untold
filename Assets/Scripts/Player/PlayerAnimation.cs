@@ -24,7 +24,7 @@ public class PlayerAnimation : MonoBehaviour
         animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
 
         // Subscribe
-        EventPublisher.PlayerPrimaryAttack += PlayPrimaryAttackAnimation;
+        EventPublisher.PlayerUseSkill += PlaySkillAnimation;
         EventPublisher.PlayerJump += PlayJumpAnimation;
         EventPublisher.PlayerLand += PlayLandAnimation;
         EventPublisher.PlayerRun += PlayRunAnimation;
@@ -42,7 +42,7 @@ public class PlayerAnimation : MonoBehaviour
     private void OnDestroy()
     {
         // Unsubscribe
-        EventPublisher.PlayerPrimaryAttack -= PlayPrimaryAttackAnimation;
+        EventPublisher.PlayerUseSkill -= PlaySkillAnimation;
         EventPublisher.PlayerJump -= PlayJumpAnimation;
         EventPublisher.PlayerLand -= PlayLandAnimation;
         EventPublisher.PlayerRun -= PlayRunAnimation;
@@ -52,10 +52,25 @@ public class PlayerAnimation : MonoBehaviour
         EventPublisher.PlayerChangeClass -= ChangeHumanAnimator;
     }
 
-    private void PlayPrimaryAttackAnimation()
+    private void PlaySkillAnimation(int skillNumber)
     {
         // Need to accelerate the animation
-        animator.SetTrigger("PrimaryAttack");
+        switch (skillNumber)
+        {
+            case 0:
+                animator.SetTrigger("PrimaryAttack");
+                break;
+            case 1:
+                animator.SetTrigger("Skill2");
+                break;
+            case 2:
+                throw new System.NotImplementedException();
+            case 3:
+                throw new System.NotImplementedException();
+            default:
+                throw new System.InvalidOperationException();
+        }
+
     }
 
     private void PlayJumpAnimation()

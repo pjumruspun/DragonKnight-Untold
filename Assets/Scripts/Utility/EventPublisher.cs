@@ -9,7 +9,7 @@ public class EventPublisher
     public delegate void OnPlayerLand();
     public delegate void OnPlayerRun();
     public delegate void OnPlayerStop();
-    public delegate void OnPlayerPrimaryAttack();
+    public delegate void OnPlayerUseSkill(int number);
     public delegate void OnPlayerShapeshift();
     public delegate void OnPlayerHealthChange();
     public delegate void OnPlayerDead();
@@ -20,7 +20,7 @@ public class EventPublisher
     public static event OnPlayerLand PlayerLand;
     public static event OnPlayerRun PlayerRun;
     public static event OnPlayerStop PlayerStop;
-    public static event OnPlayerPrimaryAttack PlayerPrimaryAttack;
+    public static event OnPlayerUseSkill PlayerUseSkill;
     public static event OnPlayerShapeshift PlayerShapeshift;
     public static event OnPlayerHealthChange PlayerHealthChange;
     public static event OnPlayerDead PlayerDead;
@@ -47,9 +47,9 @@ public class EventPublisher
         PlayerStop?.Invoke();
     }
 
-    public static void TriggerPlayerPrimaryAttack()
+    public static void TriggerPlayerUseSkill(int number)
     {
-        PlayerPrimaryAttack?.Invoke();
+        PlayerUseSkill?.Invoke(number);
     }
 
     public static void TriggerPlayerShapeshift()

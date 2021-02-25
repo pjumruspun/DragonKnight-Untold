@@ -27,11 +27,29 @@ public class Projectile : MonoBehaviour
     public void SetDirection(Vector2 direction)
     {
         this.direction = direction;
+        HandleFlip();
     }
 
     public void SetDamage(float damage)
     {
         this.damage = damage;
+    }
+
+    private void HandleFlip()
+    {
+        // Hard coded projectile flip
+        // Currently can only handle (-1, 0) and (1, 0) vectors
+        float x = Mathf.Abs(transform.localScale.x);
+        if (direction.x < -0.01f)
+        {
+            // If left, then flip left
+            transform.localScale = new Vector3(-Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
+        }
+        else if (direction.x > 0.01f)
+        {
+            // If right, then flip right
+            transform.localScale = new Vector3(Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
+        }
     }
 
     private void Start()
@@ -61,13 +79,12 @@ public class Projectile : MonoBehaviour
         {
             // Reach max distance
             // Destroy or set inactive
-            gameObject.SetActive(false);
+            Destruct();
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.name);
         // Deals damage here
         switch (target)
         {
@@ -93,23 +110,20 @@ public class Projectile : MonoBehaviour
         {
             // This projectile cannot pierce
             // So destroy or set inactive after it hits
-            gameObject.SetActive(false);
+            Destruct();
         }
+    }
+
+    private void Destruct()
+    {
+        direction = Vector2.zero;
+        gameObject.SetActive(false);
     }
 
     private void Setup()
     {
         // Reset as it's activated
         totalTraveledDistance = 0.0f;
-
-        // Hard coded projectile flip
-        // Currently can only handle (-1, 0) and (1, 0) vectors
-        float x = Mathf.Abs(transform.localScale.x);
-        if (direction.x < -0.01f)
-        {
-            // If left, then flip
-            transform.localScale = new Vector3(-Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
-        }
 
         // Set collision by layer
         switch (target)

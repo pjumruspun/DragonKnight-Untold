@@ -42,7 +42,7 @@ public class PlayerSkills : System.IDisposable
         EventPublisher.PlayerChangeClass -= AdjustStats;
     }
 
-    public void PrimaryAttack(Vector3 currentPlayerPosition, Vector2 forwardVector) // Player position for arrow spawning position
+    public void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector) // Player position for arrow spawning position
     {
         // Primary attack = skillDamage[0]
         float damage = skillDamage[0];
@@ -66,7 +66,6 @@ public class PlayerSkills : System.IDisposable
                     GameObject spawnedObject = arrows.SpawnObject(currentPlayerPosition, Quaternion.identity);
                     if (spawnedObject.TryGetComponent<Projectile>(out Projectile arrow))
                     {
-                        Debug.Log(forwardVector);
                         arrow.SetDirection(forwardVector);
                         arrow.SetDamage(damage);
                     }
@@ -77,22 +76,64 @@ public class PlayerSkills : System.IDisposable
                     break;
                 default:
                     throw new System.NotImplementedException();
-
             }
         }
     }
 
-    public float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted)
+    public void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector) // Player position for arrow spawning position
     {
-        if (skillNumber < 1 || skillNumber > 4)
+        // Skill 2 = skillDamage[1]
+        float damage = skillDamage[1];
+
+        if (PlayerAbilities.Instance.IsDragonForm)
         {
-            throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 1 and 4");
+            // Dragon Skill 2
+            Debug.Log("Still not implemented");
         }
         else
         {
-            ++skillNumber; // to match with array
+            // Player Primary Attack
+            switch (playerClass)
+            {
+                case PlayerClass.Sword:
+                    // Spawn sword wave
+                    GameObject spawnedObject = swordWaves.SpawnObject(currentPlayerPosition, Quaternion.identity);
+                    if (spawnedObject.TryGetComponent<Projectile>(out Projectile swordWave))
+                    {
+                        swordWave.SetDirection(forwardVector);
+                        swordWave.SetDamage(damage);
+                    }
+                    else
+                    {
+                        throw new System.InvalidOperationException();
+                    }
+                    break;
+                case PlayerClass.Archer:
+                    // Arrow rain
+                    Debug.Log("Not implemented");
+                    break;
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
+    }
+
+    public float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    {
+        if (skillNumber < 0 || skillNumber > 3)
+        {
+            throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
+        }
+        else
+        {
             float cooldown = PlayerAbilities.Instance.IsDragonForm ? dragonAttackCooldown[skillNumber] : skillCooldown[skillNumber];
             float current = cooldown - timeSinceLastExecuted;
+            if (percentage)
+            {
+                // Normalized with cooldown
+                current = current / cooldown;
+            }
+
             return current < 0.0f ? 0.0f : current;
         }
     }
@@ -100,8 +141,6 @@ public class PlayerSkills : System.IDisposable
     private void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage)
     {
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
-        // Debug.Log(desiredHitbox.HitColliders.Count);
-        Debug.Log($"Before: {desiredHitbox.HitColliders.Count}");
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
         {
             bool objectIsActive = enemyCollider.gameObject.activeInHierarchy;
@@ -127,14 +166,11 @@ public class PlayerSkills : System.IDisposable
             }
         }
 
-        Debug.Log($"After iterated: {desiredHitbox.HitColliders.Count}");
         // Remove the unrelated colliders
         foreach (Collider2D unrelatedCollider in collidersToRemove)
         {
             desiredHitbox.HitColliders.Remove(unrelatedCollider);
         }
-
-        Debug.Log($"After remove: {desiredHitbox.HitColliders.Count}");
     }
 
     private void AdjustStats(PlayerClass playerClass)

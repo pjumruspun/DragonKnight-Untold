@@ -9,4 +9,18 @@ public class PlayerSkillsUI : MonoBehaviour
     private Image[] skillIcons;
     [SerializeField]
     private Image[] cooldownMasks;
+
+    private void Start()
+    {
+
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            float currentCooldownPercentage = PlayerAbilities.Instance.GetCurrentSkillCooldown(i, true);
+            cooldownMasks[i].fillAmount = currentCooldownPercentage;
+        }
+    }
 }

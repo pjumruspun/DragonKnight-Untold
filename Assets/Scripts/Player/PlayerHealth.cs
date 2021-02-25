@@ -51,12 +51,4 @@ public class PlayerHealth : Health
             DestroyImmediate(gameObject);
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            TakeDamage(40.78f);
-        }
-    }
 }

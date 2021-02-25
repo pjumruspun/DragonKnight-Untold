@@ -14,7 +14,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private GameObject arrowPrefab;
     [SerializeField]
     private GameObject swordWavePrefab;
-    private float timeSinceLastPrimaryAttack = 0.0f;
+    private float[] timeSinceLastSkillUsed = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
     private bool isDragonForm = false;
     private PlayerSkills playerSkills;
 
@@ -26,6 +26,14 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         EventPublisher.TriggerPlayerChangeClass(playerClass);
     }
 
+    public float GetCurrentSkillCooldown(int number, bool percentage = false)
+    {
+        // Skill 0 = Primary attack
+        // Skill 3 = Ultimate
+        float currentCooldown = playerSkills.GetCurrentCooldown(number, timeSinceLastSkillUsed[number], percentage);
+        return currentCooldown;
+    }
+
     private void Start()
     {
         // Initialize player skills
@@ -34,17 +42,20 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         ChangeClass(PlayerClass.Sword);
 
         // This line means player is ready to attack right when this method is called
-        timeSinceLastPrimaryAttack = playerSkills.SkillCooldown[0];
+        for (int i = 0; i < timeSinceLastSkillUsed.Length; ++i)
+        {
+            timeSinceLastSkillUsed[i] = playerSkills.SkillCooldown[i];
+        }
 
         // Subscribe
-        EventPublisher.PlayerPrimaryAttack += PrimaryAttack;
+        EventPublisher.PlayerUseSkill += ActivateSkill;
         EventPublisher.PlayerShapeshift += Shapeshift;
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
     }
 
     private void OnDestroy()
     {
-        EventPublisher.PlayerPrimaryAttack -= PrimaryAttack;
+        EventPublisher.PlayerUseSkill -= ActivateSkill;
         EventPublisher.PlayerShapeshift -= Shapeshift;
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
     }
@@ -53,7 +64,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         ProcessDeltaTime();
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             if (playerSkills.Class == PlayerClass.Sword)
             {
@@ -77,24 +88,31 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void ProcessDeltaTime()
     {
-        timeSinceLastPrimaryAttack += Time.deltaTime;
+        for (int i = 0; i < timeSinceLastSkillUsed.Length; ++i)
+        {
+            // Loop just 4, shouldn't hurt
+            timeSinceLastSkillUsed[i] += Time.deltaTime;
+        }
     }
 
     private void ListenToAttackEvent()
     {
-        if (InputManager.PrimaryAttack && IsSkillReady(1))
+        if (InputManager.PrimaryAttack && IsSkillReady(0))
         {
             // Player attacks here
-            EventPublisher.TriggerPlayerPrimaryAttack();
+            EventPublisher.TriggerPlayerUseSkill(0);
+        }
+        else if (InputManager.Skill2 && IsSkillReady(1))
+        {
+            // Player skill 2
+            EventPublisher.TriggerPlayerUseSkill(1);
         }
     }
 
     private bool IsSkillReady(int number)
     {
-        // Skill 1 = Primary attack
-        // Skill 4 = Ultimate
-        float currentCooldown = playerSkills.GetCurrentCooldown(number, timeSinceLastPrimaryAttack);
-        bool readyToAttack = timeSinceLastPrimaryAttack >= currentCooldown;
+        float currentCooldown = GetCurrentSkillCooldown(number);
+        bool readyToAttack = currentCooldown <= 0.01f;
         return readyToAttack;
     }
 
@@ -108,10 +126,25 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         }
     }
 
-    private void PrimaryAttack()
+    private void ActivateSkill(int skillNumber)
     {
-        playerSkills.PrimaryAttack(transform.position, GetForwardVector());
-        timeSinceLastPrimaryAttack = 0.0f;
+        switch (skillNumber)
+        {
+            case 0:
+                playerSkills.Skill1(transform.position, GetForwardVector());
+                break;
+            case 1:
+                playerSkills.Skill2(transform.position, GetForwardVector());
+                break;
+            case 2:
+                throw new System.NotImplementedException();
+            case 3:
+                throw new System.NotImplementedException();
+            default:
+                throw new System.InvalidOperationException();
+        }
+
+        timeSinceLastSkillUsed[skillNumber] = 0.0f;
     }
 
     private void Shapeshift()
