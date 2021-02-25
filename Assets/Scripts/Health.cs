@@ -7,7 +7,7 @@ public abstract class Health : MonoBehaviour
 {
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
-    public bool IsDead => currentHealth <= 0;
+    public bool IsDead => currentHealth <= 0.01f;
 
     protected float maxHealth = 100;
     protected float currentHealth;
@@ -19,7 +19,9 @@ public abstract class Health : MonoBehaviour
         {
             // Returns health after taking damage
             currentHealth -= damage;
-            if (currentHealth < 0.0f)
+
+            // If this is the last hit
+            if (IsDead)
             {
                 currentHealth = 0.0f;
                 HandleDeath();

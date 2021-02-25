@@ -240,14 +240,12 @@ public class PlayerSkills : System.IDisposable
                 skillDamage = swordConfig.skillDamage;
                 skillCooldown = swordConfig.skillCooldown;
                 AdjustStats(new Stats(swordConfig.atk, swordConfig.agi, swordConfig.vit, swordConfig.tal, swordConfig.luk));
-                // Secondary here too
                 break;
             case PlayerClass.Archer:
                 ClassConfig archerConfig = playerConfig.ArcherConfig;
                 skillDamage = archerConfig.skillDamage;
                 skillCooldown = archerConfig.skillCooldown;
                 AdjustStats(new Stats(archerConfig.atk, archerConfig.agi, archerConfig.vit, archerConfig.tal, archerConfig.luk));
-                // Secondary here too
                 break;
             default:
                 Debug.LogAssertion($"Invalid playerClass: {playerClass}");

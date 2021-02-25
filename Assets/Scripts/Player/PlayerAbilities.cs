@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 {
     public bool IsDragonForm => isDragonForm;
+    public PlayerClass Class => playerSkills.Class;
 
     [SerializeField]
     private PlayerAttackHitbox swordPrimaryHitbox;
@@ -64,6 +65,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         ProcessDeltaTime();
 
+        // Debugging
         if (Input.GetKeyDown(KeyCode.T))
         {
             if (playerSkills.Class == PlayerClass.Sword)

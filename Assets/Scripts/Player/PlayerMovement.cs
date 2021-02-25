@@ -16,8 +16,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     [SerializeField]
     private bool drawJumpingRay = false;
-    [SerializeField]
-    private float baseMovementSpeed = 3.0f;
+    private float baseMovementSpeed;
     [SerializeField]
     private int maxDragonJumpCount = 3;
     private int dragonJumpCount = 0;
@@ -142,6 +141,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Subscribe
         EventPublisher.PlayerJump += Jump;
         EventPublisher.PlayerLand += ResetDragonJumpCount;
+        EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
+        EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
     }
 
     private void OnDestroy()
@@ -149,6 +150,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Unsubscribe
         EventPublisher.PlayerJump -= Jump;
         EventPublisher.PlayerLand -= ResetDragonJumpCount;
+        EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
+        EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
     }
 
     // Update for listening to input
@@ -372,5 +375,44 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
         turn = side;
         transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
+    }
+
+    private void UpdateMoveSpeedOnChangeClass(PlayerClass playerClass)
+    {
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        ClassConfig config;
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                config = playerConfig.SwordConfig;
+                break;
+            case PlayerClass.Archer:
+                config = playerConfig.ArcherConfig;
+                break;
+            default:
+                throw new System.InvalidOperationException();
+        }
+
+        baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, config.agi);
+    }
+
+    private void UpdateMoveSpeedOnStatsChange(Stats stats)
+    {
+        PlayerClass playerClass = PlayerAbilities.Instance.Class;
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        ClassConfig config;
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                config = playerConfig.SwordConfig;
+                break;
+            case PlayerClass.Archer:
+                config = playerConfig.ArcherConfig;
+                break;
+            default:
+                throw new System.InvalidOperationException();
+        }
+
+        baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, stats.agi);
     }
 }

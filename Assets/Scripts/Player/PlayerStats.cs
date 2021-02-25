@@ -41,6 +41,13 @@ public class PlayerStats
         this.stats = stats;
     }
 
+    // Static version because PlayerMovement needs it
+    public static float CalculateMovementSpeed(float baseMoveSpeed, int inputAgi)
+    {
+        // Speed +3% per agi
+        return (1 + inputAgi * 0.03f) * baseMoveSpeed;
+    }
+
     // Static version because PlayerHealth needs it
     public static float CalculateMaxHealth(float baseHealth, int inputVit)
     {

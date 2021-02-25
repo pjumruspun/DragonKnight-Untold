@@ -14,4 +14,6 @@ public class ClassConfig
     public int vit = 10;
     public int tal = 10;
     public int luk = 10;
+    public float baseMoveSpeed = 3.0f;
+    public float baseHealthRegen = 1.0f;
 }
