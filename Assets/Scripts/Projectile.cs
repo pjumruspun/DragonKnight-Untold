@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour
         {
             // Reach max distance
             // Destroy or set inactive
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
@@ -93,7 +93,7 @@ public class Projectile : MonoBehaviour
         {
             // This projectile cannot pierce
             // So destroy or set inactive after it hits
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
@@ -101,6 +101,15 @@ public class Projectile : MonoBehaviour
     {
         // Reset as it's activated
         totalTraveledDistance = 0.0f;
+
+        // Hard coded projectile flip
+        // Currently can only handle (-1, 0) and (1, 0) vectors
+        float x = Mathf.Abs(transform.localScale.x);
+        if (direction.x < -0.01f)
+        {
+            // If left, then flip
+            transform.localScale = new Vector3(-Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
+        }
 
         // Set collision by layer
         switch (target)

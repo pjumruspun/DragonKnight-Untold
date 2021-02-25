@@ -14,7 +14,7 @@ public class FloatingDamageManager : MonoSingleton<FloatingDamageManager>
 
     public void Spawn(float damage, Vector3 position)
     {
-        GameObject floatingDamage = floatingDamagePool.GetObject(position);
+        GameObject floatingDamage = floatingDamagePool.SpawnObject(position);
         if (floatingDamage.TryGetComponent<TextMesh>(out TextMesh textMesh))
         {
             // Set damage number to the text mesh

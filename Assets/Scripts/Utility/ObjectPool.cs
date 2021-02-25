@@ -33,7 +33,7 @@ public class ObjectPool
     /// Get a pooled GameObject.
     /// </summary>
     /// <returns>Pooled GameObject.</returns>
-    public GameObject GetObject()
+    public GameObject SpawnObject()
     {
         foreach (GameObject pooledObject in pooledObjects)
         {
@@ -52,10 +52,24 @@ public class ObjectPool
     /// </summary>
     /// <param name="position">Position of the pooled GameObject to spawn at.</param>
     /// <returns>Pooled GameObject.</returns>
-    public GameObject GetObject(Vector3 position)
+    public GameObject SpawnObject(Vector3 position)
     {
-        GameObject pooledObject = GetObject();
+        GameObject pooledObject = SpawnObject();
         pooledObject.transform.position = position;
+        return pooledObject;
+    }
+
+    /// <summary>
+    /// Get a pooled GameObject.
+    /// </summary>
+    /// <param name="position">Position of the pooled GameObject to spawn at.</param>
+    /// <param name="quaternion">Rotation angle in quaternion of the pooled GameObject to be tilted.</param>
+    /// <returns>Pooled GameObject.</returns>
+    public GameObject SpawnObject(Vector3 position, Quaternion quaternion)
+    {
+        GameObject pooledObject = SpawnObject();
+        pooledObject.transform.position = position;
+        pooledObject.transform.rotation = quaternion;
         return pooledObject;
     }
 }

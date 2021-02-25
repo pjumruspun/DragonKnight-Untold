@@ -154,6 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 0
-  speed: 5
+  speed: 15
   maxTravelDistance: 10
   pierce: 0

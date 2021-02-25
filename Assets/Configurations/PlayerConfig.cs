@@ -9,4 +9,5 @@ public class PlayerConfig
     public float MaxHealth = 200.0f;
     public ClassConfig SwordConfig;
     public ClassConfig ArcherConfig;
+    public DragonConfig NightDragonConfig;
 }

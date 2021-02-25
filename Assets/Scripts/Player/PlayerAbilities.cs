@@ -13,13 +13,11 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     [SerializeField]
     private GameObject arrowPrefab;
     [SerializeField]
-    private float primaryAttackDamage;
-    private float primaryAttackRate;
-    private float dragonPrimaryAttackDamage = 56.2f;
-    private float dragonPrimaryAttackRate = 3.0f;
+    private GameObject swordWavePrefab;
     private float timeSinceLastPrimaryAttack = 0.0f;
     private bool isDragonForm = false;
-    private PlayerClass playerClass;
+    private PlayerSkills playerSkills;
+
 
     public void ChangeClass(PlayerClass playerClass)
     {
@@ -30,8 +28,13 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void Start()
     {
-        SetPlayerAttributes();
-        timeSinceLastPrimaryAttack = 1.0f / primaryAttackRate;
+        // Initialize player skills
+        playerSkills = new PlayerSkills(dragonPrimaryHitbox, swordPrimaryHitbox, arrowPrefab, swordWavePrefab);
+        // Initialize player starting class, player will get to choose this later
+        ChangeClass(PlayerClass.Sword);
+
+        // This line means player is ready to attack right when this method is called
+        timeSinceLastPrimaryAttack = playerSkills.SkillCooldown[0];
 
         // Subscribe
         EventPublisher.PlayerPrimaryAttack += PrimaryAttack;
@@ -39,19 +42,11 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
     }
 
-    private void SetPlayerAttributes()
-    {
-        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        ClassConfig classConfig = playerConfig.SwordConfig; // This should change depends on player class
-        primaryAttackRate = classConfig.primaryAttackRate;
-        primaryAttackDamage = classConfig.primaryAttackDamage;
-        EventPublisher.PlayerChangeClass += ProcessChangingClass;
-    }
-
     private void OnDestroy()
     {
         EventPublisher.PlayerPrimaryAttack -= PrimaryAttack;
         EventPublisher.PlayerShapeshift -= Shapeshift;
+        EventPublisher.PlayerChangeClass -= ProcessChangingClass;
     }
 
     private void Update()
@@ -60,7 +55,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            if (playerClass == PlayerClass.Sword)
+            if (playerSkills.Class == PlayerClass.Sword)
             {
                 ChangeClass(PlayerClass.Archer);
             }
@@ -69,7 +64,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
                 ChangeClass(PlayerClass.Sword);
             }
 
-            Debug.Log(primaryAttackDamage);
+            Debug.Log(playerSkills.SkillDamage);
         }
 
         // If the player is still alive
@@ -87,13 +82,20 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void ListenToAttackEvent()
     {
-        float attackRate = IsDragonForm ? dragonPrimaryAttackRate : primaryAttackRate;
-        bool readyToAttack = timeSinceLastPrimaryAttack >= 1.0f / attackRate;
-        if (InputManager.PrimaryAttack && readyToAttack)
+        if (InputManager.PrimaryAttack && IsSkillReady(1))
         {
             // Player attacks here
             EventPublisher.TriggerPlayerPrimaryAttack();
         }
+    }
+
+    private bool IsSkillReady(int number)
+    {
+        // Skill 1 = Primary attack
+        // Skill 4 = Ultimate
+        float currentCooldown = playerSkills.GetCurrentCooldown(number, timeSinceLastPrimaryAttack);
+        bool readyToAttack = timeSinceLastPrimaryAttack >= currentCooldown;
+        return readyToAttack;
     }
 
     private void ListenToShapeshiftEvent()
@@ -108,78 +110,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void PrimaryAttack()
     {
-        if (IsDragonForm)
-        {
-            // Dragon Primary Attack
-            AttackWithHitbox(dragonPrimaryHitbox, dragonPrimaryAttackDamage);
-        }
-        else
-        {
-            // Player Primary Attack
-            switch (playerClass)
-            {
-                case PlayerClass.Sword:
-                    AttackWithHitbox(swordPrimaryHitbox, primaryAttackDamage);
-                    break;
-                case PlayerClass.Archer:
-                    // Spawn arrow
-                    GameObject spawnedObject = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-                    if (spawnedObject.TryGetComponent<Projectile>(out Projectile arrow))
-                    {
-                        arrow.SetDirection(GetForwardVector());
-                        arrow.SetDamage(primaryAttackDamage);
-                    }
-                    else
-                    {
-                        throw new System.InvalidOperationException();
-                    }
-                    break;
-                default:
-                    throw new System.NotImplementedException();
-
-            }
-        }
-    }
-
-    public void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage)
-    {
-        HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
-        // Debug.Log(desiredHitbox.HitColliders.Count);
-        Debug.Log($"Before: {desiredHitbox.HitColliders.Count}");
-        foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
-        {
-            bool objectIsActive = enemyCollider.gameObject.activeInHierarchy;
-            bool isReallyAnEnemy = enemyCollider.gameObject.layer == Layers.enemyLayerIndex;
-            if (objectIsActive && isReallyAnEnemy)
-            {
-                GameObject enemyObject = enemyCollider.gameObject;
-                if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
-                {
-                    // Damage the enemy here
-                    enemy.TakeDamage(attackDamage);
-                }
-                else
-                {
-                    // The enemy is dead, clear it from set
-                    Debug.LogAssertion($"gameObject {enemyCollider.gameObject.name} does not have EnemyHealth attached to.");
-                }
-            }
-            else
-            {
-                // Keep track of colliders to remove
-                collidersToRemove.Add(enemyCollider);
-            }
-        }
-
-        Debug.Log($"After iterated: {desiredHitbox.HitColliders.Count}");
-        // Remove the unrelated colliders
-        foreach (Collider2D unrelatedCollider in collidersToRemove)
-        {
-            desiredHitbox.HitColliders.Remove(unrelatedCollider);
-        }
-
-        Debug.Log($"After remove: {desiredHitbox.HitColliders.Count}");
-
+        playerSkills.PrimaryAttack(transform.position, GetForwardVector());
         timeSinceLastPrimaryAttack = 0.0f;
     }
 
@@ -196,28 +127,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             // Player dragon down
             isDragonForm = !isDragonForm;
             EventPublisher.TriggerPlayerShapeshift();
-        }
-
-        // Now change the class for real
-        this.playerClass = playerClass;
-        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        switch (playerClass)
-        {
-            case PlayerClass.Sword:
-                ClassConfig swordConfig = playerConfig.SwordConfig;
-                primaryAttackDamage = swordConfig.primaryAttackDamage;
-                primaryAttackRate = swordConfig.primaryAttackRate;
-                // Secondary here too
-                break;
-            case PlayerClass.Archer:
-                ClassConfig archerConfig = playerConfig.ArcherConfig;
-                primaryAttackDamage = archerConfig.primaryAttackDamage;
-                primaryAttackRate = archerConfig.primaryAttackRate;
-                // Secondary here too
-                break;
-            default:
-                Debug.LogAssertion($"Invalid playerClass: {playerClass}");
-                break;
         }
     }
 
