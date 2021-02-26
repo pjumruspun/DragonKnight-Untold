@@ -18,10 +18,21 @@ public class PlayerAnimation : MonoBehaviour
     // Base
     private Animator animator;
 
+    // Cache config
+    private PlayerConfig playerConfig;
+
+    // Map string to each class/dragon
+    private Dictionary<int, string[]> nSkillToAnimationName = new Dictionary<int, string[]>
+    {
+        { 0, new string[]{ "Sword_Attack1", "Archer_Attack1", "Night_Claw"}},
+        { 1, new string[]{ "Sword_Attack3", "?", "?"}}
+    };
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
+        playerConfig = ConfigContainer.Instance.GetPlayerConfig;
 
         // Subscribe
         EventPublisher.PlayerUseSkill += PlaySkillAnimation;
@@ -54,6 +65,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void PlaySkillAnimation(int skillNumber)
     {
+        Debug.Log(GetAnimLength(GetAnimName(skillNumber)));
         // Need to accelerate the animation
         switch (skillNumber)
         {
@@ -132,5 +144,46 @@ public class PlayerAnimation : MonoBehaviour
                 Debug.LogAssertion($"Invalid playerClass: {playerClass}");
                 break;
         }
+    }
+
+    private string GetAnimName(int skillNumber)
+    {
+        return nSkillToAnimationName[skillNumber][GetIndex()];
+    }
+
+    private int GetIndex()
+    {
+        if (PlayerAbilities.Instance.IsDragonForm)
+        {
+            // Map to night's animation
+            return 2;
+        }
+        else
+        {
+            switch (PlayerAbilities.Instance.Class)
+            {
+                case PlayerClass.Sword:
+                    return 0;
+                case PlayerClass.Archer:
+                    return 1;
+                default:
+                    throw new System.IndexOutOfRangeException();
+            }
+        }
+    }
+
+    private float GetAnimLength(string name)
+    {
+        AnimationClip[] anims = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < anims.Length; ++i)
+        {
+            if (anims[i].name == name)
+            {
+                Debug.Log($"{anims[i].name}: {anims[i].length}");
+                return anims[i].length;
+            }
+        }
+
+        return 0.0f;
     }
 }

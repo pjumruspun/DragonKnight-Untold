@@ -83,29 +83,35 @@ public class Enemy : Health
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
+        EnemyStunnedBehavior behavior = animator.GetBehaviour<EnemyStunnedBehavior>();
+        behavior.Test();
     }
 
     public void AdjustRotation()
     {
         float enemyX = transform.localScale.x;
         float hpBarX = hpBar.transform.localScale.x;
+        float superArmorBarX = superArmorBar.transform.localScale.x;
 
         if (rigidbody2D.velocity.x < -0.01f)
         {
             // Is going left
             enemyX = -Mathf.Abs(enemyX);
-            // Need to flip hp bar as well
+            // Need to flip hp bar and super armor bar as well
             hpBarX = -Mathf.Abs(hpBarX);
+            superArmorBarX = -Mathf.Abs(superArmorBarX);
         }
         else if (rigidbody2D.velocity.x > 0.01f)
         {
             // Is going right
             enemyX = Mathf.Abs(enemyX);
-            // Need to flip hp bar as well
+            // Need to flip hp bar and super armor bar as well
             hpBarX = Mathf.Abs(hpBarX);
+            superArmorBarX = Mathf.Abs(superArmorBarX);
         }
 
         hpBar.transform.localScale = new Vector3(hpBarX, hpBar.transform.localScale.y, hpBar.transform.localScale.z);
+        superArmorBar.transform.localScale = new Vector3(superArmorBarX, superArmorBar.transform.localScale.y, superArmorBar.transform.localScale.z);
         transform.localScale = new Vector3(enemyX, transform.localScale.y, transform.localScale.z);
     }
 
@@ -160,13 +166,13 @@ public class Enemy : Health
             superArmor = 0.0f;
         }
 
-        Debug.Log($"Super armor = {superArmor}");
+        // Debug.Log($"Super armor = {superArmor}");
         HandleSuperArmorUIChange();
     }
 
     private void KnockedAirborne()
     {
-        Debug.Log("Knocked!");
+        // ebug.Log("Knocked!");
         animator.SetBool("Stunned", true);
     }
 

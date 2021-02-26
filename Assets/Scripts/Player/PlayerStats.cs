@@ -23,22 +23,41 @@ public struct Stats
 
 public class PlayerStats
 {
+    // For reading skill cooldown
+    public IReadOnlyList<float> SkillCooldown => CalculateSkillCooldown();
+
     // Visible stats
-    Stats stats;
+    private Stats stats;
 
     // Hidden stats
     private float critDamage = 1.5f;
     private float healthRegen = 1.0f;
+    private float[] baseSkillCooldown;
 
     public PlayerStats()
     {
         stats = new Stats(0, 0, 0, 0, 0);
+        baseSkillCooldown = new float[4] { 2.0f, 2.0f, 2.0f, 2.0f };
     }
 
     // Assign but not create
     public void AssignStats(Stats stats)
     {
         this.stats = stats;
+
+        // Notify stats changed
+        EventPublisher.TriggerPlayerStatsChange(stats);
+
+        // Health might update
+        EventPublisher.TriggerPlayerHealthChange();
+    }
+
+    public void AssignSkillCooldown(float[] cooldown)
+    {
+        for (int i = 0; i < baseSkillCooldown.Length; ++i)
+        {
+            baseSkillCooldown[i] = cooldown[i];
+        }
     }
 
     // Static version because PlayerMovement needs it
@@ -86,5 +105,22 @@ public class PlayerStats
     {
         // Simple 2% crit chance per luk for now
         return stats.luk * 0.02f;
+    }
+
+    // This is very expensive as it's currently calculating every frame
+    // This could be cached into a variable and only calculate when the cooldown has changed
+    // Can do it later when the game is lagging
+    private IReadOnlyList<float> CalculateSkillCooldown()
+    {
+        // If player ever has cooldown reduction items
+
+        // For example, half cooldown of the base
+        float[] results = new float[4];
+        for (int i = 0; i < 4; ++i)
+        {
+            results[i] = baseSkillCooldown[i] / 2;
+        }
+
+        return results;
     }
 }

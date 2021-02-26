@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerSkills : System.IDisposable
 {
     public float[] SkillDamage => skillDamage; // For debugging purpose
-    public float[] SkillCooldown => skillCooldown;
+    public IReadOnlyList<float> SkillCooldown => stats.SkillCooldown;
     public float[] DragonAttackDamage => dragonAttackDamage;
     public float[] DragonAttackCooldown => dragonAttackCooldown;
     public PlayerClass Class => playerClass;
@@ -18,7 +18,6 @@ public class PlayerSkills : System.IDisposable
     private float[] dragonAttackDamage;
     private float[] dragonAttackCooldown;
     private float[] skillDamage;
-    private float[] skillCooldown;
     private PlayerClass playerClass;
     private ObjectPool arrows;
     private ObjectPool swordWaves;
@@ -153,7 +152,7 @@ public class PlayerSkills : System.IDisposable
         }
         else
         {
-            float cooldown = PlayerAbilities.Instance.IsDragonForm ? dragonAttackCooldown[skillNumber] : skillCooldown[skillNumber];
+            float cooldown = PlayerAbilities.Instance.IsDragonForm ? dragonAttackCooldown[skillNumber] : stats.SkillCooldown[skillNumber];
             float current = cooldown - timeSinceLastExecuted;
             if (percentage)
             {
@@ -228,6 +227,7 @@ public class PlayerSkills : System.IDisposable
         }
     }
 
+    // This one is triggered by PlayerAbilities.Start()
     private void AdjustClassAttributes(PlayerClass playerClass)
     {
         // This should be put in Adjust dragon stats function once it's implemented
@@ -236,33 +236,27 @@ public class PlayerSkills : System.IDisposable
 
         // Now change the class
         this.playerClass = playerClass;
+        ClassConfig config;
         switch (playerClass)
         {
             case PlayerClass.Sword:
-                ClassConfig swordConfig = playerConfig.SwordConfig;
-                skillDamage = swordConfig.skillDamage;
-                skillCooldown = swordConfig.skillCooldown;
-                AdjustStats(new Stats(swordConfig.atk, swordConfig.agi, swordConfig.vit, swordConfig.tal, swordConfig.luk));
+                config = playerConfig.SwordConfig;
                 break;
             case PlayerClass.Archer:
-                ClassConfig archerConfig = playerConfig.ArcherConfig;
-                skillDamage = archerConfig.skillDamage;
-                skillCooldown = archerConfig.skillCooldown;
-                AdjustStats(new Stats(archerConfig.atk, archerConfig.agi, archerConfig.vit, archerConfig.tal, archerConfig.luk));
+                config = playerConfig.ArcherConfig;
                 break;
             default:
-                Debug.LogAssertion($"Invalid playerClass: {playerClass}");
-                break;
+                throw new System.InvalidOperationException();
         }
-    }
 
-    private void AdjustStats(Stats stats)
-    {
-        this.stats.AssignStats(stats);
-        // Notify stats changed
-        EventPublisher.TriggerPlayerStatsChange(stats);
-        // Health might update
-        EventPublisher.TriggerPlayerHealthChange();
+        // Load base skill damage
+        skillDamage = config.skillDamage;
+
+        // Load config cooldowns into PlayerStats
+        this.stats.AssignSkillCooldown(config.skillCooldown);
+
+        // Load config stats into PlayerStats
+        this.stats.AssignStats(new Stats(config.atk, config.agi, config.vit, config.tal, config.luk));
     }
 
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)

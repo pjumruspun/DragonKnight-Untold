@@ -86,6 +86,4 @@ public class EnemyBehavior : StateMachineBehaviour
     {
         return gameObject.TryGetComponent<PlayerAbilities>(out _);
     }
-
-
 }
