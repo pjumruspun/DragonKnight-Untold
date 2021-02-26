@@ -443,7 +443,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void UpdateMoveSpeedOnStatsChange(Stats stats)
     {
-        PlayerClass playerClass = PlayerAbilities.Instance.Class;
+        PlayerClass playerClass = PlayerAbilities.Instance.CurrentClass;
         PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
         ClassConfig config;
         switch (playerClass)

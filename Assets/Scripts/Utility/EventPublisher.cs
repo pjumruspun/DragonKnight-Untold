@@ -10,7 +10,7 @@ public class EventPublisher
     public delegate void OnPlayerRun();
     public delegate void OnPlayerStop();
     public delegate void OnPlayerUseSkill(int number);
-    public delegate void OnPlayerShapeshift();
+    public delegate void OnPlayerShapeshift(bool isDragon);
     public delegate void OnPlayerHealthChange();
     public delegate void OnPlayerDead();
     public delegate void OnPlayerChangeClass(PlayerClass pc);
@@ -54,9 +54,9 @@ public class EventPublisher
         PlayerUseSkill?.Invoke(number);
     }
 
-    public static void TriggerPlayerShapeshift()
+    public static void TriggerPlayerShapeshift(bool isDragon)
     {
-        PlayerShapeshift?.Invoke();
+        PlayerShapeshift?.Invoke(isDragon);
     }
 
     public static void TriggerPlayerHealthChange()

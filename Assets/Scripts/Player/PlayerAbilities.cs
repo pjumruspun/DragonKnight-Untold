@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 {
     public bool IsDragonForm => isDragonForm;
-    public PlayerClass Class => playerSkills.Class;
+    public PlayerClass CurrentClass => currentClass;
 
     [SerializeField]
     private PlayerAttackHitbox swordPrimaryHitbox;
@@ -17,7 +17,11 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private GameObject swordWavePrefab;
     private float[] timeSinceLastSkillUsed = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
     private bool isDragonForm = false;
-    private PlayerSkills playerSkills;
+    private SwordSkills swordSkills;
+    private ArcherSkills archerSkills;
+    private DragonSkills dragonSkills;
+    private PlayerSkills current;
+    private PlayerClass currentClass;
 
 
     public void ChangeClass(PlayerClass playerClass)
@@ -31,27 +35,31 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         // Skill 0 = Primary attack
         // Skill 3 = Ultimate
-        float currentCooldown = playerSkills.GetCurrentCooldown(number, timeSinceLastSkillUsed[number], percentage);
+        float currentCooldown = current.GetCurrentCooldown(number, timeSinceLastSkillUsed[number], percentage);
         return currentCooldown;
     }
 
     private void Start()
     {
+        // Subscribe
+        EventPublisher.PlayerUseSkill += ActivateSkill;
+        EventPublisher.PlayerShapeshift += Shapeshift;
+        EventPublisher.PlayerChangeClass += ProcessChangingClass;
+
         // Initialize player skills
-        playerSkills = new PlayerSkills(transform, dragonPrimaryHitbox, swordPrimaryHitbox, arrowPrefab, swordWavePrefab);
+        swordSkills = new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
+        archerSkills = new ArcherSkills(transform, arrowPrefab);
+
         // Initialize player starting class, player will get to choose this later
         ChangeClass(PlayerClass.Sword);
 
         // This line means player is ready to attack right when this method is called
         for (int i = 0; i < timeSinceLastSkillUsed.Length; ++i)
         {
-            timeSinceLastSkillUsed[i] = playerSkills.SkillCooldown[i];
+            timeSinceLastSkillUsed[i] = current.SkillCooldown[i];
         }
 
-        // Subscribe
-        EventPublisher.PlayerUseSkill += ActivateSkill;
-        EventPublisher.PlayerShapeshift += Shapeshift;
-        EventPublisher.PlayerChangeClass += ProcessChangingClass;
+
     }
 
     private void OnDestroy()
@@ -68,7 +76,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         // Debugging
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (playerSkills.Class == PlayerClass.Sword)
+            if (currentClass == PlayerClass.Sword)
             {
                 ChangeClass(PlayerClass.Archer);
             }
@@ -122,7 +130,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         {
             // Player transforms here
             isDragonForm = !isDragonForm;
-            EventPublisher.TriggerPlayerShapeshift();
+            EventPublisher.TriggerPlayerShapeshift(isDragonForm);
         }
     }
 
@@ -131,10 +139,10 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         switch (skillNumber)
         {
             case 0:
-                playerSkills.Skill1(transform.position, GetForwardVector());
+                current.Skill1(transform.position, GetForwardVector());
                 break;
             case 1:
-                playerSkills.Skill2(transform.position, GetForwardVector());
+                current.Skill2(transform.position, GetForwardVector());
                 break;
             case 2:
                 throw new System.NotImplementedException();
@@ -147,19 +155,56 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         timeSinceLastSkillUsed[skillNumber] = 0.0f;
     }
 
-    private void Shapeshift()
+    private void Shapeshift(bool isDragon)
     {
-        // Debug.Log($"Dragon form: {isDragonForm}");
+        if (isDragon)
+        {
+            current = dragonSkills;
+        }
+        else
+        {
+            // Change current skill sets back
+            switch (currentClass)
+            {
+                case PlayerClass.Sword:
+                    current = swordSkills;
+                    break;
+                case PlayerClass.Archer:
+                    current = archerSkills;
+                    break;
+                default:
+                    throw new System.ArgumentOutOfRangeException();
+            }
+        }
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
     {
+        // Change class label
+        currentClass = playerClass;
+
+        // Change current skill sets
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                current = swordSkills;
+                break;
+            case PlayerClass.Archer:
+                current = archerSkills;
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException();
+        }
+
+        // Assign dragon skills
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, current.PStats);
+
         // Player should not be in dragon form when changing class, just in case
         if (IsDragonForm)
         {
             // Player dragon down
             isDragonForm = !isDragonForm;
-            EventPublisher.TriggerPlayerShapeshift();
+            EventPublisher.TriggerPlayerShapeshift(isDragonForm);
         }
     }
 

@@ -38,7 +38,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         {
             if (anims[i].name == name)
             {
-                Debug.Log($"{anims[i].name}: {anims[i].length}");
+                // Debug.Log($"{anims[i].name}: {anims[i].length}");
                 return anims[i].length;
             }
         }
@@ -126,9 +126,9 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         animator.SetBool("Running", false);
     }
 
-    private void PlayShapeshiftAnimation()
+    private void PlayShapeshiftAnimation(bool isDragon)
     {
-        if (PlayerAbilities.Instance.IsDragonForm)
+        if (isDragon)
         {
             // Player just transformed into a dragon
             // animator.SetBool("DragonForm", true);
@@ -177,7 +177,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         }
         else
         {
-            switch (PlayerAbilities.Instance.Class)
+            switch (PlayerAbilities.Instance.CurrentClass)
             {
                 case PlayerClass.Sword:
                     return 0;

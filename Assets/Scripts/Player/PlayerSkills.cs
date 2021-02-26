@@ -2,149 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSkills : System.IDisposable
+public abstract class PlayerSkills : System.IDisposable
 {
-    public float[] SkillDamage => skillDamage; // For debugging purpose
     public IReadOnlyList<float> SkillCooldown => stats.SkillCooldown;
-    public float[] DragonAttackDamage => dragonAttackDamage;
-    public float[] DragonAttackCooldown => dragonAttackCooldown;
-    public PlayerClass Class => playerClass;
-    private Transform transform;
-    private GameObject arrowPrefab;
-    private PlayerConfig playerConfig;
-    private AdditionalSkillConfigs configs;
-    private PlayerAttackHitbox dragonPrimaryHitbox;
-    private PlayerAttackHitbox swordPrimaryHitbox;
-    private float[] dragonAttackDamage;
-    private float[] dragonAttackCooldown;
-    private float[] skillDamage;
-    private PlayerClass playerClass;
-    private ObjectPool arrows;
-    private ObjectPool swordWaves;
-    private PlayerMovement movement;
-    private PlayerStats stats;
+    public PlayerStats PStats => stats;
+    protected Transform transform;
+    protected PlayerConfig playerConfig;
+    protected AdditionalSkillConfigs configs;
+    protected PlayerMovement movement;
+    protected PlayerStats stats;
 
-    // for testing
-    private float dragonSuperArmorAttack = 100.0f;
 
-    public PlayerSkills(Transform transform, PlayerAttackHitbox dragonPrimaryHitbox, PlayerAttackHitbox swordPrimaryHitbox, GameObject arrowPrefab, GameObject swordWavePrefab)
+    public PlayerSkills(Transform transform)
     {
         // Cache
         playerConfig = ConfigContainer.Instance.GetPlayerConfig;
         configs = playerConfig.AdditionalConfigs;
         movement = PlayerMovement.Instance;
-
-        // Init player stats
-        stats = new PlayerStats();
-
         this.transform = transform;
-        this.dragonPrimaryHitbox = dragonPrimaryHitbox;
-        this.swordPrimaryHitbox = swordPrimaryHitbox;
-        this.arrowPrefab = arrowPrefab;
-
-        // Object pooling
-        arrows = new ObjectPool(arrowPrefab, 20);
-        swordWaves = new ObjectPool(swordWavePrefab, 20);
 
         // Subscribe
-        EventPublisher.PlayerChangeClass += AdjustClassAttributes;
+        // EventPublisher.PlayerChangeClass += AdjustClassAttributes;
     }
 
     public void Dispose()
     {
         // Destructor, call on garbage collects
-        EventPublisher.PlayerChangeClass -= AdjustClassAttributes;
+        // EventPublisher.PlayerChangeClass -= AdjustClassAttributes;
     }
 
-    public void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector) // Player position for arrow spawning position
-    {
-        // Primary attack = skillDamage[0]
-        float damage = skillDamage[0];
+    public abstract void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector);
 
-        if (PlayerAbilities.Instance.IsDragonForm)
-        {
-            // Dragon Primary Attack
-            // Night dragon is just a place holder for now
-            AttackWithHitbox(dragonPrimaryHitbox, playerConfig.NightDragonConfig.dragonAttackDamage[0], dragonSuperArmorAttack);
-        }
-        else
-        {
-            // Player Primary Attack
-            switch (playerClass)
-            {
-                case PlayerClass.Sword:
-                    // Lock player's movement and flip
-                    // Lock equals to animation clip length
-                    float animLength = PlayerAnimation.Instance.GetAnimLength(0);
-                    movement.LockMovementBySkill(animLength, true, true);
+    public abstract void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector);
 
-                    // Then attack
-                    AttackWithHitbox(swordPrimaryHitbox, damage);
-                    break;
-                case PlayerClass.Archer:
-                    // Spawn arrow
-                    AttackWithProjectile(ref arrows, damage, currentPlayerPosition, forwardVector);
-                    break;
-                default:
-                    throw new System.NotImplementedException();
-            }
-        }
-    }
-
-    public void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector) // Player position for arrow spawning position
-    {
-        // Skill 2 = skillDamage[1]
-        float damage = skillDamage[1];
-
-        if (PlayerAbilities.Instance.IsDragonForm)
-        {
-            // Dragon Skill 2
-            Debug.Log("Still not implemented");
-        }
-        else
-        {
-            // Player Primary Attack
-            switch (playerClass)
-            {
-                case PlayerClass.Sword:
-                    // Sword wave
-                    // Lock player's movement
-                    movement.LockMovementBySkill(configs.SwordSkill2LockMovementTime, true, true);
-
-                    // Spawn sword wave with delay
-                    CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, configs.SwordSkill2DelayTime));
-                    break;
-                case PlayerClass.Archer:
-                    // Arrow rain
-                    // Lock player's movement and flip
-                    movement.LockMovementBySkill(configs.ArcherSkill2LockMovementTime, false, true);
-
-                    // Add force by skills first
-                    Vector2 forceVector = configs.ArcherSkill2ForceVector;
-                    switch (movement.TurnDirection)
-                    {
-                        case PlayerMovement.MovementState.Right:
-                            // Go up left
-                            movement.AddForceBySkill(new Vector2(-Mathf.Abs(forceVector.x), Mathf.Abs(forceVector.y)));
-                            break;
-                        case PlayerMovement.MovementState.Left:
-                            // Go up right
-                            movement.AddForceBySkill(new Vector2(Mathf.Abs(forceVector.x), Mathf.Abs(forceVector.y)));
-                            break;
-                    }
-
-                    // Then spawn arrow rains
-                    int arrowCount = configs.ArcherSkill2ArrowCount;
-                    float interval = configs.ArcherSkill2Interval;
-                    CoroutineUtility.Instance.CreateCoroutine(ArrowRain(arrowCount, damage, forwardVector, interval));
-                    break;
-                default:
-                    throw new System.NotImplementedException();
-            }
-        }
-    }
-
-    public float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    public virtual float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
     {
         if (skillNumber < 0 || skillNumber > 3)
         {
@@ -152,7 +43,7 @@ public class PlayerSkills : System.IDisposable
         }
         else
         {
-            float cooldown = PlayerAbilities.Instance.IsDragonForm ? dragonAttackCooldown[skillNumber] : stats.SkillCooldown[skillNumber];
+            float cooldown = stats.SkillCooldown[skillNumber];
             float current = cooldown - timeSinceLastExecuted;
             if (percentage)
             {
@@ -164,7 +55,7 @@ public class PlayerSkills : System.IDisposable
         }
     }
 
-    private void AttackWithProjectile(ref ObjectPool objectPool, float damage, Vector3 currentPlayerPosition, Vector2 forwardVector, float rotationZ = 0.0f)
+    protected void AttackWithProjectile(ref ObjectPool objectPool, float damage, Vector3 currentPlayerPosition, Vector2 forwardVector, float rotationZ = 0.0f)
     {
         GameObject spawnedObject = objectPool.SpawnObject(currentPlayerPosition, Quaternion.identity);
 
@@ -191,7 +82,7 @@ public class PlayerSkills : System.IDisposable
         }
     }
 
-    private void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage, float superArmorDamage = 0.0f)
+    protected void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage, float superArmorDamage = 0.0f)
     {
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
@@ -227,50 +118,35 @@ public class PlayerSkills : System.IDisposable
         }
     }
 
-    // This one is triggered by PlayerAbilities.Start()
-    private void AdjustClassAttributes(PlayerClass playerClass)
-    {
-        // This should be put in Adjust dragon stats function once it's implemented
-        dragonAttackDamage = this.playerConfig.NightDragonConfig.dragonAttackDamage;
-        dragonAttackCooldown = this.playerConfig.NightDragonConfig.dragonAttackCooldown;
+    // // This one is triggered by PlayerAbilities.Start()
+    // private void AdjustClassAttributes(PlayerClass playerClass)
+    // {
+    //     // This should be put in Adjust dragon stats function once it's implemented
+    //     dragonAttackDamage = this.playerConfig.NightDragonConfig.dragonAttackDamage;
+    //     dragonAttackCooldown = this.playerConfig.NightDragonConfig.dragonAttackCooldown;
 
-        // Now change the class
-        this.playerClass = playerClass;
-        ClassConfig config;
-        switch (playerClass)
-        {
-            case PlayerClass.Sword:
-                config = playerConfig.SwordConfig;
-                break;
-            case PlayerClass.Archer:
-                config = playerConfig.ArcherConfig;
-                break;
-            default:
-                throw new System.InvalidOperationException();
-        }
+    //     // Now change the class
+    //     this.playerClass = playerClass;
+    //     ClassConfig config;
+    //     switch (playerClass)
+    //     {
+    //         case PlayerClass.Sword:
+    //             config = playerConfig.SwordConfig;
+    //             break;
+    //         case PlayerClass.Archer:
+    //             config = playerConfig.ArcherConfig;
+    //             break;
+    //         default:
+    //             throw new System.InvalidOperationException();
+    //     }
 
-        // Load base skill damage
-        skillDamage = config.skillDamage;
+    //     // Load base skill damage
+    //     skillDamage = config.skillDamage;
 
-        // Load config cooldowns into PlayerStats
-        this.stats.AssignSkillCooldown(config.skillCooldown);
+    //     // Load config cooldowns into PlayerStats
+    //     this.stats.AssignSkillCooldown(config.skillCooldown);
 
-        // Load config stats into PlayerStats
-        this.stats.AssignStats(new Stats(config.atk, config.agi, config.vit, config.tal, config.luk));
-    }
-
-    private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        AttackWithProjectile(ref swordWaves, damage, transform.position, forwardVector);
-    }
-
-    private IEnumerator ArrowRain(int count, float damage, Vector2 forwardVector, float interval)
-    {
-        for (int i = 0; i < count; ++i)
-        {
-            AttackWithProjectile(ref arrows, damage, transform.position, forwardVector, Random.Range(-20.0f, -50.0f));
-            yield return new WaitForSeconds(interval);
-        }
-    }
+    //     // Load config stats into PlayerStats
+    //     this.stats.AssignStats(new Stats(config.atk, config.agi, config.vit, config.tal, config.luk));
+    // }
 }

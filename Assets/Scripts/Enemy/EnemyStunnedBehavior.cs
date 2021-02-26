@@ -52,7 +52,7 @@ public class EnemyStunnedBehavior : EnemyBehavior
     {
         if (isStunned && Mathf.Abs(velocityY) > 0.01f)
         {
-            Debug.Log("It works!");
+            // Debug.Log("It works!");
             // Disable vy
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0.0f);
             // Then add force

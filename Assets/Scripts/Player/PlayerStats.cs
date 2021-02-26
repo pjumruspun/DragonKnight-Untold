@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public struct Stats
 {
@@ -23,8 +24,8 @@ public struct Stats
 
 public class PlayerStats
 {
-    // For reading skill cooldown
     public IReadOnlyList<float> SkillCooldown => CalculateSkillCooldown();
+    public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
     // Visible stats
     private Stats stats;
@@ -32,13 +33,42 @@ public class PlayerStats
     // Hidden stats
     private float critDamage = 1.5f;
     private float healthRegen = 1.0f;
-    private float[] baseSkillCooldown;
+    private float[] baseSkillCooldown = new float[4];
+    private float[] baseSkillDamage = new float[4];
     private float attackSpeed = 1.0f; // Only affects skill 1, auto attack
 
-    public PlayerStats()
+    private PlayerStats() { }
+
+    // For creating stats based on class
+    public static PlayerStats Create(PlayerClass playerClass)
     {
-        stats = new Stats(0, 0, 0, 0, 0);
-        baseSkillCooldown = new float[4] { 2.0f, 2.0f, 2.0f, 2.0f };
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        ClassConfig config;
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                config = playerConfig.SwordConfig;
+                break;
+            case PlayerClass.Archer:
+                config = playerConfig.ArcherConfig;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        float[] cooldowns = new float[4];
+        float[] skillDamage = new float[4];
+        config.skillCooldown.CopyTo(cooldowns, 0);
+        config.skillDamage.CopyTo(skillDamage, 0);
+        Stats stats = new Stats(config.atk, config.agi, config.vit, config.tal, config.luk);
+
+        PlayerStats playerStats = new PlayerStats();
+
+        playerStats.baseSkillCooldown = cooldowns;
+        playerStats.baseSkillDamage = skillDamage;
+        playerStats.stats = stats;
+
+        return playerStats;
     }
 
     // Assign but not create
@@ -77,7 +107,7 @@ public class PlayerStats
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
-        float random = Random.Range(0.0f, 1.0f);
+        float random = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
         float damage = baseDamage * (1 + 0.03f * stats.atk);
