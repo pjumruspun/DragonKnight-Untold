@@ -25,7 +25,7 @@ public class PlayerSkills : System.IDisposable
     private PlayerStats stats;
 
     // for testing
-    private float dragonSuperArmorAttack = 30.0f;
+    private float dragonSuperArmorAttack = 100.0f;
 
     public PlayerSkills(Transform transform, PlayerAttackHitbox dragonPrimaryHitbox, PlayerAttackHitbox swordPrimaryHitbox, GameObject arrowPrefab, GameObject swordWavePrefab)
     {
@@ -73,6 +73,12 @@ public class PlayerSkills : System.IDisposable
             switch (playerClass)
             {
                 case PlayerClass.Sword:
+                    // Lock player's movement and flip
+                    // Lock equals to animation clip length
+                    float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+                    movement.LockMovementBySkill(animLength, true, true);
+
+                    // Then attack
                     AttackWithHitbox(swordPrimaryHitbox, damage);
                     break;
                 case PlayerClass.Archer:
@@ -103,21 +109,15 @@ public class PlayerSkills : System.IDisposable
                 case PlayerClass.Sword:
                     // Sword wave
                     // Lock player's movement
-                    movement.LockMovementBySkill(configs.SwordSkill2LockMovementTime, true);
-
-                    // Lock player's flip
-                    movement.LockFlipBySkill(configs.SwordSkill2LockMovementTime);
+                    movement.LockMovementBySkill(configs.SwordSkill2LockMovementTime, true, true);
 
                     // Spawn sword wave with delay
                     CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, configs.SwordSkill2DelayTime));
                     break;
                 case PlayerClass.Archer:
                     // Arrow rain
-                    // Lock player's movement
-                    movement.LockMovementBySkill(configs.ArcherSkill2LockMovementTime);
-
-                    // Lock player's flip
-                    movement.LockFlipBySkill(configs.ArcherSkill2LockMovementTime);
+                    // Lock player's movement and flip
+                    movement.LockMovementBySkill(configs.ArcherSkill2LockMovementTime, false, true);
 
                     // Add force by skills first
                     Vector2 forceVector = configs.ArcherSkill2ForceVector;

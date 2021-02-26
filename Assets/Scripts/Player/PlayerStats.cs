@@ -33,6 +33,7 @@ public class PlayerStats
     private float critDamage = 1.5f;
     private float healthRegen = 1.0f;
     private float[] baseSkillCooldown;
+    private float attackSpeed = 1.0f; // Only affects skill 1, auto attack
 
     public PlayerStats()
     {
@@ -114,13 +115,15 @@ public class PlayerStats
     {
         // If player ever has cooldown reduction items
 
-        // For example, half cooldown of the base
         float[] results = new float[4];
         for (int i = 0; i < 4; ++i)
         {
-            results[i] = baseSkillCooldown[i] / 2;
+            results[i] = baseSkillCooldown[i];
         }
 
-        return results;
+        // Only skill 1 is affected by attack speed
+        results[0] /= attackSpeed;
+
+        return baseSkillCooldown;
     }
 }

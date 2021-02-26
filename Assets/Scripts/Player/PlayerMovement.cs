@@ -36,10 +36,17 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private bool lastFrameWasGrounded = false;
     private MovementState movementState = MovementState.Idle;
     private MovementState turn = MovementState.Right;
+
+    // Lock movement stuff
     private bool isFlipLockedBySkills = false;
     private bool isMovementLockedBySkills = false;
     private bool isJumpLockedBySkills = false;
     private bool stopAllMovement = false;
+    private float originalGravityScale;
+
+    // Lock function utility
+    private bool stateLock = false;
+    private float lockDuration = 0.0f;
 
     // This could be cached and put private
     // Letting other classes access through property instead
@@ -96,7 +103,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
 
-    public void LockMovementBySkill(float duration, bool stopAllMovement = false) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement));
+    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip));
 
     public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
 
@@ -107,18 +114,34 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         isFlipLockedBySkills = false;
     }
 
-    private IEnumerator LockMovementBySkillPrivate(float duration, bool stopAllMovement)
+    private IEnumerator LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
     {
+        LockState(duration);
+        if (lockFlip)
+        {
+            LockFlipBySkill(duration);
+        }
+
         // Disable old movement
         rigidbody2D.velocity = Vector2.zero;
-
         // Stop all movement?
         this.stopAllMovement = stopAllMovement;
-
+        // Disable gravity too
+        rigidbody2D.gravityScale = 0.0f;
+        // Lock movement
         isMovementLockedBySkills = true;
+
+        // Then wait
         yield return new WaitForSeconds(duration);
-        isMovementLockedBySkills = false;
-        this.stopAllMovement = false;
+
+        if (!stateLock)
+        {
+            // Unlock
+            isMovementLockedBySkills = false;
+            this.stopAllMovement = false;
+            // Reenable gravity
+            rigidbody2D.gravityScale = originalGravityScale;
+        }
     }
 
     private IEnumerator LockJumpBySkillPrivate(float duration)
@@ -137,6 +160,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        originalGravityScale = rigidbody2D.gravityScale;
 
         // Subscribe
         EventPublisher.PlayerJump += Jump;
@@ -173,6 +197,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             ProcessGlide();
             ProcessStopAllMovement();
         }
+
+        ProcessLockState();
     }
 
     private void ListenInput()
@@ -328,6 +354,25 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         {
             rigidbody2D.velocity = Vector2.zero;
         }
+    }
+
+    private void ProcessLockState()
+    {
+        if (stateLock)
+        {
+            lockDuration -= Time.deltaTime;
+            if (lockDuration <= 0.0f)
+            {
+                // Unlock
+                stateLock = false;
+            }
+        }
+    }
+
+    private void LockState(float duration)
+    {
+        stateLock = true;
+        lockDuration = duration;
     }
 
     private void Jump()

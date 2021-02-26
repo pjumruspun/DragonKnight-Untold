@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class PlayerAnimation : MonoBehaviour
+public class PlayerAnimation : MonoSingleton<PlayerAnimation>
 {
     // Dragon animators
     [SerializeField]
@@ -27,6 +27,24 @@ public class PlayerAnimation : MonoBehaviour
         { 0, new string[]{ "Sword_Attack1", "Archer_Attack1", "Night_Claw"}},
         { 1, new string[]{ "Sword_Attack3", "?", "?"}}
     };
+
+    // Animation clip length according to skill number
+    // Already consider player's state like dragon/class
+    public float GetAnimLength(int skillNumber)
+    {
+        name = GetAnimName(skillNumber);
+        AnimationClip[] anims = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < anims.Length; ++i)
+        {
+            if (anims[i].name == name)
+            {
+                Debug.Log($"{anims[i].name}: {anims[i].length}");
+                return anims[i].length;
+            }
+        }
+
+        throw new System.IndexOutOfRangeException();
+    }
 
     private void Start()
     {
@@ -65,7 +83,6 @@ public class PlayerAnimation : MonoBehaviour
 
     private void PlaySkillAnimation(int skillNumber)
     {
-        Debug.Log(GetAnimLength(GetAnimName(skillNumber)));
         // Need to accelerate the animation
         switch (skillNumber)
         {
@@ -170,20 +187,5 @@ public class PlayerAnimation : MonoBehaviour
                     throw new System.IndexOutOfRangeException();
             }
         }
-    }
-
-    private float GetAnimLength(string name)
-    {
-        AnimationClip[] anims = animator.runtimeAnimatorController.animationClips;
-        for (int i = 0; i < anims.Length; ++i)
-        {
-            if (anims[i].name == name)
-            {
-                Debug.Log($"{anims[i].name}: {anims[i].length}");
-                return anims[i].length;
-            }
-        }
-
-        return 0.0f;
     }
 }
