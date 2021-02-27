@@ -5,10 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoSingleton<PlayerMovement>
 {
+    public enum MovementState
+    {
+        Right,
+        Left,
+        Idle
+    }
+
+    public MovementState TurnDirection => turn;
+
     [SerializeField]
     private bool drawJumpingRay = false;
-    [SerializeField]
-    private float baseMovementSpeed = 3.0f;
+    private float baseMovementSpeed;
     [SerializeField]
     private int maxDragonJumpCount = 3;
     private int dragonJumpCount = 0;
@@ -22,20 +30,26 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private float glideFallingSpeed = 1.0f;
     private const float expandedColliderFactor = 1.0f; // 1.0f = full collider size
     private Rigidbody2D rigidbody2D;
-    private LayerMask groundLayer = 1 << groundLayerIndex;
-    private const int groundLayerIndex = 7; // Layer "Ground"
     private bool jumpKeyPressed = false;
     private bool jumpKeyHold = false;
     private bool isGrounded = false;
     private bool lastFrameWasGrounded = false;
-    private enum MovementState
-    {
-        Right,
-        Left,
-        Idle
-    }
     private MovementState movementState = MovementState.Idle;
+    private MovementState turn = MovementState.Right;
 
+    // Lock movement stuff
+    private bool isFlipLockedBySkills = false;
+    private bool isMovementLockedBySkills = false;
+    private bool isJumpLockedBySkills = false;
+    private bool stopAllMovement = false;
+    private float originalGravityScale;
+
+    // Lock function utility
+    private bool stateLock = false;
+    private float lockDuration = 0.0f;
+
+    // This could be cached and put private
+    // Letting other classes access through property instead
     public bool IsGrounded()
     {
         Vector2 position = transform.position;
@@ -61,9 +75,9 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             // Raycast to the ground layer only
-            RaycastHit2D hitLeft = Physics2D.Raycast(positionLeft, direction, distance, groundLayer);
-            RaycastHit2D hitCenter = Physics2D.Raycast(position, direction, distance, groundLayer);
-            RaycastHit2D hitRight = Physics2D.Raycast(positionRight, direction, distance, groundLayer);
+            RaycastHit2D hitLeft = Physics2D.Raycast(positionLeft, direction, distance, Layers.GroundLayer);
+            RaycastHit2D hitCenter = Physics2D.Raycast(position, direction, distance, Layers.GroundLayer);
+            RaycastHit2D hitRight = Physics2D.Raycast(positionRight, direction, distance, Layers.GroundLayer);
 
             // Grounded if left OR right OR center touches with the ground
             return hitLeft.collider != null || hitRight.collider != null || hitCenter.collider != null;
@@ -77,9 +91,64 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             // Raycast to the ground layer only
-            RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
+            RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, Layers.GroundLayer);
             return hit.collider != null;
         }
+    }
+
+    public void AddForceBySkill(Vector2 force)
+    {
+        rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
+
+    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip));
+
+    public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
+
+    private IEnumerator LockFlipBySkillPrivate(float duration)
+    {
+        isFlipLockedBySkills = true;
+        yield return new WaitForSeconds(duration);
+        isFlipLockedBySkills = false;
+    }
+
+    private IEnumerator LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
+    {
+        LockState(duration);
+        if (lockFlip)
+        {
+            LockFlipBySkill(duration);
+        }
+
+        // Disable old movement
+        rigidbody2D.velocity = Vector2.zero;
+        // Stop all movement?
+        this.stopAllMovement = stopAllMovement;
+        // Disable gravity too
+        rigidbody2D.gravityScale = 0.0f;
+        // Lock movement
+        isMovementLockedBySkills = true;
+
+        // Then wait
+        yield return new WaitForSeconds(duration);
+
+        if (!stateLock)
+        {
+            // Unlock
+            isMovementLockedBySkills = false;
+            this.stopAllMovement = false;
+            // Reenable gravity
+            rigidbody2D.gravityScale = originalGravityScale;
+        }
+    }
+
+    private IEnumerator LockJumpBySkillPrivate(float duration)
+    {
+        isJumpLockedBySkills = true;
+        yield return new WaitForSeconds(duration);
+        isJumpLockedBySkills = false;
     }
 
     private void UpdateIsGrounded()
@@ -91,10 +160,13 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        originalGravityScale = rigidbody2D.gravityScale;
 
         // Subscribe
         EventPublisher.PlayerJump += Jump;
         EventPublisher.PlayerLand += ResetDragonJumpCount;
+        EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
+        EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
     }
 
     private void OnDestroy()
@@ -102,6 +174,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Unsubscribe
         EventPublisher.PlayerJump -= Jump;
         EventPublisher.PlayerLand -= ResetDragonJumpCount;
+        EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
+        EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
     }
 
     // Update for listening to input
@@ -121,7 +195,10 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             ProcessJump();
             ProcessPlayerLanding();
             ProcessGlide();
+            ProcessStopAllMovement();
         }
+
+        ProcessLockState();
     }
 
     private void ListenInput()
@@ -163,52 +240,59 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void ProcessFlipping()
     {
-        switch (movementState)
+        // If player skill isn't locking player's direction
+        if (!isFlipLockedBySkills)
         {
-            case MovementState.Right:
-                // Turn the character facing right
-                TurnRight(true);
-                break;
-            case MovementState.Left:
-                // Turn left
-                TurnRight(false);
-                break;
-            default:
-                break;
+            switch (movementState)
+            {
+                case MovementState.Right:
+                    // Turn the character facing right
+                    Turn(movementState);
+                    break;
+                case MovementState.Left:
+                    // Turn left
+                    Turn(movementState);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
     private void ProcessMovement()
     {
-        // Move according to input
-        float horizontalMovement = 0.0f;
-        switch (movementState)
+        if (!isMovementLockedBySkills)
         {
-            case MovementState.Right:
-                horizontalMovement = 1.0f;
-                EventPublisher.TriggerPlayerRun();
-                break;
-            case MovementState.Left:
-                horizontalMovement = -1.0f;
-                EventPublisher.TriggerPlayerRun();
-                break;
-            default:
-                EventPublisher.TriggerPlayerStop();
-                break;
-        }
+            // Move according to input
+            float horizontalMovement = 0.0f;
+            switch (movementState)
+            {
+                case MovementState.Right:
+                    horizontalMovement = 1.0f;
+                    EventPublisher.TriggerPlayerRun();
+                    break;
+                case MovementState.Left:
+                    horizontalMovement = -1.0f;
+                    EventPublisher.TriggerPlayerRun();
+                    break;
+                default:
+                    EventPublisher.TriggerPlayerStop();
+                    break;
+            }
 
-        float velocityX = 0.0f;
-        if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
-        {
-            // The dragon is gliding
-            velocityX = horizontalMovement * dragonGlidingSpeed;
-        }
-        else
-        {
-            velocityX = horizontalMovement * baseMovementSpeed;
-        }
+            float velocityX = 0.0f;
+            if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
+            {
+                // The dragon is gliding
+                velocityX = horizontalMovement * dragonGlidingSpeed;
+            }
+            else
+            {
+                velocityX = horizontalMovement * baseMovementSpeed;
+            }
 
-        rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+            rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+        }
     }
 
     private void ProcessJump()
@@ -218,7 +302,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         //     jumpKeyPressed = false;
         // }
 
-        if (jumpKeyPressed)
+        if (jumpKeyPressed && !isJumpLockedBySkills)
         {
             if (PlayerAbilities.Instance.IsDragonForm)
             {
@@ -264,6 +348,33 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         }
     }
 
+    private void ProcessStopAllMovement()
+    {
+        if (stopAllMovement)
+        {
+            rigidbody2D.velocity = Vector2.zero;
+        }
+    }
+
+    private void ProcessLockState()
+    {
+        if (stateLock)
+        {
+            lockDuration -= Time.deltaTime;
+            if (lockDuration <= 0.0f)
+            {
+                // Unlock
+                stateLock = false;
+            }
+        }
+    }
+
+    private void LockState(float duration)
+    {
+        stateLock = true;
+        lockDuration = duration;
+    }
+
     private void Jump()
     {
         // Jump
@@ -290,18 +401,63 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         lastFrameWasGrounded = isGrounded;
     }
 
-    private void TurnRight(bool right)
+    private void Turn(MovementState side)
     {
         float x = 0.0f;
-        if (right)
+        switch (side)
         {
-            x = Mathf.Abs(transform.localScale.x);
-        }
-        else
-        {
-            x = -Mathf.Abs(transform.localScale.x);
+            case MovementState.Right:
+                x = Mathf.Abs(transform.localScale.x);
+                break;
+            case MovementState.Left:
+                x = -Mathf.Abs(transform.localScale.x);
+                break;
+            case MovementState.Idle:
+                throw new System.InvalidOperationException();
+            default:
+                throw new System.NotImplementedException();
         }
 
+        turn = side;
         transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
+    }
+
+    private void UpdateMoveSpeedOnChangeClass(PlayerClass playerClass)
+    {
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        ClassConfig config;
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                config = playerConfig.SwordConfig;
+                break;
+            case PlayerClass.Archer:
+                config = playerConfig.ArcherConfig;
+                break;
+            default:
+                throw new System.InvalidOperationException();
+        }
+
+        baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, config.agi);
+    }
+
+    private void UpdateMoveSpeedOnStatsChange(Stats stats)
+    {
+        PlayerClass playerClass = PlayerAbilities.Instance.CurrentClass;
+        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+        ClassConfig config;
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                config = playerConfig.SwordConfig;
+                break;
+            case PlayerClass.Archer:
+                config = playerConfig.ArcherConfig;
+                break;
+            default:
+                throw new System.InvalidOperationException();
+        }
+
+        baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, stats.agi);
     }
 }

@@ -6,21 +6,20 @@ public class PlayerHealth : Health
 {
     // Can't multiple inherit so we need to handmade a singleton here
     public static PlayerHealth Instance { get; private set; }
-
-    [SerializeField]
-    private float playerMaxHealth = 200.0f;
     [SerializeField]
     private BoxCollider2D playerCollider;
 
     override protected void Start()
     {
-        maxHealth = playerMaxHealth;
+        maxHealth = ConfigContainer.Instance.GetPlayerConfig.MaxHealth;
         base.Start();
         collider2D = GetComponent<BoxCollider2D>();
         if (playerCollider != null)
         {
             collider2D = playerCollider;
         }
+
+        EventPublisher.PlayerStatsChange += AdjustMaxHealth;
     }
 
     protected override void HandleHealthChange()
@@ -34,10 +33,28 @@ public class PlayerHealth : Health
         EventPublisher.TriggerPlayerDead();
     }
 
-    private void SetPlayerAttributes()
+    private void OnDestroy()
     {
-        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        playerMaxHealth = playerConfig.MaxHealth;
+        EventPublisher.PlayerStatsChange -= AdjustMaxHealth;
+    }
+
+    private void AdjustMaxHealth(Stats stats)
+    {
+        float finalMaxHealth = PlayerStats.CalculateMaxHealth(ConfigContainer.Instance.GetPlayerConfig.MaxHealth, stats.vit);
+        if (finalMaxHealth > maxHealth)
+        {
+            // Increase current health with the same amount of max health increased
+            float maxHealthIncreased = finalMaxHealth - maxHealth;
+            currentHealth += maxHealthIncreased;
+        }
+
+        maxHealth = finalMaxHealth;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        EventPublisher.TriggerPlayerHealthChange();
     }
 
     private void Awake()
@@ -49,14 +66,6 @@ public class PlayerHealth : Health
         else
         {
             DestroyImmediate(gameObject);
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            TakeDamage(4.78f);
         }
     }
 }
