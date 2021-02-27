@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 {
-    public bool IsDragonForm => isDragonForm;
     public PlayerClass CurrentClass => currentClass;
 
     [SerializeField]
@@ -18,7 +17,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     [SerializeField]
     private GameObject fireBreath;
     private float[] timeSinceLastSkillUsed = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
-    private bool isDragonForm = false;
     private SwordSkills swordSkills;
     private ArcherSkills archerSkills;
     private DragonSkills dragonSkills;
@@ -45,7 +43,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         // Subscribe
         EventPublisher.PlayerUseSkill += ActivateSkill;
-        EventPublisher.PlayerShapeshift += Shapeshift;
+        EventPublisher.PlayerShapeshift += ToggleSkillSet;
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.StopFireBreath += StopFireBreath;
 
@@ -61,14 +59,12 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         {
             timeSinceLastSkillUsed[i] = current.SkillCooldown[i];
         }
-
-
     }
 
     private void OnDestroy()
     {
         EventPublisher.PlayerUseSkill -= ActivateSkill;
-        EventPublisher.PlayerShapeshift -= Shapeshift;
+        EventPublisher.PlayerShapeshift -= ToggleSkillSet;
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.StopFireBreath -= StopFireBreath;
     }
@@ -94,7 +90,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         if (!PlayerHealth.Instance.IsDead)
         {
             ListenToAttackEvent();
-            ListenToShapeshiftEvent();
+
         }
     }
 
@@ -119,7 +115,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
         }
-        else if (InputManager.Skill2Release && IsDragonForm)
+        else if (InputManager.Skill2Release && DragonGauge.Instance.IsDragonForm)
         {
             // Stop fire breath
             EventPublisher.TriggerStopFireBreath();
@@ -131,16 +127,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         float currentCooldown = GetCurrentSkillCooldown(number);
         bool readyToAttack = currentCooldown <= 0.01f;
         return readyToAttack;
-    }
-
-    private void ListenToShapeshiftEvent()
-    {
-        if (InputManager.Shapeshift)
-        {
-            // Player transforms here
-            isDragonForm = !isDragonForm;
-            EventPublisher.TriggerPlayerShapeshift(isDragonForm);
-        }
     }
 
     private void ActivateSkill(int skillNumber)
@@ -170,7 +156,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         dragon.Skill2Release();
     }
 
-    private void Shapeshift(bool isDragon)
+    private void ToggleSkillSet(bool isDragon)
     {
         if (isDragon)
         {
@@ -217,14 +203,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
         // Assign dragon skills
         dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, current.PStats, fireBreath);
-
-        // Player should not be in dragon form when changing class, just in case
-        if (IsDragonForm)
-        {
-            // Player dragon down
-            isDragonForm = !isDragonForm;
-            EventPublisher.TriggerPlayerShapeshift(isDragonForm);
-        }
     }
 
     private Vector2 GetForwardVector()

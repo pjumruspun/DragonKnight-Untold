@@ -58,9 +58,9 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -0.3986381, y: 0.7392747}
-      - {x: -1.3031818, y: 0.8291941}
-      - {x: -0.33263996, y: 0.053337812}
-      - {x: -1.0266408, y: -0.617613}
+      - {x: -1.9090829, y: 0.7512925}
+      - {x: -0.9125738, y: 0.018714875}
+      - {x: -1.4507717, y: -0.58299005}
       - {x: 0.42510647, y: -0.6176299}
       - {x: 0.6784086, y: 0.025720775}
 --- !u!114 &911877144
@@ -134,10 +134,10 @@ PolygonCollider2D:
     m_Paths:
     - - {x: -0.3636354, y: 0.64593405}
       - {x: -0.9414871, y: 0.4908347}
-      - {x: -0.36769012, y: 0.10007143}
+      - {x: -0.8063818, y: -0.6036631}
       - {x: -0.3023015, y: -0.6059929}
       - {x: 0.42510647, y: -0.6176299}
-      - {x: 0.4917276, y: 0.27073973}
+      - {x: 0.500867, y: 0.29815796}
 --- !u!114 &1937013507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 500538367555941619}
   - component: {fileID: 500538367555941618}
   - component: {fileID: 500538367555941617}
+  - component: {fileID: 426988451819479028}
   - component: {fileID: 500538367555941621}
   - component: {fileID: 500538367555941624}
   - component: {fileID: 500538367555941620}
@@ -260,6 +261,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &426988451819479028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b644968464224ad3a40d78531e4e1c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drainingRate: 2
+  regenRate: 1
 --- !u!50 &500538367555941621
 Rigidbody2D:
   serializedVersion: 4
@@ -297,6 +312,7 @@ MonoBehaviour:
   dragonPrimaryHitbox: {fileID: 911877144}
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
   swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
+  fireBreath: {fileID: 0}
 --- !u!114 &500538367555941620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,7 +340,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1a8459e836a543f587bd569b1d1b80d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMaxHealth: 200
   playerCollider: {fileID: 0}
 --- !u!114 &500538367555941623
 MonoBehaviour:
@@ -339,7 +354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawJumpingRay: 0
-  baseMovementSpeed: 5
   maxDragonJumpCount: 3
   dragonGlidingSpeed: 8
   jumpingForce: 8

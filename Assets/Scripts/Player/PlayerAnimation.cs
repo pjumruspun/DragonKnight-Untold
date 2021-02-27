@@ -92,7 +92,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 animator.SetTrigger("PrimaryAttack");
                 break;
             case 1:
-                if (PlayerAbilities.Instance.IsDragonForm)
+                if (DragonGauge.Instance.IsDragonForm)
                 {
                     // Fire breath
                     animator.SetBool("Fire", true);
@@ -184,7 +184,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
 
     private int GetIndex()
     {
-        if (PlayerAbilities.Instance.IsDragonForm)
+        if (DragonGauge.Instance.IsDragonForm)
         {
             // Map to night's animation
             return 2;

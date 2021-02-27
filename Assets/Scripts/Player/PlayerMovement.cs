@@ -299,7 +299,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             float velocityX = 0.0f;
-            if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
+            if (DragonGauge.Instance.IsDragonForm && !isGrounded)
             {
                 // The dragon is gliding
                 velocityX = horizontalMovement * dragonGlidingSpeed;
@@ -317,7 +317,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     {
         if (jumpKeyPressed && !isJumpLockedBySkills)
         {
-            if (PlayerAbilities.Instance.IsDragonForm)
+            if (DragonGauge.Instance.IsDragonForm)
             {
                 // Player is in dragon form and wants to jump
                 if (dragonJumpCount < maxDragonJumpCount)
@@ -354,7 +354,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // If jump key is hold and player is in the air
         // With falling speed more than glide falling speed
         // And if player is in dragon mode
-        if (jumpKeyHold && !isGrounded && rigidbody2D.velocity.y < glideFallingSpeed && PlayerAbilities.Instance.IsDragonForm)
+        if (jumpKeyHold && !isGrounded && rigidbody2D.velocity.y < glideFallingSpeed && DragonGauge.Instance.IsDragonForm)
         {
             // Set the falling speed to glide falling speed
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, -glideFallingSpeed);

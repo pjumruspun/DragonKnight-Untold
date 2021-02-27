@@ -93,7 +93,7 @@ public class DragonSkills : PlayerSkills
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.0f);
+            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f);
         }
     }
 }
