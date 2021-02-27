@@ -24,6 +24,8 @@ public class Projectile : MonoBehaviour
     private Vector2 direction;
     private float damage;
     private bool crit;
+    private float superArmorDamage;
+    private float knockAmplitude;
 
     public void SetDirection(Vector2 direction)
     {
@@ -35,6 +37,16 @@ public class Projectile : MonoBehaviour
     {
         this.damage = damage;
         this.crit = crit;
+    }
+
+    public void SetSuperArmorDamage(float superArmorDamage)
+    {
+        this.superArmorDamage = superArmorDamage;
+    }
+
+    public void SetKnockValue(float knockAmplitude)
+    {
+        this.knockAmplitude = knockAmplitude;
     }
 
     private void HandleFlip()
@@ -102,7 +114,7 @@ public class Projectile : MonoBehaviour
                 if (other.gameObject.layer == Layers.enemyLayerIndex && other.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
                     // Deals damage to enemy
-                    enemy.TakeDamage(damage, crit);
+                    enemy.TakeDamage(damage, crit, superArmorDamage, knockAmplitude);
                 }
                 break;
             case Target.Player:

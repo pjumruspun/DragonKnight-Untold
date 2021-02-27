@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class PlayerAttackHitbox : MonoBehaviour
 {
     public HashSet<Collider2D> HitColliders => hitColliders;

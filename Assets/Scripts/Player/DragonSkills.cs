@@ -6,19 +6,27 @@ using System;
 public class DragonSkills : PlayerSkills
 {
     private PlayerAttackHitbox dragonPrimaryHitbox;
+    private PlayerAttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4];
     private float[] dragonAttackCooldown = new float[4];
     // for testing
     private float dragonSuperArmorAttack = 100.0f;
+    private GameObject fireBreath;
+    private Coroutine fireBreathCoroutine;
 
     public DragonSkills(
         Transform transform,
         PlayerAttackHitbox dragonPrimaryHitbox,
-        PlayerStats stats
+        PlayerStats stats,
+        GameObject fireBreath
     ) : base(transform)
     {
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.stats = stats; // Player class stats
+        this.fireBreath = fireBreath;
+        this.fireBreathHitbox = fireBreath.GetComponent<PlayerAttackHitbox>();
+
+        this.fireBreath.SetActive(false);
 
         DragonConfig config = ConfigContainer.Instance.GetPlayerConfig.NightDragonConfig;
         config.dragonAttackDamage.CopyTo(this.dragonAttackDamage, 0);
@@ -52,7 +60,7 @@ public class DragonSkills : PlayerSkills
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
-        AttackWithHitbox(dragonPrimaryHitbox, playerConfig.NightDragonConfig.dragonAttackDamage[0], dragonSuperArmorAttack);
+        AttackWithHitbox(dragonPrimaryHitbox, playerConfig.NightDragonConfig.dragonAttackDamage[0], dragonSuperArmorAttack, knockAmplitude: 3.0f);
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
@@ -61,6 +69,31 @@ public class DragonSkills : PlayerSkills
         float damage = dragonAttackDamage[1];
 
         // Dragon Skill 2
-        Debug.Log("Still not implemented");
+        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(0.1f, 0.33f));
+        Debug.Log("Fire breath start");
+        movement.LockJumpBySkill(true);
+        movement.LockFlipBySkill(true);
+        movement.LockMovementBySkill(true);
+    }
+
+    public void Skill2Release()
+    {
+        fireBreath.SetActive(false);
+        CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+        Debug.Log("Fire breath stop");
+        movement.LockJumpBySkill(false);
+        movement.LockFlipBySkill(false);
+        movement.LockMovementBySkill(false);
+    }
+
+    private IEnumerator DelayedFireBreath(float delay, float interval)
+    {
+        yield return new WaitForSeconds(delay);
+        fireBreath.SetActive(true);
+        while (true)
+        {
+            yield return new WaitForSeconds(interval);
+            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.0f);
+        }
     }
 }

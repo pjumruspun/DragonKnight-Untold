@@ -55,7 +55,7 @@ public abstract class PlayerSkills : System.IDisposable
         }
     }
 
-    protected void AttackWithProjectile(ref ObjectPool objectPool, float damage, Vector3 currentPlayerPosition, Vector2 forwardVector, float rotationZ = 0.0f)
+    protected void AttackWithProjectile(ref ObjectPool objectPool, float damage, Vector3 currentPlayerPosition, Vector2 forwardVector, float rotationZ = 0.0f, float knockAmplitude = 0.0f)
     {
         GameObject spawnedObject = objectPool.SpawnObject(currentPlayerPosition, Quaternion.identity);
 
@@ -70,11 +70,12 @@ public abstract class PlayerSkills : System.IDisposable
             forwardVector = Quaternion.Euler(0.0f, 0.0f, rotationZ) * forwardVector;
         }
 
-        if (spawnedObject.TryGetComponent<Projectile>(out Projectile arrow))
+        if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            arrow.SetDirection(forwardVector);
+            projectile.SetDirection(forwardVector);
             stats.CalculateDamage(damage, out float finalDamage, out bool crit);
-            arrow.SetDamage(finalDamage, crit);
+            projectile.SetDamage(finalDamage, crit);
+            projectile.SetKnockValue(knockAmplitude);
         }
         else
         {
@@ -82,7 +83,7 @@ public abstract class PlayerSkills : System.IDisposable
         }
     }
 
-    protected void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage, float superArmorDamage = 0.0f)
+    protected void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage, float superArmorDamage = 0.0f, float knockAmplitude = 0.0f)
     {
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
@@ -96,7 +97,7 @@ public abstract class PlayerSkills : System.IDisposable
                 {
                     // Damage the enemy here
                     stats.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
-                    enemy.TakeDamage(finalDamage, crit, superArmorDamage);
+                    enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockAmplitude);
                 }
                 else
                 {
@@ -117,36 +118,4 @@ public abstract class PlayerSkills : System.IDisposable
             desiredHitbox.HitColliders.Remove(unrelatedCollider);
         }
     }
-
-    // // This one is triggered by PlayerAbilities.Start()
-    // private void AdjustClassAttributes(PlayerClass playerClass)
-    // {
-    //     // This should be put in Adjust dragon stats function once it's implemented
-    //     dragonAttackDamage = this.playerConfig.NightDragonConfig.dragonAttackDamage;
-    //     dragonAttackCooldown = this.playerConfig.NightDragonConfig.dragonAttackCooldown;
-
-    //     // Now change the class
-    //     this.playerClass = playerClass;
-    //     ClassConfig config;
-    //     switch (playerClass)
-    //     {
-    //         case PlayerClass.Sword:
-    //             config = playerConfig.SwordConfig;
-    //             break;
-    //         case PlayerClass.Archer:
-    //             config = playerConfig.ArcherConfig;
-    //             break;
-    //         default:
-    //             throw new System.InvalidOperationException();
-    //     }
-
-    //     // Load base skill damage
-    //     skillDamage = config.skillDamage;
-
-    //     // Load config cooldowns into PlayerStats
-    //     this.stats.AssignSkillCooldown(config.skillCooldown);
-
-    //     // Load config stats into PlayerStats
-    //     this.stats.AssignStats(new Stats(config.atk, config.agi, config.vit, config.tal, config.luk));
-    // }
 }

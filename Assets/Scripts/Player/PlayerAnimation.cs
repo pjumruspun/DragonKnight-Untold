@@ -61,6 +61,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerShapeshift += PlayShapeshiftAnimation;
         EventPublisher.PlayerDead += PlayDeadAnimation;
         EventPublisher.PlayerChangeClass += ChangeHumanAnimator;
+        EventPublisher.StopFireBreath += PlayStopFireBreathAnimation;
     }
 
     private void Update()
@@ -79,6 +80,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerShapeshift -= PlayShapeshiftAnimation;
         EventPublisher.PlayerDead -= PlayDeadAnimation;
         EventPublisher.PlayerChangeClass -= ChangeHumanAnimator;
+        EventPublisher.StopFireBreath -= PlayStopFireBreathAnimation;
     }
 
     private void PlaySkillAnimation(int skillNumber)
@@ -90,7 +92,15 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 animator.SetTrigger("PrimaryAttack");
                 break;
             case 1:
-                animator.SetTrigger("Skill2");
+                if (PlayerAbilities.Instance.IsDragonForm)
+                {
+                    // Fire breath
+                    animator.SetBool("Fire", true);
+                }
+                else
+                {
+                    animator.SetTrigger("Skill2");
+                }
                 break;
             case 2:
                 throw new System.NotImplementedException();
@@ -99,7 +109,6 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
             default:
                 throw new System.InvalidOperationException();
         }
-
     }
 
     private void PlayJumpAnimation()
@@ -145,6 +154,11 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     private void PlayDeadAnimation()
     {
         animator.SetBool("Dead", true);
+    }
+
+    private void PlayStopFireBreathAnimation()
+    {
+        animator.SetBool("Fire", false);
     }
 
     private void ChangeHumanAnimator(PlayerClass playerClass)

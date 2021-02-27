@@ -101,6 +101,24 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         rigidbody2D.AddForce(force, ForceMode2D.Impulse);
     }
 
+    // Set reset lockers
+    public void LockFlipBySkill(bool lockFlip) => isFlipLockedBySkills = lockFlip;
+
+    public void LockMovementBySkill(bool lockMovement)
+    {
+        if (lockMovement)
+        {
+            rigidbody2D.velocity = Vector2.zero;
+        }
+
+        this.stopAllMovement = lockMovement;
+        rigidbody2D.gravityScale = lockMovement ? 0.0f : originalGravityScale;
+        isMovementLockedBySkills = lockMovement;
+    }
+
+    public void LockJumpBySkill(bool lockJump) => isJumpLockedBySkills = lockJump;
+
+    // Release automatically lockers
     public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
 
     public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip));
@@ -297,11 +315,6 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void ProcessJump()
     {
-        // if (!isGrounded)
-        // {
-        //     jumpKeyPressed = false;
-        // }
-
         if (jumpKeyPressed && !isJumpLockedBySkills)
         {
             if (PlayerAbilities.Instance.IsDragonForm)

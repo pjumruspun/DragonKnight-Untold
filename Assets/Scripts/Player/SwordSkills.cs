@@ -31,7 +31,7 @@ public class SwordSkills : PlayerSkills
         movement.LockMovementBySkill(animLength, true, true);
 
         // Then attack
-        AttackWithHitbox(swordPrimaryHitbox, damage);
+        AttackWithHitbox(swordPrimaryHitbox, damage, knockAmplitude: 1.5f);
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
@@ -55,6 +55,6 @@ public class SwordSkills : PlayerSkills
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
     {
         yield return new WaitForSeconds(delay);
-        AttackWithProjectile(ref swordWaves, damage, transform.position, forwardVector);
+        AttackWithProjectile(ref swordWaves, damage, transform.position, forwardVector, knockAmplitude: 2.0f);
     }
 }

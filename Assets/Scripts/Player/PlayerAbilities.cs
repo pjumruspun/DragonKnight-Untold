@@ -15,6 +15,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private GameObject arrowPrefab;
     [SerializeField]
     private GameObject swordWavePrefab;
+    [SerializeField]
+    private GameObject fireBreath;
     private float[] timeSinceLastSkillUsed = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
     private bool isDragonForm = false;
     private SwordSkills swordSkills;
@@ -45,6 +47,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         EventPublisher.PlayerUseSkill += ActivateSkill;
         EventPublisher.PlayerShapeshift += Shapeshift;
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
+        EventPublisher.StopFireBreath += StopFireBreath;
 
         // Initialize player skills
         swordSkills = new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
@@ -67,6 +70,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         EventPublisher.PlayerUseSkill -= ActivateSkill;
         EventPublisher.PlayerShapeshift -= Shapeshift;
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
+        EventPublisher.StopFireBreath -= StopFireBreath;
     }
 
     private void Update()
@@ -115,6 +119,11 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
         }
+        else if (InputManager.Skill2Release && IsDragonForm)
+        {
+            // Stop fire breath
+            EventPublisher.TriggerStopFireBreath();
+        }
     }
 
     private bool IsSkillReady(int number)
@@ -155,6 +164,12 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         timeSinceLastSkillUsed[skillNumber] = 0.0f;
     }
 
+    private void StopFireBreath()
+    {
+        DragonSkills dragon = (DragonSkills)current;
+        dragon.Skill2Release();
+    }
+
     private void Shapeshift(bool isDragon)
     {
         if (isDragon)
@@ -163,6 +178,10 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         }
         else
         {
+            // Stop breathing fire first as we need current to be
+            // instance of DragonSkill
+            EventPublisher.TriggerStopFireBreath();
+
             // Change current skill sets back
             switch (currentClass)
             {
@@ -197,7 +216,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         }
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, current.PStats);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, current.PStats, fireBreath);
 
         // Player should not be in dragon form when changing class, just in case
         if (IsDragonForm)

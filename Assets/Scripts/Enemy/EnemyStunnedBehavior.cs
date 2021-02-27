@@ -48,7 +48,7 @@ public class EnemyStunnedBehavior : EnemyBehavior
         rigidbody2D.gravityScale = cachedGravityScale;
     }
 
-    public void Test()
+    public void KnockedUp(float amplitude)
     {
         if (isStunned && Mathf.Abs(velocityY) > 0.01f)
         {
@@ -56,7 +56,7 @@ public class EnemyStunnedBehavior : EnemyBehavior
             // Disable vy
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0.0f);
             // Then add force
-            rigidbody2D.AddForce(2 * Vector2.up, ForceMode2D.Impulse);
+            rigidbody2D.AddForce(amplitude * Vector2.up, ForceMode2D.Impulse);
         }
     }
 
