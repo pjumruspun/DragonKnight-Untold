@@ -10,7 +10,7 @@ public class DragonSkills : PlayerSkills
     private float[] dragonAttackDamage = new float[4];
     private float[] dragonAttackCooldown = new float[4];
     // for testing
-    private float dragonSuperArmorAttack = 100.0f;
+    private float dragonSuperArmorAttack = 50.0f;
     private GameObject fireBreath;
     private Coroutine fireBreathCoroutine;
 
