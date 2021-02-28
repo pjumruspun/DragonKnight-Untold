@@ -79,7 +79,11 @@ public class DragonSkills : PlayerSkills
     public void Skill2Release()
     {
         fireBreath.SetActive(false);
-        CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+        if (fireBreathCoroutine != null)
+        {
+            CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+        }
+
         Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
         movement.LockFlipBySkill(false);

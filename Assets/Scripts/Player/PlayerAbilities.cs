@@ -22,6 +22,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private DragonSkills dragonSkills;
     private PlayerSkills current;
     private PlayerClass currentClass;
+    private List<Buff> buffs;
 
 
     public void ChangeClass(PlayerClass playerClass)
@@ -84,6 +85,12 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             {
                 ChangeClass(PlayerClass.Sword);
             }
+        }
+
+        // Debugging
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+
         }
 
         // If the player is still alive
@@ -218,5 +225,10 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             default:
                 throw new System.NotImplementedException();
         }
+    }
+
+    private void AddBuff(Buff buff)
+    {
+        // TODO
     }
 }
