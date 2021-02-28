@@ -29,6 +29,11 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.TriggerPlayerChangeClass(playerClass);
     }
 
+    public float[] GetCurrentCooldown()
+    {
+        return CurrentSkills().GetCurrentCooldown();
+    }
+
     public float CurrentCooldownPercentage(int skillNumber)
     {
         return CurrentSkills().CurrentCooldownPercentage(skillNumber);

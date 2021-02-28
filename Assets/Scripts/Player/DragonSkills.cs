@@ -33,7 +33,7 @@ public class DragonSkills : PlayerSkills
         config.dragonAttackCooldown.CopyTo(this.dragonAttackCooldown, 0);
     }
 
-    public override IReadOnlyList<float> GetCurrentCooldown()
+    public override float[] GetCurrentCooldown()
     {
         return currentCooldown;
     }

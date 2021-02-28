@@ -51,16 +51,21 @@ public class ArcherSkills : PlayerSkills
         }
 
         // Then spawn arrow rains
-        int arrowCount = configs.ArcherSkill2ArrowCount;
-        float interval = configs.ArcherSkill2Interval;
+        int arrowCount = 3; // configs.ArcherSkill2ArrowCount;
+        float interval = 0.3f; // configs.ArcherSkill2Interval;
         CoroutineUtility.Instance.CreateCoroutine(ArrowRain(arrowCount, damage, forwardVector, interval));
     }
 
     private IEnumerator ArrowRain(int count, float damage, Vector2 forwardVector, float interval)
     {
+        // Spawns 5x3 arrows
         for (int i = 0; i < count; ++i)
         {
-            AttackWithProjectile(ref arrows, damage, transform.position, forwardVector, Random.Range(-20.0f, -50.0f));
+            for (int j = 0; j < 5; ++j)
+            {
+                AttackWithProjectile(ref arrows, damage, transform.position, forwardVector, -7.5f - j * 15.0f);
+            }
+
             yield return new WaitForSeconds(interval);
         }
     }

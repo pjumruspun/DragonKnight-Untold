@@ -17,7 +17,7 @@ public abstract class PlayerSkills
     /// currentCooldown[i] has the range of [0, stats.SkillCooldown[i]].
     /// </summary>
     /// <returns></returns>
-    public virtual IReadOnlyList<float> GetCurrentCooldown()
+    public virtual float[] GetCurrentCooldown()
     {
         // Need to be a method because it needs to be overriden
         return currentCooldown;

@@ -121,7 +121,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     // Release automatically lockers
     public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
 
-    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip));
+    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip);
 
     public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
 
@@ -132,7 +132,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         isFlipLockedBySkills = false;
     }
 
-    private IEnumerator LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
+    private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
     {
         LockState(duration);
         if (lockFlip)
@@ -148,18 +148,6 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         rigidbody2D.gravityScale = 0.0f;
         // Lock movement
         isMovementLockedBySkills = true;
-
-        // Then wait
-        yield return new WaitForSeconds(duration);
-
-        if (!stateLock)
-        {
-            // Unlock
-            isMovementLockedBySkills = false;
-            this.stopAllMovement = false;
-            // Reenable gravity
-            rigidbody2D.gravityScale = originalGravityScale;
-        }
     }
 
     private IEnumerator LockJumpBySkillPrivate(float duration)
@@ -378,6 +366,14 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             {
                 // Unlock
                 stateLock = false;
+                Debug.Log("Unlock");
+
+                // Unlock
+                isMovementLockedBySkills = false;
+                this.stopAllMovement = false;
+                // Reenable gravity
+                rigidbody2D.gravityScale = originalGravityScale;
+                Debug.Log("Unlock successfully");
             }
         }
     }
