@@ -9,15 +9,13 @@ public class SwordSkills : PlayerSkills
 
     public SwordSkills(
         Transform transform,
+        ref PlayerStats stats,
         PlayerAttackHitbox swordPrimaryHitbox,
         GameObject swordWavePrefab
-    ) : base(transform)
+    ) : base(transform, ref stats)
     {
         this.swordWaves = new ObjectPool(swordWavePrefab, 20);
         this.swordPrimaryHitbox = swordPrimaryHitbox;
-
-        // Init sword stats
-        this.stats = PlayerStats.Create(PlayerClass.Sword);
     }
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)

@@ -17,9 +17,9 @@ public class DragonSkills : PlayerSkills
     public DragonSkills(
         Transform transform,
         PlayerAttackHitbox dragonPrimaryHitbox,
-        PlayerStats stats,
+        ref PlayerStats stats,
         GameObject fireBreath
-    ) : base(transform)
+    ) : base(transform, ref stats)
     {
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.stats = stats; // Player class stats

@@ -8,11 +8,11 @@ public class ArcherSkills : PlayerSkills
 
     public ArcherSkills(
         Transform transform,
+        ref PlayerStats stats,
         GameObject arrowPrefab
-    ) : base(transform)
+    ) : base(transform, ref stats)
     {
         arrows = new ObjectPool(arrowPrefab, 20);
-        this.stats = PlayerStats.Create(PlayerClass.Archer);
     }
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)

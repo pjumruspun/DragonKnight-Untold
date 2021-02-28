@@ -19,6 +19,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private DragonSkills dragonSkills;
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
+    private PlayerStats stats;
     private List<Buff> buffs;
 
     public void ChangeClass(PlayerClass playerClass)
@@ -144,6 +145,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private void ProcessChangingClass(PlayerClass playerClass)
     {
+        // Don't forget to transfer items and perks here once it's done
+
         // Change class label
         currentClass = playerClass;
 
@@ -151,7 +154,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         humanSkills = CreatePlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, humanSkills.PStats, fireBreath);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, ref this.stats, fireBreath);
     }
 
     private Vector2 GetForwardVector()
@@ -176,13 +179,19 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
     {
+        // Create stats, this is just base stats for now
+        // We might want something more flexible than this later on
+        this.stats = PlayerStats.Create(playerClass);
+
         // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
-                return new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
+                // Send this.stats pointer in
+                return new SwordSkills(transform, ref this.stats, swordPrimaryHitbox, swordWavePrefab);
             case PlayerClass.Archer:
-                return new ArcherSkills(transform, arrowPrefab);
+                // Send this.stats pointer in
+                return new ArcherSkills(transform, ref this.stats, arrowPrefab);
             default:
                 throw new System.ArgumentOutOfRangeException();
         }

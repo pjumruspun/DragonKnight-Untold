@@ -4,18 +4,13 @@ using UnityEngine;
 
 public abstract class PlayerSkills
 {
-    public IReadOnlyList<float> CooldownCap => stats.SkillCooldown;
-
-    /// <summary>
-    /// Player's stats.
-    /// </summary>
-    public PlayerStats PStats => stats;
+    // Cache
     protected Transform transform;
     protected PlayerConfig playerConfig;
     protected AdditionalSkillConfigs configs;
     protected PlayerMovement movement;
-    protected PlayerStats stats;
     protected float[] currentCooldown;
+    protected PlayerStats stats;
 
     /// <summary>
     /// Returns current cooldown of every skill.
@@ -38,13 +33,14 @@ public abstract class PlayerSkills
         return currentCooldown[skillNumber] / stats.SkillCooldown[skillNumber];
     }
 
-    public PlayerSkills(Transform transform)
+    public PlayerSkills(Transform transform, ref PlayerStats stats)
     {
         // Cache
         playerConfig = ConfigContainer.Instance.GetPlayerConfig;
         configs = playerConfig.AdditionalConfigs;
         movement = PlayerMovement.Instance;
         this.transform = transform;
+        this.stats = stats;
         currentCooldown = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
     }
 

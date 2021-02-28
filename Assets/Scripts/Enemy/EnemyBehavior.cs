@@ -7,7 +7,6 @@ public class EnemyBehavior : StateMachineBehaviour
     // Cached speed
     protected float cachedActualSpeed;
 
-
     // Other stuff
     protected Animator animator;
     protected Transform transform;
