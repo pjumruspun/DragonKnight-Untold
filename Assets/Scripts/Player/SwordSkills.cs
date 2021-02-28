@@ -22,6 +22,8 @@ public class SwordSkills : PlayerSkills
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill1(currentPlayerPosition, forwardVector);
+
         // Primary attack = skillDamage[0]
         float damage = stats.BaseSkillDamage[0];
 
@@ -36,6 +38,8 @@ public class SwordSkills : PlayerSkills
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill2(currentPlayerPosition, forwardVector);
+
         // Skill 2 = skillDamage[1]
         float damage = stats.BaseSkillDamage[1];
 
@@ -47,10 +51,10 @@ public class SwordSkills : PlayerSkills
         CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, configs.SwordSkill2DelayTime));
     }
 
-    public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
-    {
-        return base.GetCurrentCooldown(skillNumber, timeSinceLastExecuted, percentage);
-    }
+    // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    // {
+    //     return base.GetCurrentCooldown(skillNumber, timeSinceLastExecuted, percentage);
+    // }
 
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
     {

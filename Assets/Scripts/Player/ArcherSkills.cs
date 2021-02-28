@@ -17,6 +17,8 @@ public class ArcherSkills : PlayerSkills
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill1(currentPlayerPosition, forwardVector);
+
         // Primary attack = skillDamage[0]
         float damage = stats.BaseSkillDamage[0];
         // Spawn arrow
@@ -25,6 +27,8 @@ public class ArcherSkills : PlayerSkills
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill2(currentPlayerPosition, forwardVector);
+
         // Skill 2 = skillDamage[1]
         float damage = stats.BaseSkillDamage[1];
 

@@ -5451,6 +5451,7 @@ MonoBehaviour:
   - {fileID: 211460979}
   - {fileID: 144691660}
   - {fileID: 1151512850}
+  cooldownlabels: []
 --- !u!1001 &704953466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5617,10 +5618,10 @@ MonoBehaviour:
       - 1
       - 1
       atk: 5
-      agi: 30
+      agi: 50
       vit: 10
       tal: 10
-      luk: 25
+      luk: 50
       baseMoveSpeed: 3
       baseHealthRegen: 1
     ArcherConfig:

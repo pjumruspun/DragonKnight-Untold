@@ -24,7 +24,7 @@ public struct Stats
 
 public class PlayerStats
 {
-    public IReadOnlyList<float> SkillCooldown => CalculateSkillCooldown();
+    public float[] SkillCooldown => CalculateSkillCooldown();
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
     // Visible stats
@@ -141,7 +141,7 @@ public class PlayerStats
     // This is very expensive as it's currently calculating every frame
     // This could be cached into a variable and only calculate when the cooldown has changed
     // Can do it later when the game is lagging
-    private IReadOnlyList<float> CalculateSkillCooldown()
+    private float[] CalculateSkillCooldown()
     {
         // If player ever has cooldown reduction items
 
@@ -153,7 +153,6 @@ public class PlayerStats
 
         // Only skill 1 is affected by attack speed
         results[0] /= attackSpeed;
-
         return baseSkillCooldown;
     }
 }

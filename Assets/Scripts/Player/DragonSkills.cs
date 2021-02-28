@@ -33,28 +33,40 @@ public class DragonSkills : PlayerSkills
         config.dragonAttackCooldown.CopyTo(this.dragonAttackCooldown, 0);
     }
 
-    public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    public override IReadOnlyList<float> CurrentCooldown()
     {
-        if (skillNumber < 0 || skillNumber > 3)
-        {
-            throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
-        }
-        else
-        {
-            float cooldown = dragonAttackCooldown[skillNumber];
-            float current = cooldown - timeSinceLastExecuted;
-            if (percentage)
-            {
-                // Normalized with cooldown
-                current = current / cooldown;
-            }
-
-            return current < 0.0f ? 0.0f : current;
-        }
+        return currentCooldown;
     }
+
+    public override float CurrentCooldownPercentage(int skillNumber)
+    {
+        return currentCooldown[skillNumber] / dragonAttackCooldown[skillNumber];
+    }
+
+    // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    // {
+    //     if (skillNumber < 0 || skillNumber > 3)
+    //     {
+    //         throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
+    //     }
+    //     else
+    //     {
+    //         float cooldown = dragonAttackCooldown[skillNumber];
+    //         float current = cooldown - timeSinceLastExecuted;
+    //         if (percentage)
+    //         {
+    //             // Normalized with cooldown
+    //             current = current / cooldown;
+    //         }
+
+    //         return current < 0.0f ? 0.0f : current;
+    //     }
+    // }
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        currentCooldown[0] = dragonAttackCooldown[0];
+
         // Primary attack = dragonAttackDamage[0]
         float damage = dragonAttackDamage[0];
 
@@ -65,6 +77,8 @@ public class DragonSkills : PlayerSkills
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        currentCooldown[1] = dragonAttackCooldown[1];
+
         // Skill 2 = dragonAttackDamage[1]
         float damage = dragonAttackDamage[1];
 

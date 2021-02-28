@@ -1,17 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public abstract class PlayerSkills : System.IDisposable
 {
-    public IReadOnlyList<float> SkillCooldown => stats.SkillCooldown;
+    public IReadOnlyList<float> CooldownCap => stats.SkillCooldown;
+
     public PlayerStats PStats => stats;
     protected Transform transform;
     protected PlayerConfig playerConfig;
     protected AdditionalSkillConfigs configs;
     protected PlayerMovement movement;
     protected PlayerStats stats;
+    protected float[] currentCooldown;
 
+    public virtual IReadOnlyList<float> CurrentCooldown()
+    {
+        return currentCooldown;
+    }
+
+    public virtual float CurrentCooldownPercentage(int skillNumber)
+    {
+        return currentCooldown[skillNumber] / stats.SkillCooldown[skillNumber];
+    }
 
     public PlayerSkills(Transform transform)
     {
@@ -20,6 +32,7 @@ public abstract class PlayerSkills : System.IDisposable
         configs = playerConfig.AdditionalConfigs;
         movement = PlayerMovement.Instance;
         this.transform = transform;
+        currentCooldown = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
 
         // Subscribe
         // EventPublisher.PlayerChangeClass += AdjustClassAttributes;
@@ -31,29 +44,51 @@ public abstract class PlayerSkills : System.IDisposable
         // EventPublisher.PlayerChangeClass -= AdjustClassAttributes;
     }
 
-    public abstract void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector);
-
-    public abstract void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector);
-
-    public virtual float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    public void ProcessSkillCooldown()
     {
-        if (skillNumber < 0 || skillNumber > 3)
+        // Debug.Log($"{currentCooldown[0]} {currentCooldown[1]} {currentCooldown[2]} {currentCooldown[3]}");
+        for (int i = 0; i < 4; ++i)
         {
-            throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
-        }
-        else
-        {
-            float cooldown = stats.SkillCooldown[skillNumber];
-            float current = cooldown - timeSinceLastExecuted;
-            if (percentage)
+            if (currentCooldown[i] > 0.0f)
             {
-                // Normalized with cooldown
-                current = current / cooldown;
+                currentCooldown[i] -= Time.deltaTime;
             }
-
-            return current < 0.0f ? 0.0f : current;
+            else
+            {
+                currentCooldown[i] = 0.0f;
+            }
         }
     }
+
+    public virtual void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    {
+        currentCooldown[0] = stats.SkillCooldown[0];
+    }
+
+    public virtual void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    {
+        currentCooldown[1] = stats.SkillCooldown[1];
+    }
+
+    // public virtual float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    // {
+    //     if (skillNumber < 0 || skillNumber > 3)
+    //     {
+    //         throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
+    //     }
+    //     else
+    //     {
+    //         float cooldown = stats.SkillCooldown[skillNumber];
+    //         float current = cooldown - timeSinceLastExecuted;
+    //         if (percentage)
+    //         {
+    //             // Normalized with cooldown
+    //             current = current / cooldown;
+    //         }
+
+    //         return current < 0.0f ? 0.0f : current;
+    //     }
+    // }
 
     protected void AttackWithProjectile(ref ObjectPool objectPool, float damage, Vector3 currentPlayerPosition, Vector2 forwardVector, float rotationZ = 0.0f, float knockAmplitude = 0.0f)
     {

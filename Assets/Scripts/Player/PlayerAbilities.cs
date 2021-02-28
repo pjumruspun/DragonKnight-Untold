@@ -16,11 +16,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private GameObject swordWavePrefab;
     [SerializeField]
     private GameObject fireBreath;
-    private float[] timeSinceLastSkillUsed = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
-    private SwordSkills swordSkills;
-    private ArcherSkills archerSkills;
     private DragonSkills dragonSkills;
-    private PlayerSkills current;
+    private PlayerSkills humanSkills;
     private PlayerClass currentClass;
     private List<Buff> buffs;
 
@@ -32,12 +29,9 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         EventPublisher.TriggerPlayerChangeClass(playerClass);
     }
 
-    public float GetCurrentSkillCooldown(int number, bool percentage = false)
+    public float CurrentCooldownPercentage(int skillNumber)
     {
-        // Skill 0 = Primary attack
-        // Skill 3 = Ultimate
-        float currentCooldown = current.GetCurrentCooldown(number, timeSinceLastSkillUsed[number], percentage);
-        return currentCooldown;
+        return CurrentSkills().CurrentCooldownPercentage(skillNumber);
     }
 
     private void Start()
@@ -48,18 +42,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.StopFireBreath += StopFireBreath;
 
-        // Initialize player skills
-        swordSkills = new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
-        archerSkills = new ArcherSkills(transform, arrowPrefab);
-
         // Initialize player starting class, player will get to choose this later
         ChangeClass(PlayerClass.Sword);
-
-        // This line means player is ready to attack right when this method is called
-        for (int i = 0; i < timeSinceLastSkillUsed.Length; ++i)
-        {
-            timeSinceLastSkillUsed[i] = current.SkillCooldown[i];
-        }
     }
 
     private void OnDestroy()
@@ -72,7 +56,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void Update()
     {
-        ProcessDeltaTime();
+        ProcessSkillCooldown();
 
         // Debugging
         if (Input.GetKeyDown(KeyCode.T))
@@ -97,17 +81,13 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         if (!PlayerHealth.Instance.IsDead)
         {
             ListenToAttackEvent();
-
         }
     }
 
-    private void ProcessDeltaTime()
+    private void ProcessSkillCooldown()
     {
-        for (int i = 0; i < timeSinceLastSkillUsed.Length; ++i)
-        {
-            // Loop just 4, shouldn't hurt
-            timeSinceLastSkillUsed[i] += Time.deltaTime;
-        }
+        dragonSkills.ProcessSkillCooldown();
+        humanSkills.ProcessSkillCooldown();
     }
 
     private void ListenToAttackEvent()
@@ -129,10 +109,11 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         }
     }
 
-    private bool IsSkillReady(int number)
+    private bool IsSkillReady(int skillNumber)
     {
-        float currentCooldown = GetCurrentSkillCooldown(number);
+        float currentCooldown = CurrentSkills().CurrentCooldown()[skillNumber];
         bool readyToAttack = currentCooldown <= 0.01f;
+        Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }
 
@@ -141,10 +122,11 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         switch (skillNumber)
         {
             case 0:
-                current.Skill1(transform.position, GetForwardVector());
+                Debug.Log("test");
+                CurrentSkills().Skill1(transform.position, GetForwardVector());
                 break;
             case 1:
-                current.Skill2(transform.position, GetForwardVector());
+                CurrentSkills().Skill2(transform.position, GetForwardVector());
                 break;
             case 2:
                 throw new System.NotImplementedException();
@@ -153,41 +135,29 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             default:
                 throw new System.InvalidOperationException();
         }
-
-        timeSinceLastSkillUsed[skillNumber] = 0.0f;
     }
 
     private void StopFireBreath()
     {
-        DragonSkills dragon = (DragonSkills)current;
+        DragonSkills dragon = (DragonSkills)CurrentSkills();
         dragon.Skill2Release();
     }
 
     private void ToggleSkillSet(bool isDragon)
     {
-        if (isDragon)
-        {
-            current = dragonSkills;
-        }
-        else
-        {
-            // Stop breathing fire first as we need current to be
-            // instance of DragonSkill
-            EventPublisher.TriggerStopFireBreath();
+        // if (isDragon)
+        // {
+        //     current = dragonSkills;
+        // }
+        // else
+        // {
+        //     // Stop breathing fire first as we need current to be
+        //     // instance of DragonSkill
+        //     EventPublisher.TriggerStopFireBreath();
 
-            // Change current skill sets back
-            switch (currentClass)
-            {
-                case PlayerClass.Sword:
-                    current = swordSkills;
-                    break;
-                case PlayerClass.Archer:
-                    current = archerSkills;
-                    break;
-                default:
-                    throw new System.ArgumentOutOfRangeException();
-            }
-        }
+        //     // Change current skill sets back
+        //     current = humanSkills;
+        // }
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -196,20 +166,10 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
         currentClass = playerClass;
 
         // Change current skill sets
-        switch (playerClass)
-        {
-            case PlayerClass.Sword:
-                current = swordSkills;
-                break;
-            case PlayerClass.Archer:
-                current = archerSkills;
-                break;
-            default:
-                throw new System.ArgumentOutOfRangeException();
-        }
+        humanSkills = CreatePlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, current.PStats, fireBreath);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, humanSkills.PStats, fireBreath);
     }
 
     private Vector2 GetForwardVector()
@@ -230,5 +190,30 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private void AddBuff(Buff buff)
     {
         // TODO
+    }
+
+    private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
+    {
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                return new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
+            case PlayerClass.Archer:
+                return new ArcherSkills(transform, arrowPrefab);
+            default:
+                throw new System.ArgumentOutOfRangeException();
+        }
+    }
+
+    private PlayerSkills CurrentSkills()
+    {
+        if (DragonGauge.Instance.IsDragonForm)
+        {
+            return dragonSkills;
+        }
+        else
+        {
+            return humanSkills;
+        }
     }
 }
