@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAbilities : MonoSingleton<PlayerAbilities>
+public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
     public PlayerClass CurrentClass => currentClass;
 
@@ -21,7 +21,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private PlayerClass currentClass;
     private List<Buff> buffs;
 
-
     public void ChangeClass(PlayerClass playerClass)
     {
         // Call this after player choose his/her class
@@ -38,7 +37,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         // Subscribe
         EventPublisher.PlayerUseSkill += ActivateSkill;
-        EventPublisher.PlayerShapeshift += ToggleSkillSet;
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.StopFireBreath += StopFireBreath;
 
@@ -49,7 +47,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     private void OnDestroy()
     {
         EventPublisher.PlayerUseSkill -= ActivateSkill;
-        EventPublisher.PlayerShapeshift -= ToggleSkillSet;
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.StopFireBreath -= StopFireBreath;
     }
@@ -58,7 +55,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         ProcessSkillCooldown();
 
-        // Debugging
+        // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
         {
             if (currentClass == PlayerClass.Sword)
@@ -71,7 +68,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
             }
         }
 
-        // Debugging
+        // Debugging only
         if (Input.GetKeyDown(KeyCode.G))
         {
 
@@ -86,6 +83,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private void ProcessSkillCooldown()
     {
+        // No matter which form the player is in
+        // Both should have their cooldown refresh simultaneously
         dragonSkills.ProcessSkillCooldown();
         humanSkills.ProcessSkillCooldown();
     }
@@ -111,7 +110,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private bool IsSkillReady(int skillNumber)
     {
-        float currentCooldown = CurrentSkills().CurrentCooldown()[skillNumber];
+        float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
         bool readyToAttack = currentCooldown <= 0.01f;
         Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
@@ -141,23 +140,6 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
     {
         DragonSkills dragon = (DragonSkills)CurrentSkills();
         dragon.Skill2Release();
-    }
-
-    private void ToggleSkillSet(bool isDragon)
-    {
-        // if (isDragon)
-        // {
-        //     current = dragonSkills;
-        // }
-        // else
-        // {
-        //     // Stop breathing fire first as we need current to be
-        //     // instance of DragonSkill
-        //     EventPublisher.TriggerStopFireBreath();
-
-        //     // Change current skill sets back
-        //     current = humanSkills;
-        // }
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -194,6 +176,7 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
     {
+        // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
@@ -207,6 +190,8 @@ public class PlayerAbilities : MonoSingleton<PlayerAbilities>
 
     private PlayerSkills CurrentSkills()
     {
+        // returns an appropriate skill sets
+        // whether player is in human or dragon form
         if (DragonGauge.Instance.IsDragonForm)
         {
             return dragonSkills;

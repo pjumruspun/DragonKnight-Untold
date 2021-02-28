@@ -16,7 +16,7 @@ public class PlayerSkillsUI : MonoBehaviour
     {
         for (int i = 0; i < 4; ++i)
         {
-            float cooldownPercentage = PlayerAbilities.Instance.CurrentCooldownPercentage(i);
+            float cooldownPercentage = PlayerCombat.Instance.CurrentCooldownPercentage(i);
             cooldownMasks[i].fillAmount = cooldownPercentage;
         }
     }

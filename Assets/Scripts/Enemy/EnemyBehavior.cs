@@ -23,7 +23,7 @@ public class EnemyBehavior : StateMachineBehaviour
         this.animator = animator;
         rigidbody2D = animator.gameObject.GetComponent<Rigidbody2D>();
         transform = animator.gameObject.transform;
-        player = PlayerAbilities.Instance.gameObject.transform;
+        player = PlayerCombat.Instance.gameObject.transform;
         enemy = transform.gameObject.GetComponent<Enemy>();
 
         // Cache once on enter
@@ -84,6 +84,6 @@ public class EnemyBehavior : StateMachineBehaviour
 
     private bool IsPlayer(GameObject gameObject)
     {
-        return gameObject.TryGetComponent<PlayerAbilities>(out _);
+        return gameObject.TryGetComponent<PlayerCombat>(out _);
     }
 }

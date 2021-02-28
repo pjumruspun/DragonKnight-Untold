@@ -191,7 +191,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         }
         else
         {
-            switch (PlayerAbilities.Instance.CurrentClass)
+            switch (PlayerCombat.Instance.CurrentClass)
             {
                 case PlayerClass.Sword:
                     return 0;

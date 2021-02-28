@@ -456,7 +456,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void UpdateMoveSpeedOnStatsChange(Stats stats)
     {
-        PlayerClass playerClass = PlayerAbilities.Instance.CurrentClass;
+        PlayerClass playerClass = PlayerCombat.Instance.CurrentClass;
         PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
         ClassConfig config;
         switch (playerClass)
