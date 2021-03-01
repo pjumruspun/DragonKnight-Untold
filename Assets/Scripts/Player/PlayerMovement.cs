@@ -134,6 +134,10 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
     {
+        // This function is a bit messy
+        // It's coupled heavily with LockState function and ProcessLockState function
+        // Need to fix some day
+
         LockState(duration);
         if (lockFlip)
         {
