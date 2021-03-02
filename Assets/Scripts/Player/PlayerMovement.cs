@@ -136,7 +136,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     {
         // This function is a bit messy
         // It's coupled heavily with LockState function and ProcessLockState function
-        // Need to fix some day
+        // Need to fix some daygit s
 
         LockState(duration);
         if (lockFlip)
