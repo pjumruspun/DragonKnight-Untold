@@ -12,9 +12,11 @@ public class EventPublisher
     public delegate void OnPlayerUseSkill(int number);
     public delegate void OnPlayerShapeshift(bool isDragon);
     public delegate void OnPlayerHealthChange();
+    public delegate void OnDragonGaugeChange(float dragonGauge);
     public delegate void OnPlayerDead();
     public delegate void OnPlayerChangeClass(PlayerClass pc);
     public delegate void OnPlayerStatsChange(Stats stats);
+    public delegate void OnStopFireBreath();
 
     // Player events
     public static event OnPlayerJump PlayerJump;
@@ -24,9 +26,11 @@ public class EventPublisher
     public static event OnPlayerUseSkill PlayerUseSkill;
     public static event OnPlayerShapeshift PlayerShapeshift;
     public static event OnPlayerHealthChange PlayerHealthChange;
+    public static event OnDragonGaugeChange DragonGaugeChange;
     public static event OnPlayerDead PlayerDead;
     public static event OnPlayerChangeClass PlayerChangeClass;
     public static event OnPlayerStatsChange PlayerStatsChange;
+    public static event OnStopFireBreath StopFireBreath;
 
 
     public static void TriggerPlayerJump()
@@ -64,6 +68,11 @@ public class EventPublisher
         PlayerHealthChange?.Invoke();
     }
 
+    public static void TriggerDragonGaugeChange(float dragonGauge)
+    {
+        DragonGaugeChange?.Invoke(dragonGauge);
+    }
+
     public static void TriggerPlayerDead()
     {
         PlayerDead?.Invoke();
@@ -77,5 +86,10 @@ public class EventPublisher
     public static void TriggerPlayerStatsChange(Stats stats)
     {
         PlayerStatsChange?.Invoke(stats);
+    }
+
+    public static void TriggerStopFireBreath()
+    {
+        StopFireBreath?.Invoke();
     }
 }

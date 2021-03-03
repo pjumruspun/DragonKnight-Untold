@@ -9,19 +9,19 @@ public class SwordSkills : PlayerSkills
 
     public SwordSkills(
         Transform transform,
+        ref PlayerStats stats,
         PlayerAttackHitbox swordPrimaryHitbox,
         GameObject swordWavePrefab
-    ) : base(transform)
+    ) : base(transform, ref stats)
     {
         this.swordWaves = new ObjectPool(swordWavePrefab, 20);
         this.swordPrimaryHitbox = swordPrimaryHitbox;
-
-        // Init sword stats
-        this.stats = PlayerStats.Create(PlayerClass.Sword);
     }
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill1(currentPlayerPosition, forwardVector);
+
         // Primary attack = skillDamage[0]
         float damage = stats.BaseSkillDamage[0];
 
@@ -31,11 +31,13 @@ public class SwordSkills : PlayerSkills
         movement.LockMovementBySkill(animLength, true, true);
 
         // Then attack
-        AttackWithHitbox(swordPrimaryHitbox, damage);
+        AttackWithHitbox(swordPrimaryHitbox, damage, knockAmplitude: 1.5f);
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill2(currentPlayerPosition, forwardVector);
+
         // Skill 2 = skillDamage[1]
         float damage = stats.BaseSkillDamage[1];
 
@@ -47,14 +49,14 @@ public class SwordSkills : PlayerSkills
         CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, configs.SwordSkill2DelayTime));
     }
 
-    public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
-    {
-        return base.GetCurrentCooldown(skillNumber, timeSinceLastExecuted, percentage);
-    }
+    // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
+    // {
+    //     return base.GetCurrentCooldown(skillNumber, timeSinceLastExecuted, percentage);
+    // }
 
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
     {
         yield return new WaitForSeconds(delay);
-        AttackWithProjectile(ref swordWaves, damage, transform.position, forwardVector);
+        AttackWithProjectile(ref swordWaves, damage, transform.position, forwardVector, knockAmplitude: 2.0f);
     }
 }

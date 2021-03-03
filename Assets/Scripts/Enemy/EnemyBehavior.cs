@@ -7,7 +7,6 @@ public class EnemyBehavior : StateMachineBehaviour
     // Cached speed
     protected float cachedActualSpeed;
 
-
     // Other stuff
     protected Animator animator;
     protected Transform transform;
@@ -18,19 +17,29 @@ public class EnemyBehavior : StateMachineBehaviour
     // Coroutine for finding player
     protected Coroutine findingPlayerCoroutine;
 
+    // For custom function to find the player
+    protected delegate void LookForPlayer();
+    protected LookForPlayer lookForPlayer;
+
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         this.animator = animator;
         rigidbody2D = animator.gameObject.GetComponent<Rigidbody2D>();
         transform = animator.gameObject.transform;
-        player = PlayerAbilities.Instance.gameObject.transform;
+        player = PlayerCombat.Instance.gameObject.transform;
         enemy = transform.gameObject.GetComponent<Enemy>();
 
         // Cache once on enter
         cachedActualSpeed = enemy.EnemyBaseSpeed + Random.Range(-enemy.RandomSpeedFactor, enemy.RandomSpeedFactor);
 
         // We make the AI repeatedly looking for players
+        if (lookForPlayer == null)
+        {
+            lookForPlayer = RaycastFindPlayer;
+        }
+
         findingPlayerCoroutine = CoroutineUtility.Instance.CreateCoroutine(RepeatedlyLookForPlayer());
+
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -41,9 +50,10 @@ public class EnemyBehavior : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         CoroutineUtility.Instance.KillCoroutine(findingPlayerCoroutine);
+        lookForPlayer = null;
     }
 
-    protected void LookForPlayer()
+    protected void RaycastFindPlayer()
     {
         // Right now the AI will attempt to find players no matter where the player is
         // We could optimize by checking if player distance is in chasing range or not
@@ -77,13 +87,13 @@ public class EnemyBehavior : StateMachineBehaviour
     {
         while (true)
         {
-            LookForPlayer();
+            lookForPlayer();
             yield return new WaitForSeconds(enemy.ChasingInterval);
         }
     }
 
     private bool IsPlayer(GameObject gameObject)
     {
-        return gameObject.TryGetComponent<PlayerAbilities>(out _);
+        return gameObject.TryGetComponent<PlayerCombat>(out _);
     }
 }

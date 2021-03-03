@@ -8,15 +8,17 @@ public class ArcherSkills : PlayerSkills
 
     public ArcherSkills(
         Transform transform,
+        ref PlayerStats stats,
         GameObject arrowPrefab
-    ) : base(transform)
+    ) : base(transform, ref stats)
     {
         arrows = new ObjectPool(arrowPrefab, 20);
-        this.stats = PlayerStats.Create(PlayerClass.Archer);
     }
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill1(currentPlayerPosition, forwardVector);
+
         // Primary attack = skillDamage[0]
         float damage = stats.BaseSkillDamage[0];
         // Spawn arrow
@@ -25,6 +27,8 @@ public class ArcherSkills : PlayerSkills
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
+        base.Skill2(currentPlayerPosition, forwardVector);
+
         // Skill 2 = skillDamage[1]
         float damage = stats.BaseSkillDamage[1];
 
@@ -47,16 +51,21 @@ public class ArcherSkills : PlayerSkills
         }
 
         // Then spawn arrow rains
-        int arrowCount = configs.ArcherSkill2ArrowCount;
-        float interval = configs.ArcherSkill2Interval;
+        int arrowCount = 3; // configs.ArcherSkill2ArrowCount;
+        float interval = 0.3f; // configs.ArcherSkill2Interval;
         CoroutineUtility.Instance.CreateCoroutine(ArrowRain(arrowCount, damage, forwardVector, interval));
     }
 
     private IEnumerator ArrowRain(int count, float damage, Vector2 forwardVector, float interval)
     {
+        // Spawns 5x3 arrows
         for (int i = 0; i < count; ++i)
         {
-            AttackWithProjectile(ref arrows, damage, transform.position, forwardVector, Random.Range(-20.0f, -50.0f));
+            for (int j = 0; j < 5; ++j)
+            {
+                AttackWithProjectile(ref arrows, damage, transform.position, forwardVector, -7.5f - j * 15.0f);
+            }
+
             yield return new WaitForSeconds(interval);
         }
     }

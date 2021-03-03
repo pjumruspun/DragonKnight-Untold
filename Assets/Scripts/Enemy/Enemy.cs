@@ -63,11 +63,17 @@ public class Enemy : Health
     private Animator animator;
 
     // Adapter method
-    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f)
+    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockAmplitude = 0.0f)
     {
         if (!IsDead)
         {
             TakeDamage(damage);
+            EnemyStunnedBehavior behavior = animator.GetBehaviour<EnemyStunnedBehavior>();
+            if (knockAmplitude > 0.01f)
+            {
+                behavior.KnockedUp(knockAmplitude);
+            }
+
             // Deal super armor damage
             if (superArmorDamage > 0.01f)
             {
@@ -83,8 +89,6 @@ public class Enemy : Health
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-        EnemyStunnedBehavior behavior = animator.GetBehaviour<EnemyStunnedBehavior>();
-        behavior.Test();
     }
 
     public void AdjustRotation()

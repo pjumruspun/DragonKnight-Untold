@@ -101,9 +101,27 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         rigidbody2D.AddForce(force, ForceMode2D.Impulse);
     }
 
+    // Set reset lockers
+    public void LockFlipBySkill(bool lockFlip) => isFlipLockedBySkills = lockFlip;
+
+    public void LockMovementBySkill(bool lockMovement)
+    {
+        if (lockMovement)
+        {
+            rigidbody2D.velocity = Vector2.zero;
+        }
+
+        this.stopAllMovement = lockMovement;
+        rigidbody2D.gravityScale = lockMovement ? 0.0f : originalGravityScale;
+        isMovementLockedBySkills = lockMovement;
+    }
+
+    public void LockJumpBySkill(bool lockJump) => isJumpLockedBySkills = lockJump;
+
+    // Release automatically lockers
     public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
 
-    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => StartCoroutine(LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip));
+    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip);
 
     public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
 
@@ -114,8 +132,12 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         isFlipLockedBySkills = false;
     }
 
-    private IEnumerator LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
+    private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
     {
+        // This function is a bit messy
+        // It's coupled heavily with LockState function and ProcessLockState function
+        // Need to fix some daygit s
+
         LockState(duration);
         if (lockFlip)
         {
@@ -130,18 +152,6 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         rigidbody2D.gravityScale = 0.0f;
         // Lock movement
         isMovementLockedBySkills = true;
-
-        // Then wait
-        yield return new WaitForSeconds(duration);
-
-        if (!stateLock)
-        {
-            // Unlock
-            isMovementLockedBySkills = false;
-            this.stopAllMovement = false;
-            // Reenable gravity
-            rigidbody2D.gravityScale = originalGravityScale;
-        }
     }
 
     private IEnumerator LockJumpBySkillPrivate(float duration)
@@ -281,7 +291,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             float velocityX = 0.0f;
-            if (PlayerAbilities.Instance.IsDragonForm && !isGrounded)
+            if (DragonGauge.Instance.IsDragonForm && !isGrounded)
             {
                 // The dragon is gliding
                 velocityX = horizontalMovement * dragonGlidingSpeed;
@@ -297,14 +307,9 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void ProcessJump()
     {
-        // if (!isGrounded)
-        // {
-        //     jumpKeyPressed = false;
-        // }
-
         if (jumpKeyPressed && !isJumpLockedBySkills)
         {
-            if (PlayerAbilities.Instance.IsDragonForm)
+            if (DragonGauge.Instance.IsDragonForm)
             {
                 // Player is in dragon form and wants to jump
                 if (dragonJumpCount < maxDragonJumpCount)
@@ -341,7 +346,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // If jump key is hold and player is in the air
         // With falling speed more than glide falling speed
         // And if player is in dragon mode
-        if (jumpKeyHold && !isGrounded && rigidbody2D.velocity.y < glideFallingSpeed && PlayerAbilities.Instance.IsDragonForm)
+        if (jumpKeyHold && !isGrounded && rigidbody2D.velocity.y < glideFallingSpeed && DragonGauge.Instance.IsDragonForm)
         {
             // Set the falling speed to glide falling speed
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, -glideFallingSpeed);
@@ -365,6 +370,14 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             {
                 // Unlock
                 stateLock = false;
+                Debug.Log("Unlock");
+
+                // Unlock
+                isMovementLockedBySkills = false;
+                this.stopAllMovement = false;
+                // Reenable gravity
+                rigidbody2D.gravityScale = originalGravityScale;
+                Debug.Log("Unlock successfully");
             }
         }
     }
@@ -443,7 +456,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void UpdateMoveSpeedOnStatsChange(Stats stats)
     {
-        PlayerClass playerClass = PlayerAbilities.Instance.CurrentClass;
+        PlayerClass playerClass = PlayerCombat.Instance.CurrentClass;
         PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
         ClassConfig config;
         switch (playerClass)

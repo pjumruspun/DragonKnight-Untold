@@ -2,62 +2,106 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PlayerSkills : System.IDisposable
+public abstract class PlayerSkills
 {
-    public IReadOnlyList<float> SkillCooldown => stats.SkillCooldown;
-    public PlayerStats PStats => stats;
+    // Cache
     protected Transform transform;
     protected PlayerConfig playerConfig;
     protected AdditionalSkillConfigs configs;
     protected PlayerMovement movement;
+    protected float[] currentCooldown;
     protected PlayerStats stats;
 
+    /// <summary>
+    /// Returns current cooldown of every skill.
+    /// currentCooldown[i] has the range of [0, stats.SkillCooldown[i]].
+    /// </summary>
+    /// <returns></returns>
+    public virtual float[] GetCurrentCooldown()
+    {
+        // Need to be a method because it needs to be overriden
+        return currentCooldown;
+    }
 
-    public PlayerSkills(Transform transform)
+    /// <summary>
+    /// Returns current cooldown percentage of given skillNumber.
+    /// </summary>
+    /// <param name="skillNumber"></param>
+    /// <returns></returns>
+    public virtual float CurrentCooldownPercentage(int skillNumber)
+    {
+        return currentCooldown[skillNumber] / stats.SkillCooldown[skillNumber];
+    }
+
+    public PlayerSkills(Transform transform, ref PlayerStats stats)
     {
         // Cache
         playerConfig = ConfigContainer.Instance.GetPlayerConfig;
         configs = playerConfig.AdditionalConfigs;
         movement = PlayerMovement.Instance;
         this.transform = transform;
-
-        // Subscribe
-        // EventPublisher.PlayerChangeClass += AdjustClassAttributes;
+        this.stats = stats;
+        currentCooldown = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
     }
 
-    public void Dispose()
+    /// <summary>
+    /// Call this in void Update() as it updates the cooldown of each skill
+    /// </summary>
+    public void ProcessSkillCooldown()
     {
-        // Destructor, call on garbage collects
-        // EventPublisher.PlayerChangeClass -= AdjustClassAttributes;
-    }
-
-    public abstract void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector);
-
-    public abstract void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector);
-
-    public virtual float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
-    {
-        if (skillNumber < 0 || skillNumber > 3)
+        // Debug.Log($"{currentCooldown[0]} {currentCooldown[1]} {currentCooldown[2]} {currentCooldown[3]}");
+        for (int i = 0; i < 4; ++i)
         {
-            throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
-        }
-        else
-        {
-            float cooldown = stats.SkillCooldown[skillNumber];
-            float current = cooldown - timeSinceLastExecuted;
-            if (percentage)
+            if (currentCooldown[i] > 0.0f)
             {
-                // Normalized with cooldown
-                current = current / cooldown;
+                currentCooldown[i] -= Time.deltaTime;
             }
-
-            return current < 0.0f ? 0.0f : current;
+            else
+            {
+                currentCooldown[i] = 0.0f;
+            }
         }
     }
 
-    protected void AttackWithProjectile(ref ObjectPool objectPool, float damage, Vector3 currentPlayerPosition, Vector2 forwardVector, float rotationZ = 0.0f)
+    /// <summary>
+    /// Execute skill 1 (auto attack)
+    /// </summary>
+    /// <param name="currentPlayerPosition"></param>
+    /// <param name="forwardVector"></param>
+    public virtual void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
-        GameObject spawnedObject = objectPool.SpawnObject(currentPlayerPosition, Quaternion.identity);
+        currentCooldown[0] = stats.SkillCooldown[0];
+    }
+
+    /// <summary>
+    /// Execute skill 2
+    /// </summary>
+    /// <param name="currentPlayerPosition"></param>
+    /// <param name="forwardVector"></param>
+    public virtual void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    {
+        currentCooldown[1] = stats.SkillCooldown[1];
+    }
+
+    /// <summary>
+    /// Spawn a projectile which is created by "objectPool". Make sure that the projectile script has
+    /// target marked as "Enemy".
+    /// </summary>
+    /// <param name="objectPool">an ObjectPool that has projectile prefab in it.</param>
+    /// <param name="damage">How much damage does this projectile do.</param>
+    /// <param name="spawnPosition">Position that the projectile should spawn at.</param>
+    /// <param name="forwardVector">Player's forward vector ((-1,0) or (1,0))</param>
+    /// <param name="rotationZ">Angle compared to forward vector.</param>
+    /// <param name="knockAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this projectile hits.</param>
+    protected void AttackWithProjectile(
+        ref ObjectPool objectPool,
+        float damage, Vector3 spawnPosition,
+        Vector2 forwardVector,
+        float rotationZ = 0.0f,
+        float knockAmplitude = 0.0f
+    )
+    {
+        GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
 
         if (forwardVector.x < -0.01f)
         {
@@ -70,11 +114,12 @@ public abstract class PlayerSkills : System.IDisposable
             forwardVector = Quaternion.Euler(0.0f, 0.0f, rotationZ) * forwardVector;
         }
 
-        if (spawnedObject.TryGetComponent<Projectile>(out Projectile arrow))
+        if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            arrow.SetDirection(forwardVector);
+            projectile.SetDirection(forwardVector);
             stats.CalculateDamage(damage, out float finalDamage, out bool crit);
-            arrow.SetDamage(finalDamage, crit);
+            projectile.SetDamage(finalDamage, crit);
+            projectile.SetKnockValue(knockAmplitude);
         }
         else
         {
@@ -82,7 +127,19 @@ public abstract class PlayerSkills : System.IDisposable
         }
     }
 
-    protected void AttackWithHitbox(PlayerAttackHitbox desiredHitbox, float attackDamage, float superArmorDamage = 0.0f)
+    /// <summary>
+    /// Melee attack, attack all enemies within the sent hitbox.
+    /// </summary>
+    /// <param name="desiredHitbox">Hitbox that enemies will be hit if they are in.</param>
+    /// <param name="attackDamage">How much damage does this attack do.</param>
+    /// <param name="superArmorDamage">If this does any super armor damage.</param>
+    /// <param name="knockAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this attack hits.</param>
+    protected void AttackWithHitbox(
+        PlayerAttackHitbox desiredHitbox,
+        float attackDamage,
+        float superArmorDamage = 0.0f,
+        float knockAmplitude = 0.0f
+    )
     {
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
@@ -96,7 +153,7 @@ public abstract class PlayerSkills : System.IDisposable
                 {
                     // Damage the enemy here
                     stats.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
-                    enemy.TakeDamage(finalDamage, crit, superArmorDamage);
+                    enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockAmplitude);
                 }
                 else
                 {
@@ -117,36 +174,4 @@ public abstract class PlayerSkills : System.IDisposable
             desiredHitbox.HitColliders.Remove(unrelatedCollider);
         }
     }
-
-    // // This one is triggered by PlayerAbilities.Start()
-    // private void AdjustClassAttributes(PlayerClass playerClass)
-    // {
-    //     // This should be put in Adjust dragon stats function once it's implemented
-    //     dragonAttackDamage = this.playerConfig.NightDragonConfig.dragonAttackDamage;
-    //     dragonAttackCooldown = this.playerConfig.NightDragonConfig.dragonAttackCooldown;
-
-    //     // Now change the class
-    //     this.playerClass = playerClass;
-    //     ClassConfig config;
-    //     switch (playerClass)
-    //     {
-    //         case PlayerClass.Sword:
-    //             config = playerConfig.SwordConfig;
-    //             break;
-    //         case PlayerClass.Archer:
-    //             config = playerConfig.ArcherConfig;
-    //             break;
-    //         default:
-    //             throw new System.InvalidOperationException();
-    //     }
-
-    //     // Load base skill damage
-    //     skillDamage = config.skillDamage;
-
-    //     // Load config cooldowns into PlayerStats
-    //     this.stats.AssignSkillCooldown(config.skillCooldown);
-
-    //     // Load config stats into PlayerStats
-    //     this.stats.AssignStats(new Stats(config.atk, config.agi, config.vit, config.tal, config.luk));
-    // }
 }
