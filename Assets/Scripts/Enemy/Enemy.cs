@@ -8,6 +8,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Animator))]
 public class Enemy : Health
 {
+    public MovementState TurnDirection => turnDirection;
+    public ObjectPool Projectile => projectilePool;
+    public bool IsRanged => isRanged;
     public float AttackDamage => attackDamage;
     public AttackHitbox EnemyAttackHitbox => attackHitbox;
     public float AttackRange => attackRange;
@@ -25,21 +28,28 @@ public class Enemy : Health
     public bool ShouldChase { get; set; }
 
     // Enemy AI parameters
+    [Header("Enemy Movement Parameters")]
     [SerializeField]
     private float enemyBaseSpeed = 1.5f;
+    [Tooltip("Real speed = Base Speed +- Random Speed Factor")]
     [SerializeField]
     private float randomSpeedFactor = 0.5f; // Actual speed = Base speed +- random factor
+    [Tooltip("Range to look for and chase player")]
     [SerializeField]
     private float chasingRange = 6.0f;
+    [Tooltip("How often should the enemy look for player?")]
     [SerializeField]
     private float chasingInterval = 0.5f; // Chasing every ? seconds
+    [Tooltip("Can ground and walls block enemy's vision?")]
     [SerializeField]
     private bool canSeeThroughWalls = false;
 
     // Enemy AI ground detection system for patroling
+    [Header("Ground Detection for Patroling")]
     [SerializeField]
     private Transform groundDetector;
 
+    [Header("Health Parameters")]
     // Health system
     [SerializeField]
     private float enemyMaxHealth = 150.0f;
@@ -48,6 +58,7 @@ public class Enemy : Health
     [SerializeField]
     private float secondsToDespawn = 2.0f;
 
+    [Header("Super Armor Parameters")]
     // Super armor
     [SerializeField]
     private bool showSuperArmorBar = true;
@@ -64,18 +75,34 @@ public class Enemy : Health
     // Animation
     private EnemyAnimation enemyAnimation;
 
+    [Header("Attack Parameters")]
     // Attack
+    [Tooltip("Is this enemy ranged or melee?")]
+    [SerializeField]
+    private bool isRanged = false;
+    [SerializeField]
+    private float attackDamage = 15.0f;
+    [SerializeField]
+    private float attackCooldown = 2.0f;
+    [SerializeField]
+    private float attackRange = 1.0f;
+    [Tooltip("Delay before the attack is executed")]
+    [SerializeField]
+    private float attackDelay = 0.3f;
+
+    [Header("Hitbox and projectile")]
+    [Tooltip("Can leave this blank if ranged")]
     [SerializeField]
     private AttackHitbox attackHitbox;
-    private const float attackDamage = 15.0f;
-    private const float attackCooldown = 2.0f;
-    private const float attackRange = 1.0f;
-    private const float attackDelay = 0.3f;
-
+    [Tooltip("Can leave this blank if melee")]
+    [SerializeField]
+    private GameObject projectilePrefab;
+    private ObjectPool projectilePool;
 
     // Other stuff
     private Rigidbody2D rigidbody2D;
     private Animator animator;
+    private MovementState turnDirection = MovementState.Right;
 
     // Adapter method
     public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockAmplitude = 0.0f)
@@ -106,32 +133,64 @@ public class Enemy : Health
         base.TakeDamage(damage);
     }
 
-    public void AdjustRotation()
+    public void AdjustFlipping()
+    {
+        if (rigidbody2D.velocity.x < -0.01f)
+        {
+            // Is going left
+            Flip(MovementState.Left);
+        }
+        else if (rigidbody2D.velocity.x > 0.01f)
+        {
+            // Is going right
+            Flip(MovementState.Right);
+        }
+    }
+
+    public void Flip(MovementState move)
     {
         float enemyX = transform.localScale.x;
         float hpBarX = hpBar.transform.localScale.x;
         float superArmorBarX = superArmorBar.transform.localScale.x;
 
-        if (rigidbody2D.velocity.x < -0.01f)
+        switch (move)
         {
-            // Is going left
-            enemyX = -Mathf.Abs(enemyX);
-            // Need to flip hp bar and super armor bar as well
-            hpBarX = -Mathf.Abs(hpBarX);
-            superArmorBarX = -Mathf.Abs(superArmorBarX);
-        }
-        else if (rigidbody2D.velocity.x > 0.01f)
-        {
-            // Is going right
-            enemyX = Mathf.Abs(enemyX);
-            // Need to flip hp bar and super armor bar as well
-            hpBarX = Mathf.Abs(hpBarX);
-            superArmorBarX = Mathf.Abs(superArmorBarX);
+            case MovementState.Left:
+                enemyX = -Mathf.Abs(enemyX);
+                // Need to flip hp bar and super armor bar as well
+                hpBarX = -Mathf.Abs(hpBarX);
+                superArmorBarX = -Mathf.Abs(superArmorBarX);
+                turnDirection = MovementState.Left;
+                break;
+            case MovementState.Right:
+                enemyX = Mathf.Abs(enemyX);
+                // Need to flip hp bar and super armor bar as well
+                hpBarX = Mathf.Abs(hpBarX);
+                superArmorBarX = Mathf.Abs(superArmorBarX);
+                turnDirection = MovementState.Right;
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException();
         }
 
         hpBar.transform.localScale = new Vector3(hpBarX, hpBar.transform.localScale.y, hpBar.transform.localScale.z);
         superArmorBar.transform.localScale = new Vector3(superArmorBarX, superArmorBar.transform.localScale.y, superArmorBar.transform.localScale.z);
         transform.localScale = new Vector3(enemyX, transform.localScale.y, transform.localScale.z);
+    }
+
+    public Vector2 GetForwardVector()
+    {
+        switch (turnDirection)
+        {
+            case MovementState.Right:
+                return transform.right;
+            case MovementState.Left:
+                return -transform.right;
+            case MovementState.Idle:
+                throw new System.InvalidOperationException();
+            default:
+                throw new System.NotImplementedException();
+        }
     }
 
     public void ShowStunStars(bool show)
@@ -147,13 +206,27 @@ public class Enemy : Health
 
     protected override void Start()
     {
+        // Enemy shouldn't be stunned at first, set it to inactive
         stunStars.SetActive(false);
-        animator = GetComponent<Animator>();
+
+        // Show or not show super armor bar depends on config
         superArmorBar.gameObject.SetActive(showSuperArmorBar);
+
+        // GetComponents
+        animator = GetComponent<Animator>();
         rigidbody2D = GetComponent<Rigidbody2D>();
         enemyAnimation = new EnemyAnimation(GetComponent<Animator>());
+
+        // Set health and super armor
         maxHealth = enemyMaxHealth;
         superArmor = maxSuperArmor;
+
+        // Set projectile if ranged
+        if (isRanged && projectilePrefab != null)
+        {
+            projectilePool = new ObjectPool(projectilePrefab, 10);
+        }
+
         base.Start();
     }
 

@@ -5,13 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoSingleton<PlayerMovement>
 {
-    public enum MovementState
-    {
-        Right,
-        Left,
-        Idle
-    }
-
     public MovementState TurnDirection => turn;
 
     [SerializeField]
@@ -370,14 +363,14 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             {
                 // Unlock
                 stateLock = false;
-                Debug.Log("Unlock");
+                // Debug.Log("Unlock");
 
                 // Unlock
                 isMovementLockedBySkills = false;
                 this.stopAllMovement = false;
                 // Reenable gravity
                 rigidbody2D.gravityScale = originalGravityScale;
-                Debug.Log("Unlock successfully");
+                // Debug.Log("Unlock successfully");
             }
         }
     }

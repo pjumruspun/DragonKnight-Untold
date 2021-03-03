@@ -98,7 +98,7 @@ public class DragonSkills : PlayerSkills
             CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
         }
 
-        Debug.Log("Fire breath stop");
+        // Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
         movement.LockFlipBySkill(false);
         movement.LockMovementBySkill(false);

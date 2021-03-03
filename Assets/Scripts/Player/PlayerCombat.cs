@@ -44,6 +44,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Subscribe
         EventPublisher.PlayerUseSkill += ActivateSkill;
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
+        EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
 
         // Initialize player starting class, player will get to choose this later
@@ -57,6 +58,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         EventPublisher.PlayerUseSkill -= ActivateSkill;
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
+        EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
     }
 
@@ -122,7 +124,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
         bool readyToAttack = currentCooldown <= 0.01f;
-        Debug.Log($"{skillNumber}, {currentCooldown}");
+        // Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }
 
@@ -131,7 +133,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         switch (skillNumber)
         {
             case 0:
-                Debug.Log("test");
+                // Debug.Log("test");
                 CurrentSkills().Skill1(transform.position, GetForwardVector());
                 break;
             case 1:
@@ -146,10 +148,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
     }
 
+    private void StopFireOnDragonDown(bool isDragon)
+    {
+        if (!isDragon)
+        {
+            // Stop fire breath if dragon down
+            dragonSkills.Skill2Release();
+        }
+    }
+
     private void StopFireBreath()
     {
-        DragonSkills dragon = (DragonSkills)CurrentSkills();
-        dragon.Skill2Release();
+        dragonSkills.Skill2Release();
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -170,11 +180,11 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         switch (PlayerMovement.Instance.TurnDirection)
         {
-            case PlayerMovement.MovementState.Right:
+            case MovementState.Right:
                 return transform.right;
-            case PlayerMovement.MovementState.Left:
+            case MovementState.Left:
                 return -transform.right;
-            case PlayerMovement.MovementState.Idle:
+            case MovementState.Idle:
                 throw new System.InvalidOperationException();
             default:
                 throw new System.NotImplementedException();

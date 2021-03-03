@@ -40,11 +40,11 @@ public class ArcherSkills : PlayerSkills
         Vector2 forceVector = configs.ArcherSkill2ForceVector;
         switch (movement.TurnDirection)
         {
-            case PlayerMovement.MovementState.Right:
+            case MovementState.Right:
                 // Go up left
                 movement.AddForceBySkill(new Vector2(-Mathf.Abs(forceVector.x), Mathf.Abs(forceVector.y)));
                 break;
-            case PlayerMovement.MovementState.Left:
+            case MovementState.Left:
                 // Go up right
                 movement.AddForceBySkill(new Vector2(Mathf.Abs(forceVector.x), Mathf.Abs(forceVector.y)));
                 break;

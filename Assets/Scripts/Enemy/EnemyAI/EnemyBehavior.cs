@@ -2,8 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This script is a base class for all enemy's state machine scripts.
+/// Enabling StateMachineBehavior to tie with MonoBehavior.
+/// </summary>
 public class EnemyBehavior : StateMachineBehaviour
 {
+    protected float DistanceToPlayerX => Mathf.Abs(transform.position.x - player.position.x);
+    protected float DistanceToPlayer => Vector2.Distance(transform.position, player.position);
     // Cached speed
     protected float cachedActualSpeed;
 
@@ -44,7 +50,7 @@ public class EnemyBehavior : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        enemy.AdjustRotation();
+        enemy.AdjustFlipping();
         if (enemy.CurrentCooldown > 0.0f)
         {
             enemy.CurrentCooldown -= Time.deltaTime;
@@ -91,9 +97,21 @@ public class EnemyBehavior : StateMachineBehaviour
         enemy.ShouldChase = hit && IsPlayer(hit.collider.gameObject);
     }
 
-    protected float DistanceToPlayer()
+    protected void ListenToChaseSignal()
     {
-        return Vector2.Distance(transform.position, player.position);
+        if (DistanceToPlayerX > enemy.AttackRange)
+        {
+            animator.SetTrigger("Chase");
+        }
+    }
+
+    protected void ListenToAttackSignal()
+    {
+        bool readyToAttack = enemy.CurrentCooldown < 0.01f;
+        if (DistanceToPlayerX <= enemy.AttackRange && readyToAttack)
+        {
+            animator.SetTrigger("Attack");
+        }
     }
 
     private IEnumerator RepeatedlyLookForPlayer()
