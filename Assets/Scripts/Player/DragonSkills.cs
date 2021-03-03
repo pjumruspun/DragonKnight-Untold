@@ -5,8 +5,8 @@ using System;
 
 public class DragonSkills : PlayerSkills
 {
-    private PlayerAttackHitbox dragonPrimaryHitbox;
-    private PlayerAttackHitbox fireBreathHitbox;
+    private AttackHitbox dragonPrimaryHitbox;
+    private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4];
     private float[] dragonAttackCooldown = new float[4];
     // for testing
@@ -16,7 +16,7 @@ public class DragonSkills : PlayerSkills
 
     public DragonSkills(
         Transform transform,
-        PlayerAttackHitbox dragonPrimaryHitbox,
+        AttackHitbox dragonPrimaryHitbox,
         ref PlayerStats stats,
         GameObject fireBreath
     ) : base(transform, ref stats)
@@ -24,7 +24,7 @@ public class DragonSkills : PlayerSkills
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.stats = stats; // Player class stats
         this.fireBreath = fireBreath;
-        this.fireBreathHitbox = fireBreath.GetComponent<PlayerAttackHitbox>();
+        this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
 
         this.fireBreath.SetActive(false);
 

@@ -8,6 +8,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Animator))]
 public class Enemy : Health
 {
+    public float AttackDamage => attackDamage;
+    public AttackHitbox EnemyAttackHitbox => attackHitbox;
+    public float AttackRange => attackRange;
+    public float AttackCooldown => attackCooldown;
+    public float AttackDelay => attackDelay;
+    public float CurrentCooldown { get; set; }
     public float SecondsBeforeGetUp => secondsBeforeGetUp;
     public float EnemyBaseSpeed => enemyBaseSpeed;
     public float RandomSpeedFactor => randomSpeedFactor;
@@ -57,6 +63,15 @@ public class Enemy : Health
 
     // Animation
     private EnemyAnimation enemyAnimation;
+
+    // Attack
+    [SerializeField]
+    private AttackHitbox attackHitbox;
+    private const float attackDamage = 15.0f;
+    private const float attackCooldown = 2.0f;
+    private const float attackRange = 1.0f;
+    private const float attackDelay = 0.3f;
+
 
     // Other stuff
     private Rigidbody2D rigidbody2D;

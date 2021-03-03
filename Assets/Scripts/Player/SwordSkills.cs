@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class SwordSkills : PlayerSkills
 {
-    private PlayerAttackHitbox swordPrimaryHitbox;
+    private AttackHitbox swordPrimaryHitbox;
     private ObjectPool swordWaves;
 
     public SwordSkills(
         Transform transform,
         ref PlayerStats stats,
-        PlayerAttackHitbox swordPrimaryHitbox,
+        AttackHitbox swordPrimaryHitbox,
         GameObject swordWavePrefab
     ) : base(transform, ref stats)
     {

@@ -135,7 +135,7 @@ public abstract class PlayerSkills
     /// <param name="superArmorDamage">If this does any super armor damage.</param>
     /// <param name="knockAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this attack hits.</param>
     protected void AttackWithHitbox(
-        PlayerAttackHitbox desiredHitbox,
+        AttackHitbox desiredHitbox,
         float attackDamage,
         float superArmorDamage = 0.0f,
         float knockAmplitude = 0.0f

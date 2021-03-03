@@ -45,6 +45,14 @@ public class EnemyBehavior : StateMachineBehaviour
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         enemy.AdjustRotation();
+        if (enemy.CurrentCooldown > 0.0f)
+        {
+            enemy.CurrentCooldown -= Time.deltaTime;
+        }
+        else
+        {
+            enemy.CurrentCooldown = 0.0f;
+        }
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -81,6 +89,11 @@ public class EnemyBehavior : StateMachineBehaviour
 
         // Hit something and that "something" is the player
         enemy.ShouldChase = hit && IsPlayer(hit.collider.gameObject);
+    }
+
+    protected float DistanceToPlayer()
+    {
+        return Vector2.Distance(transform.position, player.position);
     }
 
     private IEnumerator RepeatedlyLookForPlayer()

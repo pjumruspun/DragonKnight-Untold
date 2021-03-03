@@ -7,9 +7,9 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     public PlayerClass CurrentClass => currentClass;
 
     [SerializeField]
-    private PlayerAttackHitbox swordPrimaryHitbox;
+    private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
-    private PlayerAttackHitbox dragonPrimaryHitbox;
+    private AttackHitbox dragonPrimaryHitbox;
     [SerializeField]
     private GameObject arrowPrefab;
     [SerializeField]
