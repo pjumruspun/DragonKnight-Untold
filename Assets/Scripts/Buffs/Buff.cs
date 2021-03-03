@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Buff
 {
-    public bool IsExpired;
+    public bool IsExpired => isExpired;
     private float duration = 0.0f;
     private bool isExpired;
 
@@ -12,26 +12,26 @@ public abstract class Buff
     {
         this.duration = duration;
         isExpired = false;
-        OnStart();
+        Start();
     }
 
-    public virtual void OnStart()
+    public virtual void Start()
     {
         Debug.Log("Start!");
     }
 
-    public virtual void OnUpdate()
+    public virtual void Update()
     {
         duration -= Time.deltaTime;
         if (duration < 0.0f)
         {
-            OnEnd();
+            End();
         }
     }
 
-    public virtual void OnEnd()
+    public virtual void End()
     {
         isExpired = true;
-        Debug.Log("End!");
+        // Debug.Log("End!");
     }
 }

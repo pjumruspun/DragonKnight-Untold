@@ -20,7 +20,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
     private PlayerStats stats;
-    private List<Buff> buffs;
+    private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
     {
@@ -48,6 +48,9 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
         // Initialize player starting class, player will get to choose this later
         ChangeClass(PlayerClass.Sword);
+
+        // Initialize buff manager
+        buffManager = new BuffManager();
     }
 
     private void OnDestroy()
@@ -60,6 +63,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void Update()
     {
         ProcessSkillCooldown();
+        buffManager.UpdateBuffManager();
 
         // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
@@ -77,7 +81,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Debugging only
         if (Input.GetKeyDown(KeyCode.G))
         {
-
+            buffManager.AddSwordUltBuff();
         }
 
         // If the player is still alive
@@ -175,11 +179,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             default:
                 throw new System.NotImplementedException();
         }
-    }
-
-    private void AddBuff(Buff buff)
-    {
-        // TODO
     }
 
     private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)

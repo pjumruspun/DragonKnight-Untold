@@ -6,20 +6,20 @@ public class SwordUltBuff : Buff
 {
     public SwordUltBuff(float duration) : base(duration) { }
 
-    public override void OnStart()
+    public override void Start()
     {
-        base.OnStart();
+        base.Start();
 
     }
 
-    public override void OnUpdate()
+    public override void Update()
     {
-        base.OnUpdate();
+        base.Update();
     }
 
-    public override void OnEnd()
+    public override void End()
     {
-        base.OnEnd();
+        base.End();
 
     }
 }
