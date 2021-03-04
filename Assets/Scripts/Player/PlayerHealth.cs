@@ -11,15 +11,16 @@ public class PlayerHealth : Health
 
     override protected void Start()
     {
-        maxHealth = ConfigContainer.Instance.GetPlayerConfig.MaxHealth;
+        maxHealth = PlayerStats.Instance.MaxHealth;
         base.Start();
+        Invoke("UpdateMaxHealth", Time.deltaTime);
         collider2D = GetComponent<BoxCollider2D>();
         if (playerCollider != null)
         {
             collider2D = playerCollider;
         }
 
-        EventPublisher.PlayerStatsChange += AdjustMaxHealth;
+        EventPublisher.PlayerStatsChange += UpdateMaxHealth;
     }
 
     protected override void HandleHealthChange()
@@ -35,12 +36,12 @@ public class PlayerHealth : Health
 
     private void OnDestroy()
     {
-        EventPublisher.PlayerStatsChange -= AdjustMaxHealth;
+        EventPublisher.PlayerStatsChange -= UpdateMaxHealth;
     }
 
-    private void AdjustMaxHealth(Stats stats)
+    private void UpdateMaxHealth()
     {
-        float finalMaxHealth = PlayerStats.CalculateMaxHealth(ConfigContainer.Instance.GetPlayerConfig.MaxHealth, stats.vit);
+        float finalMaxHealth = PlayerStats.Instance.MaxHealth;
         if (finalMaxHealth > maxHealth)
         {
             // Increase current health with the same amount of max health increased
@@ -56,6 +57,25 @@ public class PlayerHealth : Health
 
         EventPublisher.TriggerPlayerHealthChange();
     }
+
+    // private void AdjustMaxHealth(Stats stats)
+    // {
+    //     float finalMaxHealth = PlayerStats.CalculateMaxHealth(ConfigContainer.Instance.GetPlayerConfig.MaxHealth, stats.vit);
+    //     if (finalMaxHealth > maxHealth)
+    //     {
+    //         // Increase current health with the same amount of max health increased
+    //         float maxHealthIncreased = finalMaxHealth - maxHealth;
+    //         currentHealth += maxHealthIncreased;
+    //     }
+
+    //     maxHealth = finalMaxHealth;
+    //     if (currentHealth > maxHealth)
+    //     {
+    //         currentHealth = maxHealth;
+    //     }
+
+    //     EventPublisher.TriggerPlayerHealthChange();
+    // }
 
     private void Awake()
     {

@@ -15,7 +15,7 @@ public class EventPublisher
     public delegate void OnDragonGaugeChange(float dragonGauge);
     public delegate void OnPlayerDead();
     public delegate void OnPlayerChangeClass(PlayerClass pc);
-    public delegate void OnPlayerStatsChange(Stats stats);
+    public delegate void OnPlayerStatsChange();
     public delegate void OnStopFireBreath();
 
     // Player events
@@ -83,9 +83,9 @@ public class EventPublisher
         PlayerChangeClass?.Invoke(playerClass);
     }
 
-    public static void TriggerPlayerStatsChange(Stats stats)
+    public static void TriggerPlayerStatsChange()
     {
-        PlayerStatsChange?.Invoke(stats);
+        PlayerStatsChange?.Invoke();
     }
 
     public static void TriggerStopFireBreath()

@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class SwordSkills : PlayerSkills
 {
+    private float swordSkill2LockMovementTime = 0.5f;
+    private float swordSkill2DelayTime = 0.3f;
     private AttackHitbox swordPrimaryHitbox;
     private ObjectPool swordWaves;
 
     public SwordSkills(
         Transform transform,
-        ref PlayerStats stats,
         AttackHitbox swordPrimaryHitbox,
         GameObject swordWavePrefab
-    ) : base(transform, ref stats)
+    ) : base(transform)
     {
         this.swordWaves = new ObjectPool(swordWavePrefab, 20);
         this.swordPrimaryHitbox = swordPrimaryHitbox;
@@ -23,7 +24,7 @@ public class SwordSkills : PlayerSkills
         base.Skill1(currentPlayerPosition, forwardVector);
 
         // Primary attack = skillDamage[0]
-        float damage = stats.BaseSkillDamage[0];
+        float damage = PlayerStats.Instance.BaseSkillDamage[0];
 
         // Lock player's movement and flip
         // Lock equals to animation clip length
@@ -32,6 +33,10 @@ public class SwordSkills : PlayerSkills
 
         // Then attack
         AttackWithHitbox(swordPrimaryHitbox, damage, knockAmplitude: 1.5f);
+
+        // Set on cooldown
+        Debug.Log(PlayerStats.Instance.SkillCooldown[0]);
+        currentCooldown[0] = PlayerStats.Instance.SkillCooldown[0];
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
@@ -39,14 +44,14 @@ public class SwordSkills : PlayerSkills
         base.Skill2(currentPlayerPosition, forwardVector);
 
         // Skill 2 = skillDamage[1]
-        float damage = stats.BaseSkillDamage[1];
+        float damage = PlayerStats.Instance.BaseSkillDamage[1];
 
         // Sword wave
         // Lock player's movement
-        movement.LockMovementBySkill(configs.SwordSkill2LockMovementTime, true, true);
+        movement.LockMovementBySkill(swordSkill2LockMovementTime, true, true);
 
         // Spawn sword wave with delay
-        CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, configs.SwordSkill2DelayTime));
+        CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, swordSkill2DelayTime));
     }
 
     // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)

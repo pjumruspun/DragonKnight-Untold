@@ -301,15 +301,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 500538367555941619}
-  - component: {fileID: 500538367555941618}
+  - component: {fileID: 500538367555941624}
+  - component: {fileID: 8434112226462206554}
+  - component: {fileID: 8228665814043902127}
   - component: {fileID: 500538367555941617}
   - component: {fileID: 426988451819479028}
-  - component: {fileID: 500538367555941621}
-  - component: {fileID: 500538367555941624}
-  - component: {fileID: 500538367555941620}
-  - component: {fileID: 8228665814043902127}
   - component: {fileID: 500538367555941623}
+  - component: {fileID: 500538367555941620}
   - component: {fileID: 900061623}
+  - component: {fileID: 500538367555941621}
+  - component: {fileID: 500538367555941618}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -334,6 +335,151 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &500538367555941624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5b48dd630d844813ab07c0a1a6fd360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swordPrimaryHitbox: {fileID: 1937013507}
+  dragonPrimaryHitbox: {fileID: 911877144}
+  arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
+  swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
+  fireBreath: {fileID: 1386892953}
+--- !u!114 &8434112226462206554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a100f8b32088947fc86a02bd4f834120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8228665814043902127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a8459e836a543f587bd569b1d1b80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCollider: {fileID: 0}
+--- !u!95 &500538367555941617
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &426988451819479028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b644968464224ad3a40d78531e4e1c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drainingRate: 2
+  regenRate: 1
+--- !u!114 &500538367555941623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a9c477fcc4d64b98acc7f7c3533ef00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawJumpingRay: 0
+  maxDragonJumpCount: 3
+  dragonGlidingSpeed: 8
+  jumpingForce: 8
+  distanceToGround: 0.6
+  glideFallingSpeed: 1
+--- !u!114 &500538367555941620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd6ddd0e757454652969fa921727c8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nightController: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
+  archerController: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
+  swordController: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
+--- !u!70 &900061623
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.08}
+  m_Size: {x: 0.51, y: 1.01}
+  m_Direction: 0
+--- !u!50 &500538367555941621
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1.5
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!212 &500538367555941618
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -385,136 +531,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &500538367555941617
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &426988451819479028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b644968464224ad3a40d78531e4e1c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drainingRate: 2
-  regenRate: 1
---- !u!50 &500538367555941621
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1.5
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!114 &500538367555941624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5b48dd630d844813ab07c0a1a6fd360, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  swordPrimaryHitbox: {fileID: 1937013507}
-  dragonPrimaryHitbox: {fileID: 911877144}
-  arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
-  swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
-  fireBreath: {fileID: 1386892953}
---- !u!114 &500538367555941620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd6ddd0e757454652969fa921727c8de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nightController: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
-  archerController: {fileID: 9100000, guid: a79854e2b867140f3a908b5757abbe0e, type: 2}
-  swordController: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
---- !u!114 &8228665814043902127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1a8459e836a543f587bd569b1d1b80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCollider: {fileID: 0}
---- !u!114 &500538367555941623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a9c477fcc4d64b98acc7f7c3533ef00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drawJumpingRay: 0
-  maxDragonJumpCount: 3
-  dragonGlidingSpeed: 8
-  jumpingForce: 8
-  distanceToGround: 0.6
-  glideFallingSpeed: 1
---- !u!70 &900061623
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500538367555941616}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.08}
-  m_Size: {x: 0.51, y: 1.01}
-  m_Direction: 0

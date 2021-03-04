@@ -7,9 +7,21 @@ public class DragonSkills : PlayerSkills
 {
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
-    private float[] dragonAttackDamage = new float[4];
-    private float[] dragonAttackCooldown = new float[4];
-    // for testing
+    private float[] dragonAttackDamage = new float[4]
+    {
+        30.0f,
+        30.0f,
+        30.0f,
+        30.0f
+    };
+    private float[] dragonAttackCooldown = new float[4]
+    {
+        0.5f,
+        1.0f,
+        1.0f,
+        1.0f
+    };
+
     private float dragonSuperArmorAttack = 50.0f;
     private GameObject fireBreath;
     private Coroutine fireBreathCoroutine;
@@ -17,20 +29,14 @@ public class DragonSkills : PlayerSkills
     public DragonSkills(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
-        ref PlayerStats stats,
         GameObject fireBreath
-    ) : base(transform, ref stats)
+    ) : base(transform)
     {
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
-        this.stats = stats; // Player class stats
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
 
         this.fireBreath.SetActive(false);
-
-        DragonConfig config = ConfigContainer.Instance.GetPlayerConfig.NightDragonConfig;
-        config.dragonAttackDamage.CopyTo(this.dragonAttackDamage, 0);
-        config.dragonAttackCooldown.CopyTo(this.dragonAttackCooldown, 0);
     }
 
     public override float[] GetCurrentCooldown()
@@ -72,7 +78,7 @@ public class DragonSkills : PlayerSkills
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
-        AttackWithHitbox(dragonPrimaryHitbox, playerConfig.NightDragonConfig.dragonAttackDamage[0], dragonSuperArmorAttack, knockAmplitude: 3.0f);
+        AttackWithHitbox(dragonPrimaryHitbox, damage, dragonSuperArmorAttack, knockAmplitude: 3.0f);
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)

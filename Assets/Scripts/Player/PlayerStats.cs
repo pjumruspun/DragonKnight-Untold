@@ -3,106 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public struct Stats
+public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    // For easy referencing
-    public int atk;
-    public int agi;
-    public int vit;
-    public int tal;
-    public int luk;
-
-    public Stats(int atk, int agi, int vit, int tal, int luk)
-    {
-        this.atk = atk;
-        this.agi = agi;
-        this.vit = vit;
-        this.tal = tal;
-        this.luk = luk;
-    }
-}
-
-public class PlayerStats
-{
+    public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed;
+    public float MaxHealth => (1.0f + (vit.GetValue * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
     // Visible stats
-    private Stats stats;
+    [SerializeField]
+    private Stats<int> atk;
+    [SerializeField]
+    private Stats<int> agi;
+    [SerializeField]
+    private Stats<int> vit;
+    [SerializeField]
+    private Stats<int> tal;
+    [SerializeField]
+    private Stats<int> luk;
 
-    // Hidden stats
+    // Other stats
     private float critDamage = 1.5f;
+    private float basePlayerMaxHealth = 200;
+    private float baseMovementSpeed = 3.0f;
     private float healthRegen = 1.0f;
-    private float[] baseSkillCooldown = new float[4];
-    private float[] baseSkillDamage = new float[4];
+    private float[] baseSkillCooldown = new float[4]
+    {
+        0.5f,
+        3.0f,
+        1.0f,
+        1.0f
+    };
+    private float[] baseSkillDamage = new float[4]
+    {
+        20.0f,
+        30.0f,
+        20.0f,
+        20.0f
+    };
     private float attackSpeed = 1.0f; // Only affects skill 1, auto attack
 
-    private PlayerStats() { }
-
-    // For creating stats based on class
-    public static PlayerStats Create(PlayerClass playerClass)
+    protected override void Awake()
     {
-        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        ClassConfig config;
-        switch (playerClass)
-        {
-            case PlayerClass.Sword:
-                config = playerConfig.SwordConfig;
-                break;
-            case PlayerClass.Archer:
-                config = playerConfig.ArcherConfig;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        base.Awake();
 
-        float[] cooldowns = new float[4];
-        float[] skillDamage = new float[4];
-        config.skillCooldown.CopyTo(cooldowns, 0);
-        config.skillDamage.CopyTo(skillDamage, 0);
-        Stats stats = new Stats(config.atk, config.agi, config.vit, config.tal, config.luk);
-
-        PlayerStats playerStats = new PlayerStats();
-
-        playerStats.baseSkillCooldown = cooldowns;
-        playerStats.baseSkillDamage = skillDamage;
-        playerStats.stats = stats;
-
-        return playerStats;
-    }
-
-    // Assign but not create
-    public void AssignStats(Stats stats)
-    {
-        this.stats = stats;
-
-        // Notify stats changed
-        EventPublisher.TriggerPlayerStatsChange(stats);
-
-        // Health might update
-        EventPublisher.TriggerPlayerHealthChange();
-    }
-
-    public void AssignSkillCooldown(float[] cooldown)
-    {
-        for (int i = 0; i < baseSkillCooldown.Length; ++i)
-        {
-            baseSkillCooldown[i] = cooldown[i];
-        }
-    }
-
-    // Static version because PlayerMovement needs it
-    public static float CalculateMovementSpeed(float baseMoveSpeed, int inputAgi)
-    {
-        // Speed +3% per agi
-        return (1 + inputAgi * 0.03f) * baseMoveSpeed;
-    }
-
-    // Static version because PlayerHealth needs it
-    public static float CalculateMaxHealth(float baseHealth, int inputVit)
-    {
-        // Health +5% per vit
-        return (1 + inputVit * 0.05f) * baseHealth;
+        // Set stats, should random
+        atk = new Stats<int>(0);
+        agi = new Stats<int>(30);
+        vit = new Stats<int>(40);
+        tal = new Stats<int>(0);
+        luk = new Stats<int>(40);
     }
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
@@ -110,7 +60,7 @@ public class PlayerStats
         float random = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
-        float damage = baseDamage * (1 + 0.03f * stats.atk);
+        float damage = baseDamage * (1 + 0.03f * atk.GetValue);
 
         // Handle crit
         if (random < CalculateCritChance() && canCrit)
@@ -129,13 +79,13 @@ public class PlayerStats
 
     public override string ToString()
     {
-        return $"ATK: {stats.atk}\t AGI: {stats.agi}\t VIT: {stats.vit}\t TAL: {stats.tal}\t LUK: {stats.luk}";
+        return $"ATK: {atk.GetValue}\t AGI: {agi.GetValue}\t VIT: {vit.GetValue}\t TAL: {tal.GetValue}\t LUK: {luk.GetValue}";
     }
 
     private float CalculateCritChance()
     {
         // Simple 2% crit chance per luk for now
-        return stats.luk * 0.02f;
+        return luk.GetValue * 0.02f;
     }
 
     // This is very expensive as it's currently calculating every frame

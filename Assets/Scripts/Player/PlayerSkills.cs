@@ -6,11 +6,8 @@ public abstract class PlayerSkills
 {
     // Cache
     protected Transform transform;
-    protected PlayerConfig playerConfig;
-    protected AdditionalSkillConfigs configs;
     protected PlayerMovement movement;
     protected float[] currentCooldown;
-    protected PlayerStats stats;
 
     /// <summary>
     /// Returns current cooldown of every skill.
@@ -30,17 +27,14 @@ public abstract class PlayerSkills
     /// <returns></returns>
     public virtual float CurrentCooldownPercentage(int skillNumber)
     {
-        return currentCooldown[skillNumber] / stats.SkillCooldown[skillNumber];
+        return currentCooldown[skillNumber] / PlayerStats.Instance.SkillCooldown[skillNumber];
     }
 
-    public PlayerSkills(Transform transform, ref PlayerStats stats)
+    public PlayerSkills(Transform transform)
     {
         // Cache
-        playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        configs = playerConfig.AdditionalConfigs;
         movement = PlayerMovement.Instance;
         this.transform = transform;
-        this.stats = stats;
         currentCooldown = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
     }
 
@@ -70,7 +64,7 @@ public abstract class PlayerSkills
     /// <param name="forwardVector"></param>
     public virtual void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
-        currentCooldown[0] = stats.SkillCooldown[0];
+        currentCooldown[0] = PlayerStats.Instance.SkillCooldown[0];
     }
 
     /// <summary>
@@ -80,7 +74,7 @@ public abstract class PlayerSkills
     /// <param name="forwardVector"></param>
     public virtual void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
-        currentCooldown[1] = stats.SkillCooldown[1];
+        currentCooldown[1] = PlayerStats.Instance.SkillCooldown[1];
     }
 
     /// <summary>
@@ -117,7 +111,7 @@ public abstract class PlayerSkills
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
             projectile.SetDirection(forwardVector);
-            stats.CalculateDamage(damage, out float finalDamage, out bool crit);
+            PlayerStats.Instance.CalculateDamage(damage, out float finalDamage, out bool crit);
             projectile.SetDamage(finalDamage, crit);
             projectile.SetKnockValue(knockAmplitude);
         }
@@ -152,7 +146,7 @@ public abstract class PlayerSkills
                 if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
                     // Damage the enemy here
-                    stats.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
+                    PlayerStats.Instance.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
                     enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockAmplitude);
                 }
                 else

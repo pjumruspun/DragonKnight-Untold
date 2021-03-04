@@ -19,7 +19,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private DragonSkills dragonSkills;
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
-    private PlayerStats stats;
     private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
@@ -173,7 +172,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         humanSkills = CreatePlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, ref this.stats, fireBreath);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath);
     }
 
     private Vector2 GetForwardVector()
@@ -193,19 +192,15 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
     {
-        // Create stats, this is just base stats for now
-        // We might want something more flexible than this later on
-        this.stats = PlayerStats.Create(playerClass);
-
         // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
                 // Send this.stats pointer in
-                return new SwordSkills(transform, ref this.stats, swordPrimaryHitbox, swordWavePrefab);
+                return new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
             case PlayerClass.Archer:
                 // Send this.stats pointer in
-                return new ArcherSkills(transform, ref this.stats, arrowPrefab);
+                return new ArcherSkills(transform, arrowPrefab);
             default:
                 throw new System.ArgumentOutOfRangeException();
         }

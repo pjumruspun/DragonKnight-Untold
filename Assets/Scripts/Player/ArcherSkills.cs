@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ArcherSkills : PlayerSkills
 {
+    private const float archerSkill2LockMovementTime = 0.5f;
+    private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
     private ObjectPool arrows;
 
     public ArcherSkills(
         Transform transform,
-        ref PlayerStats stats,
         GameObject arrowPrefab
-    ) : base(transform, ref stats)
+    ) : base(transform)
     {
         arrows = new ObjectPool(arrowPrefab, 20);
     }
@@ -20,7 +21,7 @@ public class ArcherSkills : PlayerSkills
         base.Skill1(currentPlayerPosition, forwardVector);
 
         // Primary attack = skillDamage[0]
-        float damage = stats.BaseSkillDamage[0];
+        float damage = PlayerStats.Instance.BaseSkillDamage[0];
         // Spawn arrow
         AttackWithProjectile(ref arrows, damage, currentPlayerPosition, forwardVector);
     }
@@ -30,14 +31,14 @@ public class ArcherSkills : PlayerSkills
         base.Skill2(currentPlayerPosition, forwardVector);
 
         // Skill 2 = skillDamage[1]
-        float damage = stats.BaseSkillDamage[1];
+        float damage = PlayerStats.Instance.BaseSkillDamage[1];
 
         // Arrow rain
         // Lock player's movement and flip
-        movement.LockMovementBySkill(configs.ArcherSkill2LockMovementTime, false, true);
+        movement.LockMovementBySkill(archerSkill2LockMovementTime, false, true);
 
         // Add force by skills first
-        Vector2 forceVector = configs.ArcherSkill2ForceVector;
+        Vector2 forceVector = archerSkill2ForceVector;
         switch (movement.TurnDirection)
         {
             case MovementState.Right:
