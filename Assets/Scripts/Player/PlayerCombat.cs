@@ -10,10 +10,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonPrimaryHitbox;
-    [SerializeField]
-    private GameObject arrowPrefab;
-    [SerializeField]
-    private GameObject swordWavePrefab;
+
     [SerializeField]
     private GameObject fireBreath;
     private DragonSkills dragonSkills;
@@ -197,10 +194,10 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             case PlayerClass.Sword:
                 // Send this.stats pointer in
-                return new SwordSkills(transform, swordPrimaryHitbox, swordWavePrefab);
+                return new SwordSkills(transform, swordPrimaryHitbox);
             case PlayerClass.Archer:
                 // Send this.stats pointer in
-                return new ArcherSkills(transform, arrowPrefab);
+                return new ArcherSkills(transform);
             default:
                 throw new System.ArgumentOutOfRangeException();
         }

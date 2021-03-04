@@ -7,15 +7,12 @@ public class SwordSkills : PlayerSkills
     private float swordSkill2LockMovementTime = 0.5f;
     private float swordSkill2DelayTime = 0.3f;
     private AttackHitbox swordPrimaryHitbox;
-    private ObjectPool swordWaves;
 
     public SwordSkills(
         Transform transform,
-        AttackHitbox swordPrimaryHitbox,
-        GameObject swordWavePrefab
+        AttackHitbox swordPrimaryHitbox
     ) : base(transform)
     {
-        this.swordWaves = new ObjectPool(swordWavePrefab, 20);
         this.swordPrimaryHitbox = swordPrimaryHitbox;
     }
 
@@ -62,6 +59,6 @@ public class SwordSkills : PlayerSkills
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
     {
         yield return new WaitForSeconds(delay);
-        AttackWithProjectile(ref swordWaves, damage, transform.position, forwardVector, knockAmplitude: 2.0f);
+        AttackWithProjectile(ref ObjectManager.Instance.SwordWaves, damage, transform.position, forwardVector, knockAmplitude: 2.0f);
     }
 }

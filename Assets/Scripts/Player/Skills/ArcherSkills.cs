@@ -6,15 +6,8 @@ public class ArcherSkills : PlayerSkills
 {
     private const float archerSkill2LockMovementTime = 0.5f;
     private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
-    private ObjectPool arrows;
 
-    public ArcherSkills(
-        Transform transform,
-        GameObject arrowPrefab
-    ) : base(transform)
-    {
-        arrows = new ObjectPool(arrowPrefab, 20);
-    }
+    public ArcherSkills(Transform transform) : base(transform) { }
 
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
@@ -23,7 +16,7 @@ public class ArcherSkills : PlayerSkills
         // Primary attack = skillDamage[0]
         float damage = PlayerStats.Instance.BaseSkillDamage[0];
         // Spawn arrow
-        AttackWithProjectile(ref arrows, damage, currentPlayerPosition, forwardVector);
+        AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, currentPlayerPosition, forwardVector);
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
@@ -64,7 +57,7 @@ public class ArcherSkills : PlayerSkills
         {
             for (int j = 0; j < 5; ++j)
             {
-                AttackWithProjectile(ref arrows, damage, transform.position, forwardVector, -7.5f - j * 15.0f);
+                AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, forwardVector, -7.5f - j * 15.0f);
             }
 
             yield return new WaitForSeconds(interval);
