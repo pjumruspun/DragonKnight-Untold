@@ -1,18 +1,38 @@
+using UnityEngine;
+
 [System.Serializable]
 public struct ItemStats
 {
+    // Main Stats
+    [Header("Additive Modifiers")]
     public int AtkAddModifier;
     public int AgiAddModifier;
     public int VitAddModifier;
     public int TalAddModifier;
     public int LukAddModifier;
+
+    [Header("Multiplicative Modifiers")]
     public float AtkMultModifier;
     public float AgiMultModifier;
     public float VitMultModifier;
     public float TalMultModifier;
     public float LukMultModifier;
 
-    // public ItemStats() { }
+    // Additional Stats
+    [Header("Extra Stats Additive Modifiers")]
+    public float CritDamageAddModifier;
+    public float MovementSpeedAddModifier;
+    public float HealthRegenAddModifier;
+    public float AttackSpeedAddModifier;
+    public float CooldownReductionAddModifier;
+
+    [Header("Extra Stats Multiplicative Modifiers")]
+    public float CritDamageMultModifier;
+    public float MovementSpeedMultModifier;
+    public float HealthRegenMultModifier;
+    public float AttackSpeedMultModifier;
+    public float CooldownReductionMultModifier;
+
 
     public ItemStats(
         int atkAddModifier,
@@ -20,11 +40,21 @@ public struct ItemStats
         int vitAddModifier,
         int talAddModifier,
         int lukAddModifier,
-        float atkMultModifier = 0.0f,
-        float agiMultModifier = 0.0f,
-        float vitMultModifier = 0.0f,
-        float talMultModifier = 0.0f,
-        float lukMultModifier = 0.0f
+        float atkMultModifier,
+        float agiMultModifier,
+        float vitMultModifier,
+        float talMultModifier,
+        float lukMultModifier,
+        float critDamageAddModifier,
+        float movementSpeedAddModifier,
+        float healthRegenAddModifier,
+        float attackSpeedAddModifier,
+        float cooldownReductionAddModifier,
+        float critDamageMultModifier,
+        float movementSpeedMultModifier,
+        float healthRegenMultModifier,
+        float attackSpeedMultModifier,
+        float cooldownReductionMultModifier
     )
     {
         this.AtkAddModifier = atkAddModifier;
@@ -37,6 +67,16 @@ public struct ItemStats
         this.VitMultModifier = vitMultModifier;
         this.TalMultModifier = talMultModifier;
         this.LukMultModifier = lukMultModifier;
+        this.CritDamageAddModifier = critDamageAddModifier;
+        this.MovementSpeedAddModifier = movementSpeedAddModifier;
+        this.HealthRegenAddModifier = healthRegenAddModifier;
+        this.AttackSpeedAddModifier = attackSpeedAddModifier;
+        this.CooldownReductionAddModifier = cooldownReductionAddModifier;
+        this.CritDamageMultModifier = critDamageMultModifier;
+        this.MovementSpeedMultModifier = movementSpeedMultModifier;
+        this.HealthRegenMultModifier = healthRegenMultModifier;
+        this.AttackSpeedMultModifier = attackSpeedMultModifier;
+        this.CooldownReductionMultModifier = cooldownReductionMultModifier;
     }
 
     public static ItemStats operator +(ItemStats a) => a;
@@ -53,7 +93,17 @@ public struct ItemStats
             -a.AgiMultModifier,
             -a.VitMultModifier,
             -a.TalMultModifier,
-            -a.LukMultModifier
+            -a.LukMultModifier,
+            -a.CritDamageAddModifier,
+            -a.MovementSpeedAddModifier,
+            -a.HealthRegenAddModifier,
+            -a.AttackSpeedAddModifier,
+            -a.CooldownReductionAddModifier,
+            -a.CritDamageMultModifier,
+            -a.MovementSpeedMultModifier,
+            -a.HealthRegenMultModifier,
+            -a.AttackSpeedMultModifier,
+            -a.CooldownReductionMultModifier
         );
     }
 
@@ -69,7 +119,17 @@ public struct ItemStats
             a.AgiMultModifier + b.AgiMultModifier,
             a.VitMultModifier + b.VitMultModifier,
             a.TalMultModifier + b.TalMultModifier,
-            a.LukMultModifier + b.LukMultModifier
+            a.LukMultModifier + b.LukMultModifier,
+            a.CritDamageAddModifier + b.CritDamageAddModifier,
+            a.MovementSpeedAddModifier + b.MovementSpeedAddModifier,
+            a.HealthRegenAddModifier + b.HealthRegenAddModifier,
+            a.AttackSpeedAddModifier + b.AttackSpeedAddModifier,
+            a.CooldownReductionAddModifier + b.CooldownReductionAddModifier,
+            a.CritDamageMultModifier + b.CritDamageMultModifier,
+            a.MovementSpeedMultModifier + b.MovementSpeedMultModifier,
+            a.HealthRegenMultModifier + b.HealthRegenMultModifier,
+            a.AttackSpeedMultModifier + b.AttackSpeedMultModifier,
+            a.CooldownReductionMultModifier + b.CooldownReductionMultModifier
         );
     }
 
@@ -85,7 +145,17 @@ public struct ItemStats
             a.AgiMultModifier - b.AgiMultModifier,
             a.VitMultModifier - b.VitMultModifier,
             a.TalMultModifier - b.TalMultModifier,
-            a.LukMultModifier - b.LukMultModifier
+            a.LukMultModifier - b.LukMultModifier,
+            a.CritDamageAddModifier - b.CritDamageAddModifier,
+            a.MovementSpeedAddModifier - b.MovementSpeedAddModifier,
+            a.HealthRegenAddModifier - b.HealthRegenAddModifier,
+            a.AttackSpeedAddModifier - b.AttackSpeedAddModifier,
+            a.CooldownReductionAddModifier - b.CooldownReductionAddModifier,
+            a.CritDamageMultModifier - b.CritDamageMultModifier,
+            a.MovementSpeedMultModifier - b.MovementSpeedMultModifier,
+            a.HealthRegenMultModifier - b.HealthRegenMultModifier,
+            a.AttackSpeedMultModifier - b.AttackSpeedMultModifier,
+            a.CooldownReductionMultModifier - b.CooldownReductionMultModifier
         );
     }
 

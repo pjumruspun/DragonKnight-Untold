@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed;
+    public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed.GetValue;
     public float MaxHealth => (1.0f + (vit.GetValue * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
-    // Visible stats
+    [Header("Main Stats")]
     [SerializeField]
     private Stats<int> atk;
     [SerializeField]
@@ -22,11 +21,18 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     [SerializeField]
     private Stats<int> luk;
 
-    // Other stats
-    private float critDamage = 1.5f;
+    [Header("Additional Stats")]
+    [SerializeField]
+    private Stats<float> critDamage = new Stats<float>(1.5f);
+    [SerializeField]
+    private Stats<float> baseMovementSpeed = new Stats<float>(3.0f);
+    [SerializeField]
+    private Stats<float> healthRegen = new Stats<float>(1.0f);
+    [SerializeField]
+    private Stats<float> attackSpeed = new Stats<float>(1.0f); // Only affects skill 1, auto attack
+    [SerializeField]
+    private Stats<float> cooldownReduction = new Stats<float>(1.0f); // Only affects skill 2, 3, and 4
     private float basePlayerMaxHealth = 200;
-    private float baseMovementSpeed = 3.0f;
-    private float healthRegen = 1.0f;
     private float[] baseSkillCooldown = new float[4]
     {
         0.5f,
@@ -41,7 +47,6 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         20.0f,
         20.0f
     };
-    private float attackSpeed = 1.0f; // Only affects skill 1, auto attack
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
@@ -54,7 +59,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         if (random < CalculateCritChance() && canCrit)
         {
             // Crit
-            finalDamage = damage * critDamage;
+            finalDamage = damage * critDamage.GetValue;
             crit = true;
         }
         else
@@ -86,6 +91,21 @@ public class PlayerStats : MonoSingleton<PlayerStats>
 
         luk.Additive = stats.LukAddModifier;
         luk.Multiplicative = stats.LukMultModifier;
+
+        critDamage.Additive = stats.CritDamageAddModifier;
+        critDamage.Multiplicative = stats.CritDamageMultModifier;
+
+        baseMovementSpeed.Additive = stats.MovementSpeedAddModifier;
+        baseMovementSpeed.Multiplicative = stats.MovementSpeedMultModifier;
+
+        healthRegen.Additive = stats.HealthRegenAddModifier;
+        healthRegen.Multiplicative = stats.HealthRegenMultModifier;
+
+        attackSpeed.Additive = stats.AttackSpeedAddModifier;
+        attackSpeed.Multiplicative = stats.AttackSpeedMultModifier;
+
+        cooldownReduction.Additive = stats.CooldownReductionAddModifier;
+        cooldownReduction.Multiplicative = stats.CooldownReductionMultModifier;
 
         EventPublisher.TriggerPlayerStatsChange();
     }
@@ -127,7 +147,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         }
 
         // Only skill 1 is affected by attack speed
-        results[0] /= attackSpeed;
+        results[0] /= attackSpeed.GetValue;
         return baseSkillCooldown;
     }
 }
