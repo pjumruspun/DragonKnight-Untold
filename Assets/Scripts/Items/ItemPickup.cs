@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class ItemPickup : Interactable
 {
     [SerializeField]
@@ -16,6 +17,7 @@ public class ItemPickup : Interactable
     private void Start()
     {
         RenderPickupUI();
+        RenderSprite();
     }
 
     private void RenderPickupUI()
@@ -24,9 +26,14 @@ public class ItemPickup : Interactable
         detailText = item.name;
     }
 
+    private void RenderSprite()
+    {
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        renderer.sprite = item.icon;
+    }
+
     private void PickItem()
     {
-        Debug.Log("Picking up an item.");
         // Add to player
         Inventory.Instance.Add(item);
 

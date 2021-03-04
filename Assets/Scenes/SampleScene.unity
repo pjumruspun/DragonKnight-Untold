@@ -5735,9 +5735,9 @@ GameObject:
   - component: {fileID: 615186484}
   - component: {fileID: 615186483}
   m_Layer: 11
-  m_Name: Interact (1)
+  m_Name: Item (1)
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -5753,8 +5753,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d92b52f028e44b2af62d18a3c60131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionText: Interact
-  detailText: An Interactable
   item: {fileID: 11400000, guid: c5ba2c90c8c14448caa67081ed97102a, type: 2}
 --- !u!212 &615186484
 SpriteRenderer:
@@ -5796,7 +5794,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cec618cb0ea544b67ab243fef51bc7fb, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5804,7 +5802,7 @@ SpriteRenderer:
   m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &615186485
@@ -6100,9 +6098,9 @@ GameObject:
   - component: {fileID: 895130253}
   - component: {fileID: 895130251}
   m_Layer: 11
-  m_Name: Interact
+  m_Name: Item
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -6132,8 +6130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d92b52f028e44b2af62d18a3c60131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionText: Interact
-  detailText: An Interactable
   item: {fileID: 11400000, guid: c3cc87b701e8b4d39a8dcca86807f213, type: 2}
 --- !u!61 &895130252
 BoxCollider2D:
@@ -6201,7 +6197,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cec618cb0ea544b67ab243fef51bc7fb, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -6209,7 +6205,7 @@ SpriteRenderer:
   m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1066718024
@@ -6812,6 +6808,14 @@ PrefabInstance:
       propertyPath: detailText
       value: 
       objectReference: {fileID: 1066718026}
+    - target: {fileID: 6825321849903209975, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6825321849903209975, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b043a9ba7df854ab88527379856c9b96, type: 3}
 --- !u!1001 &3775015375766233873

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Ring of Defense
   m_EditorClassIdentifier: 
   name: Ring of Defense
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 3c6a898a846da40d5b3fa6aa79b1862c, type: 3}
