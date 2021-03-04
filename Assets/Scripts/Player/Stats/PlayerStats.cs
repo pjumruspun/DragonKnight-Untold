@@ -5,8 +5,8 @@ using System;
 
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed;
-    public float MaxHealth => (1.0f + (vit.GetValue * 0.05f)) * basePlayerMaxHealth;
+    public float MovementSpeed => (1.0f + (agi.GetInt * 0.03f)) * baseMovementSpeed;
+    public float MaxHealth => (1.0f + (vit.GetInt * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
@@ -43,24 +43,12 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     };
     private float attackSpeed = 1.0f; // Only affects skill 1, auto attack
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        // Set stats, should random
-        atk = new Stats<int>(0);
-        agi = new Stats<int>(30);
-        vit = new Stats<int>(40);
-        tal = new Stats<int>(0);
-        luk = new Stats<int>(40);
-    }
-
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
         float random = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
-        float damage = baseDamage * (1 + 0.03f * atk.GetValue);
+        float damage = baseDamage * (1 + 0.03f * atk.GetInt);
 
         // Handle crit
         if (random < CalculateCritChance() && canCrit)
@@ -77,15 +65,52 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         }
     }
 
+    /// <summary>
+    /// Adapter method, for assigning the whole stats for player
+    /// from the parameter "stats"
+    /// </summary>
+    /// <param name="stats"></param>
+    public void AssignStatsFromItems(ItemStats stats)
+    {
+        atk.Additive = stats.AtkAddModifier;
+        atk.Multiplicative = stats.AtkMultModifier;
+
+        agi.Additive = stats.AgiAddModifier;
+        agi.Multiplicative = stats.AgiMultModifier;
+
+        vit.Additive = stats.VitAddModifier;
+        vit.Multiplicative = stats.VitMultModifier;
+
+        tal.Additive = stats.TalAddModifier;
+        tal.Multiplicative = stats.TalMultModifier;
+
+        luk.Additive = stats.LukAddModifier;
+        luk.Multiplicative = stats.LukMultModifier;
+
+        EventPublisher.TriggerPlayerStatsChange();
+    }
+
     public override string ToString()
     {
-        return $"ATK: {atk.GetValue}\t AGI: {agi.GetValue}\t VIT: {vit.GetValue}\t TAL: {tal.GetValue}\t LUK: {luk.GetValue}";
+        return $"ATK: {atk.GetInt}\t AGI: {agi.GetInt}\t VIT: {vit.GetInt}\t TAL: {tal.GetInt}\t LUK: {luk.GetInt}";
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // Set stats, should random
+        atk = new Stats<int>(0);
+        agi = new Stats<int>(30);
+        vit = new Stats<int>(40);
+        tal = new Stats<int>(0);
+        luk = new Stats<int>(40);
     }
 
     private float CalculateCritChance()
     {
         // Simple 2% crit chance per luk for now
-        return luk.GetValue * 0.02f;
+        return luk.GetInt * 0.02f;
     }
 
     // This is very expensive as it's currently calculating every frame

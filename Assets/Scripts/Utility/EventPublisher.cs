@@ -17,6 +17,7 @@ public class EventPublisher
     public delegate void OnPlayerChangeClass(PlayerClass pc);
     public delegate void OnPlayerStatsChange();
     public delegate void OnStopFireBreath();
+    public delegate void OnInventoryChange();
 
     // Player events
     public static event OnPlayerJump PlayerJump;
@@ -31,6 +32,7 @@ public class EventPublisher
     public static event OnPlayerChangeClass PlayerChangeClass;
     public static event OnPlayerStatsChange PlayerStatsChange;
     public static event OnStopFireBreath StopFireBreath;
+    public static event OnInventoryChange InventoryChange;
 
 
     public static void TriggerPlayerJump()
@@ -91,5 +93,10 @@ public class EventPublisher
     public static void TriggerStopFireBreath()
     {
         StopFireBreath?.Invoke();
+    }
+
+    public static void TriggerInventoryChange()
+    {
+        InventoryChange?.Invoke();
     }
 }

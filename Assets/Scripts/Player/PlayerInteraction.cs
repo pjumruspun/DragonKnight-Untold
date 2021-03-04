@@ -63,7 +63,7 @@ public class PlayerInteraction : MonoBehaviour
         if (interactable == focus)
         {
             focus = null;
-            Debug.Log($"Stop setting focus on {interactable.gameObject.name}");
+            // Debug.Log($"Stop setting focus on {interactable.gameObject.name}");
             ClearText();
         }
     }

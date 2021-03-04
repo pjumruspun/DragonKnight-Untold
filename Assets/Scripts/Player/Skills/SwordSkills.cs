@@ -30,10 +30,6 @@ public class SwordSkills : PlayerSkills
 
         // Then attack
         AttackWithHitbox(swordPrimaryHitbox, damage, knockAmplitude: 1.5f);
-
-        // Set on cooldown
-        Debug.Log(PlayerStats.Instance.SkillCooldown[0]);
-        currentCooldown[0] = PlayerStats.Instance.SkillCooldown[0];
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
