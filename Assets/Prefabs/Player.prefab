@@ -94,7 +94,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1386892955
 Transform:
   m_ObjectHideFlags: 0
@@ -301,6 +301,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 500538367555941619}
+  - component: {fileID: 4453584005449387455}
   - component: {fileID: 500538367555941624}
   - component: {fileID: 8434112226462206554}
   - component: {fileID: 8228665814043902127}
@@ -332,9 +333,22 @@ Transform:
   - {fileID: 1937013506}
   - {fileID: 911877143}
   - {fileID: 1386892955}
+  - {fileID: 2218699512693795601}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4453584005449387455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500538367555941616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feae0090fe3d4409b83506d32db4497a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &500538367555941624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,6 +378,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a100f8b32088947fc86a02bd4f834120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  atk:
+    baseValue: 0
+  agi:
+    baseValue: 0
+  vit:
+    baseValue: 0
+  tal:
+    baseValue: 0
+  luk:
+    baseValue: 0
 --- !u!114 &8228665814043902127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,7 +411,7 @@ Animator:
   m_GameObject: {fileID: 500538367555941616}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -520,7 +544,7 @@ SpriteRenderer:
   m_SortingLayerID: -825998113
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b75ccbc66b0764bb8a2cd412187f6cc1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17d87b932c61d444b9851b5217747aee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -531,3 +555,65 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6825321849903209975
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2218699512693795601}
+  - component: {fileID: 6269893961671684103}
+  - component: {fileID: 8535994484905372200}
+  m_Layer: 6
+  m_Name: Interactor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2218699512693795601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6825321849903209975}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 500538367555941619}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6269893961671684103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6825321849903209975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1e240f45f054fbeaf6216d5ed09232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionText: {fileID: 0}
+  detailText: {fileID: 0}
+--- !u!58 &8535994484905372200
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6825321849903209975}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.75
