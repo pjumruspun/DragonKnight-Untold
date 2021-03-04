@@ -14,3 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Ring of Attack
   icon: {fileID: 21300000, guid: 3e75fc765721642d399c2eb3eccd32b3, type: 3}
+  rarity: 0
+  stats:
+    AtkAddModifier: 10
+    AgiAddModifier: 0
+    VitAddModifier: 0
+    TalAddModifier: 0
+    LukAddModifier: 0
+    AtkMultModifier: 0.5
+    AgiMultModifier: 0
+    VitMultModifier: 0
+    TalMultModifier: 0
+    LukMultModifier: 0

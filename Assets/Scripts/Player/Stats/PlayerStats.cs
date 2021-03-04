@@ -5,8 +5,8 @@ using System;
 
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
-    public float MovementSpeed => (1.0f + (agi.GetInt * 0.03f)) * baseMovementSpeed;
-    public float MaxHealth => (1.0f + (vit.GetInt * 0.05f)) * basePlayerMaxHealth;
+    public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed;
+    public float MaxHealth => (1.0f + (vit.GetValue * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
@@ -48,7 +48,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         float random = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
-        float damage = baseDamage * (1 + 0.03f * atk.GetInt);
+        float damage = baseDamage * (1 + 0.03f * atk.GetValue);
 
         // Handle crit
         if (random < CalculateCritChance() && canCrit)
@@ -92,7 +92,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
 
     public override string ToString()
     {
-        return $"ATK: {atk.GetInt}\t AGI: {agi.GetInt}\t VIT: {vit.GetInt}\t TAL: {tal.GetInt}\t LUK: {luk.GetInt}";
+        return $"ATK: {atk.GetValue}\t AGI: {agi.GetValue}\t VIT: {vit.GetValue}\t TAL: {tal.GetValue}\t LUK: {luk.GetValue}";
     }
 
     protected override void Awake()
@@ -100,17 +100,17 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         base.Awake();
 
         // Set stats, should random
-        atk = new Stats<int>(0);
+        atk = new Stats<int>(30);
         agi = new Stats<int>(30);
-        vit = new Stats<int>(40);
-        tal = new Stats<int>(0);
-        luk = new Stats<int>(40);
+        vit = new Stats<int>(30);
+        tal = new Stats<int>(30);
+        luk = new Stats<int>(30);
     }
 
     private float CalculateCritChance()
     {
         // Simple 2% crit chance per luk for now
-        return luk.GetInt * 0.02f;
+        return luk.GetValue * 0.02f;
     }
 
     // This is very expensive as it's currently calculating every frame
