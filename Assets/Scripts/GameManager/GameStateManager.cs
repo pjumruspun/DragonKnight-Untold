@@ -7,24 +7,64 @@ public class GameStateManager : MonoSingleton<GameStateManager>
 {
     public GameState State => gameState;
     private GameState gameState;
+    private const string mainMenuScene = "MainMenu";
+    private const string gameplayScene = "Gameplay";
 
     public void LoadMainMenu()
     {
         gameState = GameState.MainMenu;
+        // Unpause the game
+        GameEvents.TriggerPause(false);
         // Load main menu
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(mainMenuScene);
     }
 
     public void StartGame()
     {
         gameState = GameState.Gameplay;
         // Load game scene
-        SceneManager.LoadScene("Gameplay");
+        SceneManager.LoadScene(gameplayScene);
+        // Unpause the game
+        GameEvents.TriggerPause(false);
     }
 
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(gameObject);
+        try
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        catch
+        {
+            // Do nothing
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Adjust scene if faulty
+        switch (scene.name)
+        {
+            case mainMenuScene:
+                gameState = GameState.MainMenu;
+                break;
+            case gameplayScene:
+                gameState = GameState.Gameplay;
+                break;
+            default:
+                Debug.LogWarning("Something wrong may be happening");
+                break;
+        }
     }
 }
