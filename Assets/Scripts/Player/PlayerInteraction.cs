@@ -23,7 +23,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void ListenToInteractSignal()
     {
-        if (InputManager.Interact)
+        if (InputManager.Interact && focus != null)
         {
             focus.Interact();
         }

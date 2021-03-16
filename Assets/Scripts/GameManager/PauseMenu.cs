@@ -29,14 +29,14 @@ public class PauseMenu : MonoSingleton<PauseMenu>
     {
         if (InputManager.Pause && GameStateManager.Instance.State == GameState.Gameplay)
         {
-            GameEvents.TriggerPause(isPaused); // Pass old isPause value
+            GameEvents.TriggerPause(!isPaused);
         }
     }
 
     private void ProcessPause(bool pause)
     {
         // Change isPause inside this function
-        isPaused = !isPaused;
+        isPaused = pause;
 
         if (pause)
         {

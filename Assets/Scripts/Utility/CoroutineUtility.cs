@@ -13,6 +13,11 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
         return StartCoroutine(function);
     }
 
+    public Coroutine ExecAtEndFrame(System.Action func)
+    {
+        return StartCoroutine(ExecAtEndFramePrivate(func));
+    }
+
     public void KillCoroutine(Coroutine coroutine)
     {
         StopCoroutine(coroutine);
@@ -22,5 +27,11 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
     {
         yield return new WaitForSeconds(seconds);
         objectToHide.SetActive(false);
+    }
+
+    private IEnumerator ExecAtEndFramePrivate(System.Action func)
+    {
+        yield return new WaitForEndOfFrame();
+        func?.Invoke();
     }
 }

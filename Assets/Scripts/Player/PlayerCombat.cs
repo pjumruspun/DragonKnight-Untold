@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
+    public int SwordCombo =>
+        currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
     public PlayerClass CurrentClass => currentClass;
 
     [SerializeField]

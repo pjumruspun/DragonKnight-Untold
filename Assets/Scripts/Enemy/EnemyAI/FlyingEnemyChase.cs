@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
+#pragma warning disable 0108
 public class FlyingEnemyChase : EnemyBehavior
 {
     private Seeker seeker;
