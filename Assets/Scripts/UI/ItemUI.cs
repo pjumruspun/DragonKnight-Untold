@@ -44,7 +44,7 @@ public class ItemUI : MonoSingleton<ItemUI>
                 {
                     itemIcon.SetIcon(item.icon);
                     itemIcon.SetCount(count);
-                    icon.transform.parent = transform;
+                    icon.transform.SetParent(transform);
                     itemIcons[item] = icon;
                 }
                 else
