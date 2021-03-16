@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Bloody Cleaver
   icon: {fileID: 21300000, guid: 9ab2fafedcfdf4429b5d653b6f35a95e, type: 3}
-  rarity: 1
+  rarity: 2
   stats:
     AtkAddModifier: 50
     AgiAddModifier: -10
@@ -26,3 +26,13 @@ MonoBehaviour:
     VitMultModifier: 0
     TalMultModifier: 0
     LukMultModifier: 0
+    CritDamageAddModifier: 0
+    MovementSpeedAddModifier: 0
+    HealthRegenAddModifier: 0
+    AttackSpeedAddModifier: 0
+    CooldownReductionAddModifier: 0
+    CritDamageMultModifier: 0
+    MovementSpeedMultModifier: 0
+    HealthRegenMultModifier: 0
+    AttackSpeedMultModifier: 0
+    CooldownReductionMultModifier: 0
