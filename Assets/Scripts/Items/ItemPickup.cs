@@ -17,9 +17,15 @@ public class ItemPickup : Interactable
     public void AssignItem(Item item)
     {
         this.item = item;
+        EnableItem();
     }
 
     private void Start()
+    {
+        EnableItem();
+    }
+
+    private void EnableItem()
     {
         RenderPickupUI();
         RenderSprite();

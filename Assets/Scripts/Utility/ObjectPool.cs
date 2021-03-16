@@ -16,7 +16,7 @@ public class ObjectPool
     /// </summary>
     /// <param name="objectToPool">Prefab to instantiate.</param>
     /// <param name="initialPoolSize">Limit number of the prefab to be in the scene at time.</param>
-    public ObjectPool(GameObject objectToPool, int initialPoolSize)
+    public ObjectPool(GameObject objectToPool, int initialPoolSize = 10)
     {
         this.objectToPool = objectToPool;
         this.poolSize = initialPoolSize;

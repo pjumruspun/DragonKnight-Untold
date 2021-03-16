@@ -905,13 +905,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2172c7b4fb3da442c90601d1ddb8c9a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnCost: 5
   enemyBaseSpeed: 1.5
   randomSpeedFactor: 0.5
   chasingRange: 6
   chasingInterval: 0.5
   canSeeThroughWalls: 1
   groundDetector: {fileID: 707214862651218420}
-  enemyMaxHealth: 1500
+  enemyMaxHealth: 500
   hpBar: {fileID: 1201546197379584409}
   secondsToDespawn: 2
   showSuperArmorBar: 1

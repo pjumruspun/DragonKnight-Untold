@@ -9,7 +9,7 @@ public class SwordSkills : PlayerSkills
     private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 175.0f, 50.0f };
     private readonly float[] knockAmplitude = new float[3] { 2.0f, 4.0f, 2.0f };
     private const float skill1PushDurationRatio = 0.1f;
-    private const float skill1LockMovementRatio = 1.0f;
+    private const float skill1LockMovementRatio = 0.7f;
     private const float skill1AnticipationRatio = 0.3f;
     private float swordSkill2LockMovementRatio = 1.0f;
     private float skill2AnticipationRatio = 0.5f;
@@ -62,6 +62,7 @@ public class SwordSkills : PlayerSkills
         // Lock player's movement and flip
         // Lock equals to animation clip length
         movement.LockMovementBySkill(animLength * skill1LockMovementRatio, false, true);
+        movement.LockJumpBySkill(animLength * skill1LockMovementRatio);
 
         movement.MoveForwardBySkill(skill1PushSpeed[currentCombo], animLength * skill1PushDurationRatio, groundOnly: false);
 
@@ -86,7 +87,6 @@ public class SwordSkills : PlayerSkills
         // Sword wave
         // Lock player's movement according to anim length
         float animLength = PlayerAnimation.Instance.GetAnimLength(1);
-        Debug.Log("s2 anim len" + animLength);
         movement.LockMovementBySkill(animLength * swordSkill2LockMovementRatio, true, true);
 
         // Spawn sword wave with delay

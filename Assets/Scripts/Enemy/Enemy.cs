@@ -9,6 +9,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Animator))]
 public class Enemy : Health
 {
+    public int SpawnCost => spawnCost;
     public MovementState TurnDirection => turnDirection;
     public ObjectPool Projectile => projectilePool;
     public bool IsRanged => isRanged;
@@ -27,6 +28,11 @@ public class Enemy : Health
     public Transform GroundDetector => groundDetector;
     [HideInInspector]
     public bool ShouldChase { get; set; }
+
+    // How rare is this monster? The higher, the rarer
+    [SerializeField]
+    [Header("Enemy Spawn Cost")]
+    private int spawnCost = 5;
 
     // Enemy AI parameters
     [Header("Enemy Movement Parameters")]
@@ -210,16 +216,26 @@ public class Enemy : Health
 
     protected override void Start()
     {
+        // GetComponents
+        animator = GetComponent<Animator>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
+        enemyAnimation = new EnemyAnimation(GetComponent<Animator>());
+
+        EnableEnemy();
+    }
+
+    private void OnEnable()
+    {
+        EnableEnemy();
+    }
+
+    private void EnableEnemy()
+    {
         // Enemy shouldn't be stunned at first, set it to inactive
         stunStars.SetActive(false);
 
         // Show or not show super armor bar depends on config
         superArmorBar.gameObject.SetActive(showSuperArmorBar);
-
-        // GetComponents
-        animator = GetComponent<Animator>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        enemyAnimation = new EnemyAnimation(GetComponent<Animator>());
 
         // Set health and super armor
         maxHealth = enemyMaxHealth;
@@ -232,6 +248,10 @@ public class Enemy : Health
         }
 
         base.Start();
+
+        HandleHealthChange();
+        HandleSuperArmorUIChange();
+        hpBar.gameObject.SetActive(true);
     }
 
     protected override void HandleHealthChange()
@@ -253,6 +273,9 @@ public class Enemy : Health
 
         // Destroy object in x seconds?
         StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(gameObject, secondsToDespawn));
+
+        // Notify that this enemy is dead
+        EventPublisher.TriggerEnemyDead(this);
     }
 
     private void TakeSuperArmorDamage(float superArmorDamage)
