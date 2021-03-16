@@ -21,7 +21,10 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     // Map string to each class/dragon
     private Dictionary<int, string[]> nSkillToAnimationName = new Dictionary<int, string[]>
     {
+        // Sword, archer, dragon
+        // Skill 1
         { 0, new string[]{ "Sword_Attack1", "Archer_Attack1", "Night_Claw"}},
+        // Skill 2
         { 1, new string[]{ "Sword_Attack3", "?", "?"}}
     };
 
@@ -36,7 +39,8 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
             if (anims[i].name == name)
             {
                 // Debug.Log($"{anims[i].name}: {anims[i].length}");
-                return anims[i].length;
+                // Animations are hastened by player's attack speed
+                return anims[i].length / PlayerStats.Instance.AttackSpeed;
             }
         }
 
@@ -58,6 +62,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerDead += PlayDeadAnimation;
         EventPublisher.PlayerChangeClass += ChangeHumanAnimator;
         EventPublisher.StopFireBreath += PlayStopFireBreathAnimation;
+        EventPublisher.PlayerStatsChange += AdjustAttackSpeed;
     }
 
     private void Update()
@@ -77,6 +82,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerDead -= PlayDeadAnimation;
         EventPublisher.PlayerChangeClass -= ChangeHumanAnimator;
         EventPublisher.StopFireBreath -= PlayStopFireBreathAnimation;
+        EventPublisher.PlayerStatsChange -= AdjustAttackSpeed;
     }
 
     private void PlaySkillAnimation(int skillNumber)
@@ -85,7 +91,42 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         switch (skillNumber)
         {
             case 0:
-                animator.SetTrigger("PrimaryAttack");
+                if (DragonGauge.Instance.IsDragonForm)
+                {
+                    animator.SetTrigger("PrimaryAttack");
+                }
+                else
+                {
+                    switch (PlayerCombat.Instance.CurrentClass)
+                    {
+                        case PlayerClass.Sword:
+                            CoroutineUtility.Instance.ExecAtEndFrame(() =>
+                            {
+                                switch (PlayerCombat.Instance.SwordCombo)
+                                {
+                                    case 0:
+                                        // Combo 1
+                                        animator.SetTrigger("PrimaryAttack");
+                                        break;
+                                    case 1:
+                                        // Combo 2
+                                        animator.SetTrigger("PrimaryAttack2");
+                                        break;
+                                    case 2:
+                                        // Combo 3
+                                        animator.SetTrigger("PrimaryAttack3");
+                                        break;
+                                }
+                            });
+
+                            break;
+                        case PlayerClass.Archer:
+                            animator.SetTrigger("PrimaryAttack");
+                            break;
+                        default:
+                            throw new System.NotImplementedException();
+                    }
+                }
                 break;
             case 1:
                 if (DragonGauge.Instance.IsDragonForm)
@@ -197,5 +238,11 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                     throw new System.IndexOutOfRangeException();
             }
         }
+    }
+
+    private void AdjustAttackSpeed()
+    {
+        print(PlayerStats.Instance.AttackSpeed);
+        animator.SetFloat("AttackSpeed", PlayerStats.Instance.AttackSpeed);
     }
 }

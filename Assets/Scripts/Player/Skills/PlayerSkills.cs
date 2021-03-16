@@ -127,14 +127,17 @@ public abstract class PlayerSkills
     /// <param name="desiredHitbox">Hitbox that enemies will be hit if they are in.</param>
     /// <param name="attackDamage">How much damage does this attack do.</param>
     /// <param name="superArmorDamage">If this does any super armor damage.</param>
-    /// <param name="knockAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this attack hits.</param>
-    protected void AttackWithHitbox(
+    /// <param name="knockUpAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this attack hits.</param>
+    protected IEnumerator AttackWithHitbox(
         AttackHitbox desiredHitbox,
         float attackDamage,
         float superArmorDamage = 0.0f,
-        float knockAmplitude = 0.0f
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
+        float delay = 0.0f
     )
     {
+        yield return new WaitForSeconds(delay);
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
         {
@@ -147,7 +150,7 @@ public abstract class PlayerSkills
                 {
                     // Damage the enemy here
                     PlayerStats.Instance.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
-                    enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockAmplitude);
+                    enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
                 }
                 else
                 {

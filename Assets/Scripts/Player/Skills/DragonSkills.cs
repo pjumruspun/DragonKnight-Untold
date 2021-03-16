@@ -78,7 +78,15 @@ public class DragonSkills : PlayerSkills
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
-        AttackWithHitbox(dragonPrimaryHitbox, damage, dragonSuperArmorAttack, knockAmplitude: 3.0f);
+        CoroutineUtility.Instance.CreateCoroutine(
+            AttackWithHitbox(
+                dragonPrimaryHitbox,
+                damage,
+                dragonSuperArmorAttack,
+                knockUpAmplitude: 3.0f,
+                knockBackAmplitude: 2.0f,
+                delay: 0.2f
+        ));
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
@@ -89,7 +97,7 @@ public class DragonSkills : PlayerSkills
         float damage = dragonAttackDamage[1];
 
         // Dragon Skill 2
-        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(0.1f, 0.33f));
+        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(0.05f, 0.33f));
         Debug.Log("Fire breath start");
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
@@ -117,7 +125,9 @@ public class DragonSkills : PlayerSkills
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f);
+            CoroutineUtility.Instance.CreateCoroutine(
+                AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f)
+            );
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
+    public float AttackSpeed => attackSpeed.GetValue;
     public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed.GetValue;
     public float MaxHealth => (1.0f + (vit.GetValue * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
@@ -148,6 +149,6 @@ public class PlayerStats : MonoSingleton<PlayerStats>
 
         // Only skill 1 is affected by attack speed
         results[0] /= attackSpeed.GetValue;
-        return baseSkillCooldown;
+        return results;
     }
 }

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable 0108
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoSingleton<PlayerMovement>
 {
+    public Vector2 ForwardVector => turn == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turn;
 
     [SerializeField]
@@ -39,6 +41,12 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     // Lock function utility
     private bool stateLock = false;
     private float lockDuration = 0.0f;
+
+    // Moving by skills
+    private bool isMovingBySkill = false;
+    private float movingDuration = 0.0f;
+    private float movingSpeed = 0.0f;
+    private ForceMode2D forceMode = ForceMode2D.Force;
 
     // This could be cached and put private
     // Letting other classes access through property instead
@@ -91,6 +99,24 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     public void AddForceBySkill(Vector2 force)
     {
         rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public void MoveForwardBySkill(
+        float speed,
+        float duration,
+        ForceMode2D forceMode = ForceMode2D.Force,
+        bool groundOnly = true
+    )
+    {
+        if (groundOnly && !isGrounded)
+        {
+            return;
+        }
+
+        isMovingBySkill = true;
+        movingDuration = duration;
+        movingSpeed = speed;
+        this.forceMode = forceMode;
     }
 
     // Set reset lockers
@@ -198,6 +224,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             ProcessPlayerLanding();
             ProcessGlide();
             ProcessStopAllMovement();
+            ProcessMoveBySkill();
         }
 
         ProcessLockState();
@@ -378,6 +405,21 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     {
         stateLock = true;
         lockDuration = duration;
+    }
+
+    private void ProcessMoveBySkill()
+    {
+        if (isMovingBySkill)
+        {
+            movingDuration -= Time.deltaTime;
+            rigidbody2D.AddForce(ForwardVector.normalized * movingSpeed, forceMode);
+            if (movingDuration <= 0.0f)
+            {
+                isMovingBySkill = false;
+                movingDuration = 0.0f;
+                rigidbody2D.velocity = Vector2.zero;
+            }
+        }
     }
 
     private void Jump()

@@ -13,4 +13,9 @@ public class EnemyAnimation
     {
         animator.SetTrigger("Dead");
     }
+
+    public void PlayFlinchAnimation()
+    {
+        animator.SetTrigger("Flinch");
+    }
 }

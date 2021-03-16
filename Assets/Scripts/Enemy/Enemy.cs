@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+#pragma warning disable 0108
 // This class will handle both HP bar update and health update
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -105,15 +106,15 @@ public class Enemy : Health
     private MovementState turnDirection = MovementState.Right;
 
     // Adapter method
-    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockAmplitude = 0.0f)
+    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
     {
         if (!IsDead)
         {
             TakeDamage(damage);
             EnemyStunnedBehavior behavior = animator.GetBehaviour<EnemyStunnedBehavior>();
-            if (knockAmplitude > 0.01f)
+            if (knockUpAmplitude > 0.01f)
             {
-                behavior.KnockedUp(knockAmplitude);
+                behavior.KnockedUp(knockUpAmplitude);
             }
 
             // Deal super armor damage
@@ -121,6 +122,9 @@ public class Enemy : Health
             {
                 TakeSuperArmorDamage(superArmorDamage);
             }
+
+            KnockedBack(knockBackAmplitude);
+            enemyAnimation.PlayFlinchAnimation();
 
             // Show floating damage number
             FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
@@ -266,6 +270,26 @@ public class Enemy : Health
     {
         // ebug.Log("Knocked!");
         animator.SetBool("Stunned", true);
+    }
+
+    private void KnockedBack(float amplitude)
+    {
+        Transform player = PlayerMovement.Instance.transform;
+        rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);
+        if (player.position.x > transform.position.x)
+        {
+            // Player is on the right
+            // Knock left
+            Vector2 direction = Vector2.left;
+            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
+        }
+        else if (player.position.x < transform.position.x)
+        {
+            // Player is on the left
+            // Knock right
+            Vector2 direction = Vector2.right;
+            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
+        }
     }
 
     private void HandleSuperArmorUIChange()

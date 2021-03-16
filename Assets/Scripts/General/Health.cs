@@ -11,6 +11,7 @@ public abstract class Health : MonoBehaviour
 
     protected float maxHealth = 100;
     protected float currentHealth;
+#pragma warning disable 0108
     protected Collider2D collider2D;
 
     public virtual void TakeDamage(float damage)
