@@ -912,7 +912,7 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 1
   groundDetector: {fileID: 707214862651218420}
-  enemyMaxHealth: 150
+  enemyMaxHealth: 500
   hpBar: {fileID: 1201546197379584409}
   secondsToDespawn: 2
   showSuperArmorBar: 1
