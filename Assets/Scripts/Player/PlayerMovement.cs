@@ -5,18 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoSingleton<PlayerMovement>
 {
-    public enum MovementState
-    {
-        Right,
-        Left,
-        Idle
-    }
-
     public MovementState TurnDirection => turn;
 
     [SerializeField]
     private bool drawJumpingRay = false;
-    private float baseMovementSpeed;
     [SerializeField]
     private int maxDragonJumpCount = 3;
     private int dragonJumpCount = 0;
@@ -175,8 +167,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Subscribe
         EventPublisher.PlayerJump += Jump;
         EventPublisher.PlayerLand += ResetDragonJumpCount;
-        EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
-        EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
+        // EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
+        // EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
     }
 
     private void OnDestroy()
@@ -184,8 +176,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Unsubscribe
         EventPublisher.PlayerJump -= Jump;
         EventPublisher.PlayerLand -= ResetDragonJumpCount;
-        EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
-        EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
+        // EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
+        // EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
     }
 
     // Update for listening to input
@@ -298,7 +290,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
             else
             {
-                velocityX = horizontalMovement * baseMovementSpeed;
+                velocityX = horizontalMovement * PlayerStats.Instance.MovementSpeed;
             }
 
             rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
@@ -370,14 +362,14 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             {
                 // Unlock
                 stateLock = false;
-                Debug.Log("Unlock");
+                // Debug.Log("Unlock");
 
                 // Unlock
                 isMovementLockedBySkills = false;
                 this.stopAllMovement = false;
                 // Reenable gravity
                 rigidbody2D.gravityScale = originalGravityScale;
-                Debug.Log("Unlock successfully");
+                // Debug.Log("Unlock successfully");
             }
         }
     }
@@ -435,42 +427,22 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
     }
 
-    private void UpdateMoveSpeedOnChangeClass(PlayerClass playerClass)
-    {
-        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        ClassConfig config;
-        switch (playerClass)
-        {
-            case PlayerClass.Sword:
-                config = playerConfig.SwordConfig;
-                break;
-            case PlayerClass.Archer:
-                config = playerConfig.ArcherConfig;
-                break;
-            default:
-                throw new System.InvalidOperationException();
-        }
+    // private void UpdateMoveSpeedOnChangeClass(PlayerClass playerClass)
+    // {
+    //     PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
+    //     ClassConfig config;
+    //     switch (playerClass)
+    //     {
+    //         case PlayerClass.Sword:
+    //             config = playerConfig.SwordConfig;
+    //             break;
+    //         case PlayerClass.Archer:
+    //             config = playerConfig.ArcherConfig;
+    //             break;
+    //         default:
+    //             throw new System.InvalidOperationException();
+    //     }
 
-        baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, config.agi);
-    }
-
-    private void UpdateMoveSpeedOnStatsChange(Stats stats)
-    {
-        PlayerClass playerClass = PlayerCombat.Instance.CurrentClass;
-        PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-        ClassConfig config;
-        switch (playerClass)
-        {
-            case PlayerClass.Sword:
-                config = playerConfig.SwordConfig;
-                break;
-            case PlayerClass.Archer:
-                config = playerConfig.ArcherConfig;
-                break;
-            default:
-                throw new System.InvalidOperationException();
-        }
-
-        baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, stats.agi);
-    }
+    //     baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, config.agi);
+    // }
 }

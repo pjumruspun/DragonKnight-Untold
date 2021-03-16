@@ -41,7 +41,7 @@ public class DragonGauge : MonoSingleton<DragonGauge>
         {
             // Player transforms here
             ShapeShift();
-            Debug.Log(isDragonForm);
+            // (isDragonForm);
         }
     }
 

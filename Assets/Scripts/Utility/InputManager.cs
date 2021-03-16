@@ -10,4 +10,6 @@ public class InputManager
     public static bool Skill2 => Input.GetKeyDown(KeyCode.Z);
     public static bool Skill2Release => Input.GetKeyUp(KeyCode.Z);
     public static bool Shapeshift => Input.GetKeyDown(KeyCode.LeftShift);
+    public static bool Interact => Input.GetKeyDown(KeyCode.F);
+    public static bool Pause => Input.GetKeyDown(KeyCode.Escape);
 }

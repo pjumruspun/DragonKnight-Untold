@@ -24,7 +24,7 @@ public class BuffManager
             }
         }
 
-        Debug.Log(buffs.Count);
+        // Debug.Log(buffs.Count);
     }
 
     public void AddSwordUltBuff()

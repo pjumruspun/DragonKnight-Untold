@@ -7,19 +7,15 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     public PlayerClass CurrentClass => currentClass;
 
     [SerializeField]
-    private PlayerAttackHitbox swordPrimaryHitbox;
+    private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
-    private PlayerAttackHitbox dragonPrimaryHitbox;
-    [SerializeField]
-    private GameObject arrowPrefab;
-    [SerializeField]
-    private GameObject swordWavePrefab;
+    private AttackHitbox dragonPrimaryHitbox;
+
     [SerializeField]
     private GameObject fireBreath;
     private DragonSkills dragonSkills;
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
-    private PlayerStats stats;
     private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
@@ -44,6 +40,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Subscribe
         EventPublisher.PlayerUseSkill += ActivateSkill;
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
+        EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
 
         // Initialize player starting class, player will get to choose this later
@@ -57,6 +54,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         EventPublisher.PlayerUseSkill -= ActivateSkill;
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
+        EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
     }
 
@@ -122,7 +120,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
         bool readyToAttack = currentCooldown <= 0.01f;
-        Debug.Log($"{skillNumber}, {currentCooldown}");
+        // Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }
 
@@ -131,7 +129,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         switch (skillNumber)
         {
             case 0:
-                Debug.Log("test");
+                // Debug.Log("test");
                 CurrentSkills().Skill1(transform.position, GetForwardVector());
                 break;
             case 1:
@@ -146,10 +144,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
     }
 
+    private void StopFireOnDragonDown(bool isDragon)
+    {
+        if (!isDragon)
+        {
+            // Stop fire breath if dragon down
+            dragonSkills.Skill2Release();
+        }
+    }
+
     private void StopFireBreath()
     {
-        DragonSkills dragon = (DragonSkills)CurrentSkills();
-        dragon.Skill2Release();
+        dragonSkills.Skill2Release();
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -163,18 +169,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         humanSkills = CreatePlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, ref this.stats, fireBreath);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath);
     }
 
     private Vector2 GetForwardVector()
     {
         switch (PlayerMovement.Instance.TurnDirection)
         {
-            case PlayerMovement.MovementState.Right:
+            case MovementState.Right:
                 return transform.right;
-            case PlayerMovement.MovementState.Left:
+            case MovementState.Left:
                 return -transform.right;
-            case PlayerMovement.MovementState.Idle:
+            case MovementState.Idle:
                 throw new System.InvalidOperationException();
             default:
                 throw new System.NotImplementedException();
@@ -183,19 +189,15 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
     {
-        // Create stats, this is just base stats for now
-        // We might want something more flexible than this later on
-        this.stats = PlayerStats.Create(playerClass);
-
         // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
                 // Send this.stats pointer in
-                return new SwordSkills(transform, ref this.stats, swordPrimaryHitbox, swordWavePrefab);
+                return new SwordSkills(transform, swordPrimaryHitbox);
             case PlayerClass.Archer:
                 // Send this.stats pointer in
-                return new ArcherSkills(transform, ref this.stats, arrowPrefab);
+                return new ArcherSkills(transform);
             default:
                 throw new System.ArgumentOutOfRangeException();
         }

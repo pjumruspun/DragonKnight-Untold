@@ -18,9 +18,6 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     // Base
     private Animator animator;
 
-    // Cache config
-    private PlayerConfig playerConfig;
-
     // Map string to each class/dragon
     private Dictionary<int, string[]> nSkillToAnimationName = new Dictionary<int, string[]>
     {
@@ -50,7 +47,6 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     {
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
-        playerConfig = ConfigContainer.Instance.GetPlayerConfig;
 
         // Subscribe
         EventPublisher.PlayerUseSkill += PlaySkillAnimation;
