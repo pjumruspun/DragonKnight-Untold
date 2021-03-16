@@ -867,6 +867,7 @@ GameObject:
   - component: {fileID: 8164413801992587747}
   - component: {fileID: 8164413801992587772}
   - component: {fileID: 1201546199326020286}
+  - component: {fileID: 7476112565294981809}
   m_Layer: 8
   m_Name: Snake
   m_TagString: Untagged
@@ -924,6 +925,7 @@ MonoBehaviour:
   attackRange: 1
   attackDelay: 0.3
   attackHitbox: {fileID: 502978019037034163}
+  projectilePrefab: {fileID: 0}
 --- !u!212 &8164413801992587746
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1041,3 +1043,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7476112565294981809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8164413801992587744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b788361e973c49bfafecaeeba71f14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ultraRareSpawnChance: 0.05
+  rareSpawnChance: 0.1
+  commonSpawnChance: 0.15

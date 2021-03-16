@@ -242,6 +242,9 @@ public class Enemy : Health
 
     protected override void HandleDeath()
     {
+        // Spawn item
+        TrySpawnItem();
+
         // Disable health bar
         hpBar.gameObject.SetActive(false);
 
@@ -296,5 +299,13 @@ public class Enemy : Health
     {
         // Update super armor bar
         superArmorBar.value = superArmor / maxSuperArmor;
+    }
+
+    private void TrySpawnItem()
+    {
+        if (TryGetComponent<ItemSpawner>(out ItemSpawner spawner))
+        {
+            spawner.SpawnItem();
+        }
     }
 }

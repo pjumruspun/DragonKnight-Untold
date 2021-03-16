@@ -14,6 +14,11 @@ public class ItemPickup : Interactable
         PickItem();
     }
 
+    public void AssignItem(Item item)
+    {
+        this.item = item;
+    }
+
     private void Start()
     {
         RenderPickupUI();
@@ -39,6 +44,6 @@ public class ItemPickup : Interactable
 
         // Remove gameObject from the scene
         // Need to change to disable object pool later
-        Destroy(gameObject);
+        ObjectManager.Instance.ItemPickups.ReturnObject(gameObject);
     }
 }

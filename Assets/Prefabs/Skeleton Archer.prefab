@@ -633,6 +633,7 @@ GameObject:
   - component: {fileID: 7845668831850652230}
   - component: {fileID: 7845668831850652249}
   - component: {fileID: 936756154545158427}
+  - component: {fileID: 2184647178899057997}
   m_Layer: 8
   m_Name: Skeleton Archer
   m_TagString: Untagged
@@ -807,6 +808,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2184647178899057997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7845668831850652229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b788361e973c49bfafecaeeba71f14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ultraRareSpawnChance: 0.15
+  rareSpawnChance: 0.3
+  commonSpawnChance: 0.65
 --- !u!1 &8598101820295051518
 GameObject:
   m_ObjectHideFlags: 0

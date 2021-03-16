@@ -8,6 +8,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool FloatingDamage;
     public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
+    public ObjectPool ItemPickups;
 
     [Header("Floating Damage")]
     [SerializeField]
@@ -33,6 +34,11 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private int arrowPoolSize = 30;
 
+    [Header("Item Pickups")]
+    [SerializeField]
+    private GameObject itemPickupPrefab;
+    [SerializeField]
+    private int itemPickupPoolSize = 10;
 
     private void Start()
     {
@@ -40,5 +46,6 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         CritFloatingDamage = new ObjectPool(critFloatingDamagePrefab, critFloatingDamagePoolSize);
         SwordWaves = new ObjectPool(swordWavePrefab, swordWavePoolSize);
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
+        ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
     }
 }

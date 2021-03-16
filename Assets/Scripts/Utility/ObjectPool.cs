@@ -88,6 +88,15 @@ public class ObjectPool
         return pooledObject;
     }
 
+    /// <summary>
+    /// Returning a GameObject. Equivalent to Destroy(GameObject).
+    /// </summary>
+    /// <param name="gameObject">GameObject to return.</param>
+    public void ReturnObject(GameObject gameObject)
+    {
+        gameObject.SetActive(false);
+    }
+
     private GameObject GetFirstActiveObject()
     {
         foreach (GameObject pooledObject in pooledObjects)

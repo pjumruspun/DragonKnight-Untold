@@ -4,17 +4,36 @@ using UnityEngine;
 
 public class Inventory : MonoSingleton<Inventory>
 {
-    public List<Item> items = new List<Item>();
+    public Dictionary<Item, int> ItemCount => itemCount;
+    private List<Item> items = new List<Item>();
+    private Dictionary<Item, int> itemCount = new Dictionary<Item, int>();
 
     public void Add(Item item)
     {
         items.Add(item);
+        if (itemCount.TryGetValue(item, out int count))
+        {
+            // Item exist
+            ++itemCount[item];
+        }
+        else
+        {
+            // Item not exist
+            itemCount[item] = 1;
+        }
+
         EventPublisher.TriggerInventoryChange();
     }
 
     public void Remove(Item item)
     {
         items.Remove(item);
+        --itemCount[item];
+        if (itemCount[item] == 0)
+        {
+            itemCount.Remove(item);
+        }
+
         EventPublisher.TriggerInventoryChange();
     }
 
