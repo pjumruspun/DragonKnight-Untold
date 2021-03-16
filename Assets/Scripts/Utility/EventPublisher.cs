@@ -19,6 +19,9 @@ public class EventPublisher
     public delegate void OnStopFireBreath();
     public delegate void OnInventoryChange();
 
+    // Enemy delegate
+    public delegate void OnEnemyDead(Enemy enemy);
+
     // Player events
     public static event OnPlayerJump PlayerJump;
     public static event OnPlayerLand PlayerLand;
@@ -33,6 +36,9 @@ public class EventPublisher
     public static event OnPlayerStatsChange PlayerStatsChange;
     public static event OnStopFireBreath StopFireBreath;
     public static event OnInventoryChange InventoryChange;
+
+    // Enemy event
+    public static event OnEnemyDead EnemyDead;
 
 
     public static void TriggerPlayerJump()
@@ -98,5 +104,10 @@ public class EventPublisher
     public static void TriggerInventoryChange()
     {
         InventoryChange?.Invoke();
+    }
+
+    public static void TriggerEnemyDead(Enemy enemy)
+    {
+        EnemyDead?.Invoke(enemy);
     }
 }

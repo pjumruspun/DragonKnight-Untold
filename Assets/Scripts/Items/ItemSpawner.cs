@@ -57,6 +57,7 @@ public class ItemSpawner : MonoBehaviour
                 throw new System.InvalidOperationException("Item spawn calculation error");
             }
 
+            Debug.Log(randomItem.name);
             itemPickup.AssignItem(randomItem);
         }
         else
