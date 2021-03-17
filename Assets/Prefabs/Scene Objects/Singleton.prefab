@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1738964386786973916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1738964386786973918}
+  - component: {fileID: 1738964386786973919}
+  - component: {fileID: 1738964386786973729}
+  - component: {fileID: 1738964386786973728}
+  m_Layer: 0
+  m_Name: Singleton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1738964386786973918
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1738964386786973919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 269a4d3e6f5484208a3f25dbacd36734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1738964386786973729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02ef1bf8bb6a54860b7d978fe1d69c09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingDamagePrefab: {fileID: 413647044697630453, guid: 20c727b23cc0047b68b76ec5f7c877d9, type: 3}
+  floatingDamagePoolSize: 20
+  critFloatingDamagePrefab: {fileID: 4959378005110300329, guid: 66385d4bc25e84d358fbcfecb64c8ee6, type: 3}
+  critFloatingDamagePoolSize: 20
+  swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
+  swordWavePoolSize: 5
+  arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
+  arrowPoolSize: 30
+  itemPickupPrefab: {fileID: 4204306999793631647, guid: d7b451dd1ffed4b5a8c3c05540637b9e, type: 3}
+  itemPickupPoolSize: 10
+--- !u!114 &1738964386786973728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccb96bad128d4d79afa9965b43f4900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ultraRareItems:
+  - {fileID: 11400000, guid: 3a347d21d88ec44349da30bcaa165418, type: 2}
+  - {fileID: 11400000, guid: f95b8091a78694e6f9acc3df052c056e, type: 2}
+  rareItems:
+  - {fileID: 11400000, guid: 7f57930189aa84727946adcb4279c580, type: 2}
+  - {fileID: 11400000, guid: 9b8d6affc4f044074b915cdf55386fe6, type: 2}
+  commonItems:
+  - {fileID: 11400000, guid: c3cc87b701e8b4d39a8dcca86807f213, type: 2}
+  - {fileID: 11400000, guid: c5ba2c90c8c14448caa67081ed97102a, type: 2}
