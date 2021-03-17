@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
-  m_Name: Ring of Defense
+  m_Name: Ring of Luck
   m_EditorClassIdentifier: 
-  name: Ring of Defense
-  icon: {fileID: 21300000, guid: 3c6a898a846da40d5b3fa6aa79b1862c, type: 3}
+  name: Ring of Luck
+  icon: {fileID: 21300000, guid: 5f8d705a0836a4831a6925af1ea42061, type: 3}
   rarity: 0
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0
-    VitAddModifier: 5
+    VitAddModifier: 0
     TalAddModifier: 0
-    LukAddModifier: 0
+    LukAddModifier: 5
     AtkMultModifier: 0
     AgiMultModifier: 0
     VitMultModifier: 0

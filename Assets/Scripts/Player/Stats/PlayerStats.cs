@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
     public float AttackSpeed => attackSpeed.GetValue;
-    public float MovementSpeed => (1.0f + (agi.GetValue * 0.03f)) * baseMovementSpeed.GetValue;
-    public float MaxHealth => (1.0f + (vit.GetValue * 0.05f)) * basePlayerMaxHealth;
+    public float MovementSpeed => (1.0f + (Mathf.Max(agi.GetValue, minAgiPossible) * 0.03f)) * baseMovementSpeed.GetValue;
+    public float MaxHealth => (1.0f + (Mathf.Max(vit.GetValue, minVitPossible) * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
@@ -71,6 +71,9 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         }
     }
 
+    private const int minAgiPossible = -30;
+    private const int minVitPossible = 0;
+
     /// <summary>
     /// Adapter method, for assigning the whole stats for player
     /// from the parameter "stats"
@@ -121,11 +124,11 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         base.Awake();
 
         // Set stats, should random
-        atk = new Stats<int>(30);
-        agi = new Stats<int>(30);
-        vit = new Stats<int>(30);
-        tal = new Stats<int>(30);
-        luk = new Stats<int>(30);
+        atk = new Stats<int>(10);
+        agi = new Stats<int>(10);
+        vit = new Stats<int>(10);
+        tal = new Stats<int>(10);
+        luk = new Stats<int>(10);
     }
 
     private float CalculateCritChance()

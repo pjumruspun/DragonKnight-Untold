@@ -18,15 +18,15 @@ MonoBehaviour:
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0
-    VitAddModifier: 0
+    VitAddModifier: -10
     TalAddModifier: 0
-    LukAddModifier: 0
+    LukAddModifier: -2
     AtkMultModifier: 0
     AgiMultModifier: 0
     VitMultModifier: 0
     TalMultModifier: 0
     LukMultModifier: 0
-    CritDamageAddModifier: 3
+    CritDamageAddModifier: 1.5
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
     AttackSpeedAddModifier: 0

@@ -6,7 +6,8 @@ public class DragonGauge : MonoSingleton<DragonGauge>
 {
     public float MaxDragonEnergy => maxDragonEnergy;
     public bool IsDragonForm => isDragonForm;
-
+    [SerializeField]
+    private float startingDragonEnergy = 50.0f;
     [SerializeField]
     private float drainingRate = 2.0f;
     [SerializeField]
@@ -18,7 +19,7 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     private void Start()
     {
         EventPublisher.PlayerChangeClass += StripDragonForm;
-        dragonEnergy = 95.0f;
+        dragonEnergy = startingDragonEnergy;
     }
 
     private void OnDestroy()

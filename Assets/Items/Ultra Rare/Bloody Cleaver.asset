@@ -16,12 +16,12 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 9ab2fafedcfdf4429b5d653b6f35a95e, type: 3}
   rarity: 2
   stats:
-    AtkAddModifier: 50
+    AtkAddModifier: 5
     AgiAddModifier: -10
     VitAddModifier: 0
     TalAddModifier: 0
     LukAddModifier: 0
-    AtkMultModifier: 1
+    AtkMultModifier: 0.4
     AgiMultModifier: 0
     VitMultModifier: 0
     TalMultModifier: 0

@@ -335,7 +335,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1135887231878369289}
-  m_Text: Double jump
+  m_Text: Triple jump
   m_OffsetZ: 0
   m_CharacterSize: 0.2
   m_LineSpacing: 1
@@ -464,8 +464,8 @@ TextMesh:
   m_GameObject: {fileID: 1135887232172467763}
   m_Text: 'Dragon mode also provide an ability to jump
 
-    twice in the air by pressing
-    up button again.'
+    thrice in the air by
+    pressing up button again.'
   m_OffsetZ: 0
   m_CharacterSize: 0.1
   m_LineSpacing: 2
