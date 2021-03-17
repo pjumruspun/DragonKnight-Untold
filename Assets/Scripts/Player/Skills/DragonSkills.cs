@@ -5,6 +5,10 @@ using System;
 
 public class DragonSkills : PlayerSkills
 {
+    private const float slashAnimLength = 0.3f;
+    private const float skill1KnockUpAmplitude = 3.0f;
+    private const float skill1KnockBackAmplitude = 2.0f;
+    private const float skill1AnticipationRatio = 0.3f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4]
@@ -24,19 +28,23 @@ public class DragonSkills : PlayerSkills
 
     private float dragonSuperArmorAttack = 50.0f;
     private GameObject fireBreath;
+    private GameObject clawSlash;
     private Coroutine fireBreathCoroutine;
 
     public DragonSkills(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
-        GameObject fireBreath
+        GameObject fireBreath,
+        GameObject clawSlash
     ) : base(transform)
     {
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
-
         this.fireBreath.SetActive(false);
+
+        this.clawSlash = clawSlash;
+        this.clawSlash.SetActive(false);
     }
 
     public override float[] GetCurrentCooldown()
@@ -49,26 +57,6 @@ public class DragonSkills : PlayerSkills
         return currentCooldown[skillNumber] / dragonAttackCooldown[skillNumber];
     }
 
-    // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
-    // {
-    //     if (skillNumber < 0 || skillNumber > 3)
-    //     {
-    //         throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
-    //     }
-    //     else
-    //     {
-    //         float cooldown = dragonAttackCooldown[skillNumber];
-    //         float current = cooldown - timeSinceLastExecuted;
-    //         if (percentage)
-    //         {
-    //             // Normalized with cooldown
-    //             current = current / cooldown;
-    //         }
-
-    //         return current < 0.0f ? 0.0f : current;
-    //     }
-    // }
-
     public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
     {
         currentCooldown[0] = dragonAttackCooldown[0];
@@ -78,15 +66,33 @@ public class DragonSkills : PlayerSkills
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
+        float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+
+        // Actual attack damage applied
+        float attackDelay = skill1AnticipationRatio * animLength;
+
         CoroutineUtility.Instance.CreateCoroutine(
             AttackWithHitbox(
                 dragonPrimaryHitbox,
                 damage,
                 dragonSuperArmorAttack,
-                knockUpAmplitude: 3.0f,
-                knockBackAmplitude: 2.0f,
-                delay: 0.2f
+                knockUpAmplitude: skill1KnockUpAmplitude,
+                knockBackAmplitude: skill1KnockBackAmplitude,
+                delay: attackDelay
         ));
+
+        // Claw slash effect
+        // On
+        CoroutineUtility.Instance.ExecDelay(() =>
+        {
+            this.clawSlash.SetActive(true);
+        }, attackDelay / 2);
+
+        // Off
+        CoroutineUtility.Instance.ExecDelay(() =>
+        {
+            this.clawSlash.SetActive(false);
+        }, attackDelay + slashAnimLength);
     }
 
     public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)

@@ -32,6 +32,7 @@ public class SwordSkills : PlayerSkills
     {
         base.Skill1(currentPlayerPosition, forwardVector);
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+        Debug.Log(animLength);
 
         // Process combo
         float currentTime = Time.time;

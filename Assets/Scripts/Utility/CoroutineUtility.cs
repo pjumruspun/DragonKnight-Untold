@@ -13,6 +13,11 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
         return StartCoroutine(function);
     }
 
+    public Coroutine ExecDelay(System.Action func, float delay)
+    {
+        return StartCoroutine(ExecDelayPrivate(func, delay));
+    }
+
     public Coroutine ExecAtEndFrame(System.Action func)
     {
         return StartCoroutine(ExecAtEndFramePrivate(func));
@@ -27,6 +32,12 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
     {
         yield return new WaitForSeconds(seconds);
         objectToHide.SetActive(false);
+    }
+
+    private IEnumerator ExecDelayPrivate(System.Action func, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        func?.Invoke();
     }
 
     private IEnumerator ExecAtEndFramePrivate(System.Action func)

@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 public class EnemySpawner : MonoSingleton<EnemySpawner>
 {
     [SerializeField]
+    private bool shouldSpawn = true;
+    [SerializeField]
     private Transform player;
     [SerializeField]
     private Tilemap tilemap;
@@ -35,7 +37,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     private void Update()
     {
-        if (Time.time - lastTimeSpawned >= spawnInterval && currentSpawnAmount < maxSpawnAmount)
+        if (shouldSpawn && Time.time - lastTimeSpawned >= spawnInterval && currentSpawnAmount < maxSpawnAmount)
         {
             // Try spawn
             MassSpawnEnemy();

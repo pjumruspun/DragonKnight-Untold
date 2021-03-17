@@ -8,13 +8,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
     public PlayerClass CurrentClass => currentClass;
 
+    [Header("Hitboxes")]
     [SerializeField]
     private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonPrimaryHitbox;
 
+    [Header("Skill Effects")]
     [SerializeField]
     private GameObject fireBreath;
+    [SerializeField]
+    private GameObject clawSlash;
+
     private DragonSkills dragonSkills;
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
@@ -171,7 +176,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         humanSkills = CreatePlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private Vector2 GetForwardVector()
