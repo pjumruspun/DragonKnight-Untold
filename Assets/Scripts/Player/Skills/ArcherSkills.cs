@@ -9,19 +9,19 @@ public class ArcherSkills : PlayerSkills
 
     public ArcherSkills(Transform transform) : base(transform) { }
 
-    public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public override void Skill1()
     {
-        base.Skill1(currentPlayerPosition, forwardVector);
+        base.Skill1();
 
         // Primary attack = skillDamage[0]
         float damage = PlayerStats.Instance.BaseSkillDamage[0];
         // Spawn arrow
-        AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, currentPlayerPosition, forwardVector);
+        AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, movement.ForwardVector);
     }
 
-    public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public override void Skill2()
     {
-        base.Skill2(currentPlayerPosition, forwardVector);
+        base.Skill2();
 
         // Skill 2 = skillDamage[1]
         float damage = PlayerStats.Instance.BaseSkillDamage[1];
@@ -47,7 +47,7 @@ public class ArcherSkills : PlayerSkills
         // Then spawn arrow rains
         int arrowCount = 3; // configs.ArcherSkill2ArrowCount;
         float interval = 0.3f; // configs.ArcherSkill2Interval;
-        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(arrowCount, damage, forwardVector, interval));
+        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(arrowCount, damage, movement.ForwardVector, interval));
     }
 
     private IEnumerator ArrowRain(int count, float damage, Vector2 forwardVector, float interval)

@@ -6,13 +6,25 @@ public class SwordSkills : PlayerSkills
 {
     public int CurrentCombo => currentCombo;
 
+    // Skill 1 params
     private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 175.0f, 50.0f };
-    private readonly float[] knockAmplitude = new float[3] { 2.0f, 4.0f, 2.0f };
+    private readonly float[] skill1KnockBackAmplitudes = new float[3] { 2.0f, 4.0f, 2.0f };
+    private const float skill1KnockUpAmplitude = 2.0f;
     private const float skill1PushDurationRatio = 0.1f;
     private const float skill1LockMovementRatio = 0.7f;
     private const float skill1AnticipationRatio = 0.3f;
-    private float swordSkill2LockMovementRatio = 1.0f;
-    private float skill2AnticipationRatio = 0.5f;
+
+    // Skill 2 params
+    private const float swordSkill2LockMovementRatio = 1.0f;
+    private const float skill2AnticipationRatio = 0.5f;
+
+    // Skill 3 params
+    private const float skill3DashAnticipationRatio = 1.0f;
+    private const float skill3AttackAnticipationRatio = 0.35f;
+    private const float skill3SpeedMultiplier = 3.5f;
+    private const float skill3KnockAmplitude = 2.0f;
+    private const float skill3CooldownResetRatio = 0.6f;
+
     private AttackHitbox swordPrimaryHitbox;
 
     // Combo stuff
@@ -28,9 +40,10 @@ public class SwordSkills : PlayerSkills
         this.swordPrimaryHitbox = swordPrimaryHitbox;
     }
 
-    public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    // Sword auto attack combo
+    public override void Skill1()
     {
-        base.Skill1(currentPlayerPosition, forwardVector);
+        base.Skill1();
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
         Debug.Log(animLength);
 
@@ -68,19 +81,20 @@ public class SwordSkills : PlayerSkills
         movement.MoveForwardBySkill(skill1PushSpeed[currentCombo], animLength * skill1PushDurationRatio, groundOnly: false);
 
         // Then attack
-        CoroutineUtility.Instance.CreateCoroutine(
+        float anticipationPeriod = animLength * skill1AnticipationRatio;
+        CoroutineUtility.Instance.ExecDelay(() =>
             AttackWithHitbox(
                 swordPrimaryHitbox,
                 damage,
-                knockUpAmplitude: 2.0f,
-                knockBackAmplitude: knockAmplitude[currentCombo],
-                delay: animLength * skill1AnticipationRatio)
-        );
+                knockUpAmplitude: skill1KnockUpAmplitude,
+                knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo]
+        ), anticipationPeriod);
     }
 
-    public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    // Sword wave
+    public override void Skill2()
     {
-        base.Skill2(currentPlayerPosition, forwardVector);
+        base.Skill2();
 
         // Skill 2 = skillDamage[1]
         float damage = PlayerStats.Instance.BaseSkillDamage[1];
@@ -91,13 +105,60 @@ public class SwordSkills : PlayerSkills
         movement.LockMovementBySkill(animLength * swordSkill2LockMovementRatio, true, true);
 
         // Spawn sword wave with delay
-        CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, forwardVector, animLength * skill2AnticipationRatio));
+        CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, movement.ForwardVector, animLength * skill2AnticipationRatio));
     }
 
-    // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
-    // {
-    //     return base.GetCurrentCooldown(skillNumber, timeSinceLastExecuted, percentage);
-    // }
+    // Dash -> Dash attack
+    public override void Skill3()
+    {
+        base.Skill3();
+
+        // Lock animation
+        float animLength = PlayerAnimation.Instance.GetAnimLength(2);
+        float lockMovementDuration = animLength * (1.0f + skill3DashAnticipationRatio);
+        movement.LockMovementBySkill(lockMovementDuration, true, true);
+        movement.LockJumpBySkill(lockMovementDuration);
+
+        // Dash ahead
+        CoroutineUtility.Instance.ExecDelay(() =>
+        {
+            movement.MoveForwardBySkill(
+                PlayerStats.Instance.MovementSpeed * skill3SpeedMultiplier,
+                animLength,
+                groundOnly: false,
+                forceMode: ForceMode2D.Impulse
+            );
+
+            DashAttack();
+        }, skill3DashAnticipationRatio * animLength);
+    }
+
+    private void DashAttack()
+    {
+        PlayerAnimation.Instance.PlayDashAttackAnimation();
+
+        // Lock animation
+        float animLength = PlayerAnimation.Instance.GetAnimLength(1);
+        movement.LockMovementBySkill(animLength, true, true);
+        movement.LockJumpBySkill(animLength);
+
+        // Skill 3 = skillDamage[2]
+        float damage = PlayerStats.Instance.BaseSkillDamage[2];
+
+        // Attack
+        float anticipationPeriod = animLength * skill3AttackAnticipationRatio;
+        CoroutineUtility.Instance.ExecDelay(() =>
+        {
+            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude);
+            Debug.Log(damageDealt);
+
+            if (damageDealt > 0.0f) // If manage to hit something
+            {
+                // Reduce cooldown
+                currentCooldown[2] = PlayerStats.Instance.SkillCooldown[2] * (1.0f - skill3CooldownResetRatio);
+            }
+        }, anticipationPeriod);
+    }
 
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
     {

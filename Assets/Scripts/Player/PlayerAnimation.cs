@@ -25,7 +25,9 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         // Skill 1
         { 0, new string[]{ "Sword_Attack1", "Archer_Attack1", "Night_Claw"}},
         // Skill 2
-        { 1, new string[]{ "Sword_Attack3", "?", "?"}}
+        { 1, new string[]{ "Sword_Attack4", "?", "?"}},
+        // Skill 3
+        { 2, new string[]{ "Sword_Dash", "?", "?"}},
     };
 
     // Animation clip length according to skill number
@@ -45,6 +47,12 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         }
 
         throw new System.IndexOutOfRangeException();
+    }
+
+    public void PlayDashAttackAnimation()
+    {
+        // Skill 2 animation is the same as dash attack animation
+        animator.SetTrigger("Skill2");
     }
 
     private void Start()
@@ -140,7 +148,8 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 }
                 break;
             case 2:
-                throw new System.NotImplementedException();
+                animator.SetTrigger("Skill3");
+                break;
             case 3:
                 throw new System.NotImplementedException();
             default:

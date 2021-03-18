@@ -57,7 +57,7 @@ public class DragonSkills : PlayerSkills
         return currentCooldown[skillNumber] / dragonAttackCooldown[skillNumber];
     }
 
-    public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public override void Skill1()
     {
         currentCooldown[0] = dragonAttackCooldown[0];
 
@@ -71,15 +71,14 @@ public class DragonSkills : PlayerSkills
         // Actual attack damage applied
         float attackDelay = skill1AnticipationRatio * animLength;
 
-        CoroutineUtility.Instance.CreateCoroutine(
+        CoroutineUtility.Instance.ExecDelay(() =>
             AttackWithHitbox(
                 dragonPrimaryHitbox,
                 damage,
                 dragonSuperArmorAttack,
                 knockUpAmplitude: skill1KnockUpAmplitude,
-                knockBackAmplitude: skill1KnockBackAmplitude,
-                delay: attackDelay
-        ));
+                knockBackAmplitude: skill1KnockBackAmplitude
+        ), attackDelay);
 
         // Claw slash effect
         // On
@@ -95,7 +94,7 @@ public class DragonSkills : PlayerSkills
         }, attackDelay + slashAnimLength);
     }
 
-    public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
 
@@ -131,9 +130,7 @@ public class DragonSkills : PlayerSkills
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            CoroutineUtility.Instance.CreateCoroutine(
-                AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f)
-            );
+            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f);
         }
     }
 }
