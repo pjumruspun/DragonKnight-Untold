@@ -137,6 +137,7 @@ public class Enemy : Health
                 TakeSuperArmorDamage(superArmorDamage);
             }
 
+            // Knock back
             KnockedBack(knockBackAmplitude);
             enemyAnimation.PlayFlinchAnimation();
 
@@ -321,20 +322,21 @@ public class Enemy : Health
     {
         Transform player = PlayerMovement.Instance.transform;
         rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);
-        if (player.position.x > transform.position.x)
+
+        Vector2 direction;
+        switch (PlayerMovement.Instance.TurnDirection)
         {
-            // Player is on the right
-            // Knock left
-            Vector2 direction = Vector2.left;
-            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
+            case MovementState.Left:
+                direction = Vector2.left;
+                break;
+            case MovementState.Right:
+                direction = Vector2.right;
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException("MovementState enum not recognized");
         }
-        else if (player.position.x < transform.position.x)
-        {
-            // Player is on the left
-            // Knock right
-            Vector2 direction = Vector2.right;
-            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
-        }
+
+        rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
     }
 
     private void HandleSuperArmorUIChange()
