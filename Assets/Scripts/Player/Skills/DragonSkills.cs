@@ -10,6 +10,7 @@ public class DragonSkills : PlayerSkills
     private const float skill1KnockBackAmplitude = 2.0f;
     private const float skill1AnticipationRatio = 0.3f;
     private const float skill1LockMovementRatio = 0.6f;
+    private const float skill1AnimStopRatio = 0.2f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4]
@@ -21,13 +22,13 @@ public class DragonSkills : PlayerSkills
     };
     private float[] dragonAttackCooldown = new float[4]
     {
-        0.6f,
+        0.7f,
         1.0f,
         1.0f,
         1.0f
     };
 
-    private float dragonSuperArmorAttack = 50.0f;
+    private float dragonSuperArmorAttack = 100.0f;
     private GameObject fireBreath;
     private GameObject clawSlash;
     private Animator clawSlashAnim;
@@ -99,11 +100,12 @@ public class DragonSkills : PlayerSkills
 
             if (totalDamage > 0.0f)
             {
+                float timeStopDuration = animLength * skill1AnimStopRatio;
                 // Stop player's animator
-                TimeStopper.StopAnimator(PlayerAnimation.Instance.GetAnimator, 0.2f);
+                TimeStopper.StopAnimator(PlayerAnimation.Instance.GetAnimator, timeStopDuration);
 
                 // Stop claw slash's animator
-                TimeStopper.StopAnimator(clawSlashAnim, 0.2f);
+                TimeStopper.StopAnimator(clawSlashAnim, timeStopDuration);
             }
 
         }, attackDelay);
