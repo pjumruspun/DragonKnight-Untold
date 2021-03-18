@@ -9,6 +9,7 @@ public class GameStateManager : MonoSingleton<GameStateManager>
     private GameState gameState;
     private const string mainMenuScene = "MainMenu";
     private const string gameplayScene = "Gameplay";
+    private const string campScene = "Camp";
 
     public void LoadMainMenu()
     {
@@ -62,8 +63,11 @@ public class GameStateManager : MonoSingleton<GameStateManager>
             case gameplayScene:
                 gameState = GameState.Gameplay;
                 break;
+            case campScene:
+                gameState = GameState.Gameplay;
+                break;
             default:
-                Debug.LogWarning("Something wrong may be happening");
+                Debug.LogWarning("Loaded an unregistered scene");
                 break;
         }
     }

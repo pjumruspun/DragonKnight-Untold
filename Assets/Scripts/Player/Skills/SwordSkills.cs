@@ -149,8 +149,6 @@ public class SwordSkills : PlayerSkills
         CoroutineUtility.Instance.ExecDelay(() =>
         {
             float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude, hitEffect: HitEffect.Slash);
-            Debug.Log(damageDealt);
-
             if (damageDealt > 0.0f) // If manage to hit something
             {
                 // Reduce cooldown
