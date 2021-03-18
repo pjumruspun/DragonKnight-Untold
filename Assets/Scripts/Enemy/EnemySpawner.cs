@@ -8,8 +8,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     [SerializeField]
     private bool shouldSpawn = true;
     [SerializeField]
-    private Transform player;
-    [SerializeField]
     private Tilemap tilemap;
     [SerializeField]
     private float spawnRange = 10.0f;
@@ -23,6 +21,18 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private int maxSpawnAmount = 50;
     private float lastTimeSpawned = 0.0f;
     private float currentSpawnAmount = 0;
+    private Transform player;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        EventPublisher.PlayerSpawn += AssignTransform;
+    }
+
+    private void AssignTransform(Transform player)
+    {
+        this.player = player;
+    }
 
     private void Start()
     {
@@ -33,6 +43,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private void OnDestroy()
     {
         EventPublisher.EnemyDead -= ProcessSpawnAmount;
+        EventPublisher.PlayerSpawn -= AssignTransform;
     }
 
     private void Update()

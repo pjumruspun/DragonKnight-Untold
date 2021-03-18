@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Intended to use with player
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : MonoSingleton<CameraFollow>
 {
-    [SerializeField]
-    private Transform followTransform;
     [SerializeField]
     private float flipOffset = 0.6f;
     [SerializeField]
@@ -14,6 +12,23 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private float fallingSmoothSpeed = 0.375f;
     private Vector3 desiredPosition = Vector3.zero;
+    private Transform followTransform;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        EventPublisher.PlayerSpawn += AssignTransform;
+    }
+
+    private void OnDestroy()
+    {
+        EventPublisher.PlayerSpawn -= AssignTransform;
+    }
+
+    private void AssignTransform(Transform player)
+    {
+        followTransform = player;
+    }
 
     private void FixedUpdate()
     {

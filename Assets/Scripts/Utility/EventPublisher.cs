@@ -18,6 +18,7 @@ public class EventPublisher
     public delegate void OnPlayerStatsChange();
     public delegate void OnStopFireBreath();
     public delegate void OnInventoryChange();
+    public delegate void OnPlayerSpawn(Transform player);
 
     // Enemy delegate
     public delegate void OnEnemyDead(Enemy enemy);
@@ -36,6 +37,7 @@ public class EventPublisher
     public static event OnPlayerStatsChange PlayerStatsChange;
     public static event OnStopFireBreath StopFireBreath;
     public static event OnInventoryChange InventoryChange;
+    public static event OnPlayerSpawn PlayerSpawn;
 
     // Enemy event
     public static event OnEnemyDead EnemyDead;
@@ -109,5 +111,10 @@ public class EventPublisher
     public static void TriggerEnemyDead(Enemy enemy)
     {
         EnemyDead?.Invoke(enemy);
+    }
+
+    public static void TriggerPlayerSpawn(Transform player)
+    {
+        PlayerSpawn?.Invoke(player);
     }
 }

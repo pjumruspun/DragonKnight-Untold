@@ -29,6 +29,15 @@ public class GameStateManager : MonoSingleton<GameStateManager>
         GameEvents.TriggerPause(false);
     }
 
+    public void LoadCampScene()
+    {
+        gameState = GameState.Gameplay;
+        // Load camp scene
+        SceneManager.LoadScene(campScene);
+        // Unpause the game
+        GameEvents.TriggerPause(false);
+    }
+
     protected override void Awake()
     {
         base.Awake();
