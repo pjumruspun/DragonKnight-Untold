@@ -12,7 +12,11 @@ public class EnemyStunnedBehavior : EnemyBehavior
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-        enemy.ShowStunStars(true);
+        if (!enemy.IsDead)
+        {
+            enemy.ShowStunStars(true);
+        }
+
         currentNotMoveYDuration = 0.0f;
 
         // Make flying enemies fall down
@@ -50,7 +54,7 @@ public class EnemyStunnedBehavior : EnemyBehavior
 
     public void KnockedUp(float amplitude)
     {
-        if (isStunned && Mathf.Abs(velocityY) > 0.01f)
+        if (isStunned && Mathf.Abs(velocityY) > 0.01f && !enemy.IsDead)
         {
             // Debug.Log("It works!");
             // Disable vy
@@ -62,6 +66,12 @@ public class EnemyStunnedBehavior : EnemyBehavior
 
     private void Stunned()
     {
+        if (enemy.IsDead)
+        {
+            animator.SetBool("Stunned", false);
+            animator.SetTrigger("Dead");
+        }
+
         if (Mathf.Abs(velocityY) < 0.01f)
         {
             currentNotMoveYDuration += Time.deltaTime;

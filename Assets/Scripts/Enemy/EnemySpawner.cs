@@ -86,7 +86,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     private void ProcessSpawnAmount(Enemy enemy)
     {
-        Debug.Log($"{enemy.name} is dead, reduce cost from {currentSpawnAmount} to {currentSpawnAmount - enemy.SpawnCost}");
         currentSpawnAmount -= enemy.SpawnCost;
     }
 }

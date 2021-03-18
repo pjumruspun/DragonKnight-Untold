@@ -285,8 +285,10 @@ public class Enemy : Health
         // Reset color
         spriteRenderer.color = originalColor;
 
-        // Disable health bar
+        // Disable health bar, super armor bar, and stun stars
         hpBar.gameObject.SetActive(false);
+        superArmorBar.gameObject.SetActive(false);
+        stunStars.SetActive(false);
 
         // Play Dead animation
         enemyAnimation.PlayDeadAnimation();
