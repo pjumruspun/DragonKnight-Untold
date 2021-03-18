@@ -11,6 +11,8 @@ public class DragonSkills : PlayerSkills
     private const float skill1AnticipationRatio = 0.3f;
     private const float skill1LockMovementRatio = 0.6f;
     private const float skill1AnimStopRatio = 0.2f;
+    private const float skill1ScreenShakeDuration = 0.3f;
+    private const float skill1ScreenShakePower = 0.15f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4]
@@ -89,6 +91,7 @@ public class DragonSkills : PlayerSkills
 
         CoroutineUtility.Instance.ExecDelay(() =>
         {
+            // Attack
             float totalDamage = AttackWithHitbox(
                 dragonPrimaryHitbox,
                 damage,
@@ -100,14 +103,17 @@ public class DragonSkills : PlayerSkills
 
             if (totalDamage > 0.0f)
             {
+                // Time stop
                 float timeStopDuration = animLength * skill1AnimStopRatio;
                 // Stop player's animator
                 TimeStopper.StopAnimator(PlayerAnimation.Instance.GetAnimator, timeStopDuration);
 
                 // Stop claw slash's animator
                 TimeStopper.StopAnimator(clawSlashAnim, timeStopDuration);
-            }
 
+                // Screen shaking
+                ScreenShake.Instance.StartShaking(skill1ScreenShakeDuration, skill1ScreenShakePower);
+            }
         }, attackDelay);
 
         // Claw slash effect
