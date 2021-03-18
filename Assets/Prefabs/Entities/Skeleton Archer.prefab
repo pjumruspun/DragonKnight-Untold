@@ -692,6 +692,7 @@ MonoBehaviour:
   attackDelay: 0.3
   attackHitbox: {fileID: 0}
   projectilePrefab: {fileID: 4139921188409239234, guid: 12428cb8c44774132a4a3ae4ac513074, type: 3}
+  hurtColor: {r: 0.77254903, g: 0, b: 0, a: 1}
 --- !u!212 &7845668831850652231
 SpriteRenderer:
   m_ObjectHideFlags: 0

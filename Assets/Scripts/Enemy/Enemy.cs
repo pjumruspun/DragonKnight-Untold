@@ -7,6 +7,7 @@ using UnityEngine.UI;
 // This class will handle both HP bar update and health update
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Enemy : Health
 {
     public int SpawnCost => spawnCost;
@@ -106,6 +107,13 @@ public class Enemy : Health
     private GameObject projectilePrefab;
     private ObjectPool projectilePool;
 
+    // Hurt effects
+    [SerializeField]
+    private Color hurtColor = new Color(0.75f, 0.0f, 0.0f);
+    private Color originalColor;
+    private SpriteRenderer spriteRenderer;
+    private float flashEffectDuration = 0.15f;
+
     // Other stuff
     private Rigidbody2D rigidbody2D;
     private Animator animator;
@@ -135,6 +143,10 @@ public class Enemy : Health
             // Show floating damage number
             FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
             HandleHealthChange();
+
+            // Flash hurt color
+            spriteRenderer.color = hurtColor;
+            CoroutineUtility.Instance.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
         }
     }
 
@@ -231,6 +243,10 @@ public class Enemy : Health
 
     private void EnableEnemy()
     {
+        // GetComponent
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+
         // Enemy shouldn't be stunned at first, set it to inactive
         stunStars.SetActive(false);
 
@@ -264,6 +280,9 @@ public class Enemy : Health
     {
         // Spawn item
         TrySpawnItem();
+
+        // Reset color
+        spriteRenderer.color = originalColor;
 
         // Disable health bar
         hpBar.gameObject.SetActive(false);
