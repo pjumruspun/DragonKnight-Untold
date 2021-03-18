@@ -13,9 +13,9 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
         return StartCoroutine(function);
     }
 
-    public Coroutine ExecDelay(System.Action func, float delay)
+    public Coroutine ExecDelay(System.Action func, float delay, bool realTime = false)
     {
-        return StartCoroutine(ExecDelayPrivate(func, delay));
+        return StartCoroutine(ExecDelayPrivate(func, delay, realTime));
     }
 
     public Coroutine ExecAtEndFrame(System.Action func)
@@ -34,9 +34,17 @@ public class CoroutineUtility : MonoSingleton<CoroutineUtility>
         objectToHide.SetActive(false);
     }
 
-    private IEnumerator ExecDelayPrivate(System.Action func, float delay)
+    private IEnumerator ExecDelayPrivate(System.Action func, float delay, bool realTime)
     {
-        yield return new WaitForSeconds(delay);
+        if (realTime)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+        }
+        else
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
         func?.Invoke();
     }
 

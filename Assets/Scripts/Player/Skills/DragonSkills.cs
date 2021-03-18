@@ -9,6 +9,7 @@ public class DragonSkills : PlayerSkills
     private const float skill1KnockUpAmplitude = 3.0f;
     private const float skill1KnockBackAmplitude = 2.0f;
     private const float skill1AnticipationRatio = 0.3f;
+    private const float skill1LockMovementRatio = 0.5f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4]
@@ -68,18 +69,30 @@ public class DragonSkills : PlayerSkills
         // Night dragon is just a place holder for now
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
 
+        // Lock movement
+        movement.LockMovementBySkill(skill1LockMovementRatio * animLength, true, true);
+        movement.LockJumpBySkill(skill1LockMovementRatio * animLength);
+
         // Actual attack damage applied
         float attackDelay = skill1AnticipationRatio * animLength;
 
         CoroutineUtility.Instance.ExecDelay(() =>
-            AttackWithHitbox(
+        {
+            float totalDamage = AttackWithHitbox(
                 dragonPrimaryHitbox,
                 damage,
                 dragonSuperArmorAttack,
                 knockUpAmplitude: skill1KnockUpAmplitude,
                 knockBackAmplitude: skill1KnockBackAmplitude,
                 hitEffect: HitEffect.Slash
-        ), attackDelay);
+            );
+
+            if (totalDamage > 0.0f)
+            {
+                TimeStopper.TimeStop(0.1f);
+            }
+
+        }, attackDelay);
 
         // Claw slash effect
         // On
