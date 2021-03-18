@@ -9,7 +9,7 @@ public class DragonSkills : PlayerSkills
     private const float skill1KnockUpAmplitude = 3.0f;
     private const float skill1KnockBackAmplitude = 2.0f;
     private const float skill1AnticipationRatio = 0.3f;
-    private const float skill1LockMovementRatio = 0.5f;
+    private const float skill1LockMovementRatio = 0.6f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4]
@@ -21,7 +21,7 @@ public class DragonSkills : PlayerSkills
     };
     private float[] dragonAttackCooldown = new float[4]
     {
-        0.5f,
+        0.6f,
         1.0f,
         1.0f,
         1.0f
@@ -30,6 +30,7 @@ public class DragonSkills : PlayerSkills
     private float dragonSuperArmorAttack = 50.0f;
     private GameObject fireBreath;
     private GameObject clawSlash;
+    private Animator clawSlashAnim;
     private Coroutine fireBreathCoroutine;
 
     public DragonSkills(
@@ -46,6 +47,15 @@ public class DragonSkills : PlayerSkills
 
         this.clawSlash = clawSlash;
         this.clawSlash.SetActive(false);
+
+        if (this.clawSlash.TryGetComponent<Animator>(out Animator animator))
+        {
+            this.clawSlashAnim = animator;
+        }
+        else
+        {
+            throw new System.NullReferenceException("Cannot get Animator component from clawSlash GameObject");
+        }
     }
 
     public override float[] GetCurrentCooldown()
@@ -89,7 +99,11 @@ public class DragonSkills : PlayerSkills
 
             if (totalDamage > 0.0f)
             {
-                TimeStopper.TimeStop(0.1f);
+                // Stop player's animator
+                TimeStopper.StopAnimator(PlayerAnimation.Instance.GetAnimator, 0.2f);
+
+                // Stop claw slash's animator
+                TimeStopper.StopAnimator(clawSlashAnim, 0.2f);
             }
 
         }, attackDelay);

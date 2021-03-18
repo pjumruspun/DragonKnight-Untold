@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimation : MonoSingleton<PlayerAnimation>
 {
+    public Animator GetAnimator => animator;
+
     // Dragon animators
     [SerializeField]
     private RuntimeAnimatorController nightController;
