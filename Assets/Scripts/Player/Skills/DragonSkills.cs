@@ -77,7 +77,8 @@ public class DragonSkills : PlayerSkills
                 damage,
                 dragonSuperArmorAttack,
                 knockUpAmplitude: skill1KnockUpAmplitude,
-                knockBackAmplitude: skill1KnockBackAmplitude
+                knockBackAmplitude: skill1KnockBackAmplitude,
+                hitEffect: HitEffect.Slash
         ), attackDelay);
 
         // Claw slash effect

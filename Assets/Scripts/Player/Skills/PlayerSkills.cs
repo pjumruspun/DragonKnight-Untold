@@ -96,7 +96,8 @@ public abstract class PlayerSkills
         float damage, Vector3 spawnPosition,
         Vector2 forwardVector,
         float rotationZ = 0.0f,
-        float knockAmplitude = 0.0f
+        float knockAmplitude = 0.0f,
+        HitEffect hitEffect = HitEffect.None
     )
     {
         GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
@@ -118,6 +119,7 @@ public abstract class PlayerSkills
             PlayerStats.Instance.CalculateDamage(damage, out float finalDamage, out bool crit);
             projectile.SetDamage(finalDamage, crit);
             projectile.SetKnockValue(knockAmplitude);
+            projectile.SetHitEffect(hitEffect);
         }
         else
         {
@@ -137,7 +139,8 @@ public abstract class PlayerSkills
         float attackDamage,
         float superArmorDamage = 0.0f,
         float knockUpAmplitude = 0.0f,
-        float knockBackAmplitude = 0.0f
+        float knockBackAmplitude = 0.0f,
+        HitEffect hitEffect = HitEffect.None
     )
     {
         float totalDamageDealt = 0.0f;
@@ -155,6 +158,9 @@ public abstract class PlayerSkills
                     PlayerStats.Instance.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
                     enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
                     totalDamageDealt += finalDamage;
+
+                    // Spawn hit effect if exist
+                    HitEffectUtility.HitEffectFunction[hitEffect]?.Invoke(enemy.transform.position);
                 }
                 else
                 {

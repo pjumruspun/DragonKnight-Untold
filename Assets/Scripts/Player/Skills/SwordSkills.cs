@@ -87,7 +87,8 @@ public class SwordSkills : PlayerSkills
                 swordPrimaryHitbox,
                 damage,
                 knockUpAmplitude: skill1KnockUpAmplitude,
-                knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo]
+                knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo],
+                hitEffect: HitEffect.Slash
         ), anticipationPeriod);
     }
 
@@ -149,7 +150,7 @@ public class SwordSkills : PlayerSkills
         float anticipationPeriod = animLength * skill3AttackAnticipationRatio;
         CoroutineUtility.Instance.ExecDelay(() =>
         {
-            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude);
+            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude, hitEffect: HitEffect.Slash);
             Debug.Log(damageDealt);
 
             if (damageDealt > 0.0f) // If manage to hit something
@@ -163,6 +164,12 @@ public class SwordSkills : PlayerSkills
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)
     {
         yield return new WaitForSeconds(delay);
-        AttackWithProjectile(ref ObjectManager.Instance.SwordWaves, damage, transform.position, forwardVector, knockAmplitude: 2.0f);
+        AttackWithProjectile(
+            ref ObjectManager.Instance.SwordWaves,
+            damage, transform.position,
+            forwardVector, knockAmplitude:
+            2.0f,
+            hitEffect: HitEffect.Slash
+        );
     }
 }
