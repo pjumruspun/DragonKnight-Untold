@@ -912,7 +912,7 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 1
   groundDetector: {fileID: 707214862651218420}
-  enemyMaxHealth: 500
+  enemyMaxHealth: 150
   hpBar: {fileID: 1201546197379584409}
   secondsToDespawn: 2
   showSuperArmorBar: 1
@@ -927,6 +927,7 @@ MonoBehaviour:
   attackDelay: 0.3
   attackHitbox: {fileID: 502978019037034163}
   projectilePrefab: {fileID: 0}
+  hurtColor: {r: 0.5, g: 0, b: 0, a: 1}
 --- !u!212 &8164413801992587746
 SpriteRenderer:
   m_ObjectHideFlags: 0

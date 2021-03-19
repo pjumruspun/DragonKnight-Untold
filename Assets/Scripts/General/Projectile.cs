@@ -26,6 +26,7 @@ public class Projectile : MonoBehaviour
     private bool crit;
     private float superArmorDamage;
     private float knockAmplitude;
+    private HitEffect hitEffect;
 
     public void SetDirection(Vector2 direction)
     {
@@ -47,6 +48,11 @@ public class Projectile : MonoBehaviour
     public void SetKnockValue(float knockAmplitude)
     {
         this.knockAmplitude = knockAmplitude;
+    }
+
+    public void SetHitEffect(HitEffect hitEffect)
+    {
+        this.hitEffect = hitEffect;
     }
 
     private void HandleFlip()
@@ -115,6 +121,9 @@ public class Projectile : MonoBehaviour
                 {
                     // Deals damage to enemy
                     enemy.TakeDamage(damage, crit, superArmorDamage, knockAmplitude);
+
+                    // Show hit effect if exist
+                    HitEffectUtility.HitEffectFunction[hitEffect]?.Invoke(enemy.transform.position);
                 }
                 break;
             case Target.Player:

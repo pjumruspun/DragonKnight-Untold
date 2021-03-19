@@ -8,13 +8,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
     public PlayerClass CurrentClass => currentClass;
 
+    [Header("Hitboxes")]
     [SerializeField]
     private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonPrimaryHitbox;
 
+    [Header("Skill Effects")]
     [SerializeField]
     private GameObject fireBreath;
+    [SerializeField]
+    private GameObject clawSlash;
+
     private DragonSkills dragonSkills;
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
@@ -116,6 +121,10 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             // Stop fire breath
             EventPublisher.TriggerStopFireBreath();
         }
+        else if (InputManager.Skill3 && IsSkillReady(2))
+        {
+            EventPublisher.TriggerPlayerUseSkill(2);
+        }
     }
 
     private bool IsSkillReady(int skillNumber)
@@ -132,13 +141,14 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             case 0:
                 // Debug.Log("test");
-                CurrentSkills().Skill1(transform.position, GetForwardVector());
+                CurrentSkills().Skill1();
                 break;
             case 1:
-                CurrentSkills().Skill2(transform.position, GetForwardVector());
+                CurrentSkills().Skill2();
                 break;
             case 2:
-                throw new System.NotImplementedException();
+                CurrentSkills().Skill3();
+                break;
             case 3:
                 throw new System.NotImplementedException();
             default:
@@ -171,7 +181,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         humanSkills = CreatePlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath);
+        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private Vector2 GetForwardVector()

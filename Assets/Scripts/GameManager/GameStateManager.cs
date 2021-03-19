@@ -7,26 +7,6 @@ public class GameStateManager : MonoSingleton<GameStateManager>
 {
     public GameState State => gameState;
     private GameState gameState;
-    private const string mainMenuScene = "MainMenu";
-    private const string gameplayScene = "Gameplay";
-
-    public void LoadMainMenu()
-    {
-        gameState = GameState.MainMenu;
-        // Unpause the game
-        GameEvents.TriggerPause(false);
-        // Load main menu
-        SceneManager.LoadScene(mainMenuScene);
-    }
-
-    public void StartGame()
-    {
-        gameState = GameState.Gameplay;
-        // Load game scene
-        SceneManager.LoadScene(gameplayScene);
-        // Unpause the game
-        GameEvents.TriggerPause(false);
-    }
 
     protected override void Awake()
     {
@@ -54,17 +34,24 @@ public class GameStateManager : MonoSingleton<GameStateManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Adjust scene if faulty
-        switch (scene.name)
+
+        if (scene.name == LevelChanger.SceneNames[Scenes.MainMenu])
         {
-            case mainMenuScene:
-                gameState = GameState.MainMenu;
-                break;
-            case gameplayScene:
-                gameState = GameState.Gameplay;
-                break;
-            default:
-                Debug.LogWarning("Something wrong may be happening");
-                break;
+            gameState = GameState.MainMenu;
+        }
+        else if (scene.name == LevelChanger.SceneNames[Scenes.Tutorial])
+        {
+            gameState = GameState.Gameplay;
+            GameEvents.TriggerPause(false);
+        }
+        else if (scene.name == LevelChanger.SceneNames[Scenes.Camp])
+        {
+            gameState = GameState.Gameplay;
+            GameEvents.TriggerPause(false);
+        }
+        else
+        {
+            Debug.LogWarning("Loaded an unregistered scene");
         }
     }
 }

@@ -60,9 +60,7 @@ public abstract class PlayerSkills
     /// <summary>
     /// Execute skill 1 (auto attack)
     /// </summary>
-    /// <param name="currentPlayerPosition"></param>
-    /// <param name="forwardVector"></param>
-    public virtual void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public virtual void Skill1()
     {
         currentCooldown[0] = PlayerStats.Instance.SkillCooldown[0];
     }
@@ -70,11 +68,17 @@ public abstract class PlayerSkills
     /// <summary>
     /// Execute skill 2
     /// </summary>
-    /// <param name="currentPlayerPosition"></param>
-    /// <param name="forwardVector"></param>
-    public virtual void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public virtual void Skill2()
     {
         currentCooldown[1] = PlayerStats.Instance.SkillCooldown[1];
+    }
+
+    /// <summary>
+    /// Execute skill 3
+    /// </summary>
+    public virtual void Skill3()
+    {
+        currentCooldown[2] = PlayerStats.Instance.SkillCooldown[2];
     }
 
     /// <summary>
@@ -92,7 +96,8 @@ public abstract class PlayerSkills
         float damage, Vector3 spawnPosition,
         Vector2 forwardVector,
         float rotationZ = 0.0f,
-        float knockAmplitude = 0.0f
+        float knockAmplitude = 0.0f,
+        HitEffect hitEffect = HitEffect.None
     )
     {
         GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
@@ -114,6 +119,7 @@ public abstract class PlayerSkills
             PlayerStats.Instance.CalculateDamage(damage, out float finalDamage, out bool crit);
             projectile.SetDamage(finalDamage, crit);
             projectile.SetKnockValue(knockAmplitude);
+            projectile.SetHitEffect(hitEffect);
         }
         else
         {
@@ -128,16 +134,16 @@ public abstract class PlayerSkills
     /// <param name="attackDamage">How much damage does this attack do.</param>
     /// <param name="superArmorDamage">If this does any super armor damage.</param>
     /// <param name="knockUpAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this attack hits.</param>
-    protected IEnumerator AttackWithHitbox(
+    protected float AttackWithHitbox(
         AttackHitbox desiredHitbox,
         float attackDamage,
         float superArmorDamage = 0.0f,
         float knockUpAmplitude = 0.0f,
         float knockBackAmplitude = 0.0f,
-        float delay = 0.0f
+        HitEffect hitEffect = HitEffect.None
     )
     {
-        yield return new WaitForSeconds(delay);
+        float totalDamageDealt = 0.0f;
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
         {
@@ -151,6 +157,10 @@ public abstract class PlayerSkills
                     // Damage the enemy here
                     PlayerStats.Instance.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
                     enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
+                    totalDamageDealt += finalDamage;
+
+                    // Spawn hit effect if exist
+                    HitEffectUtility.HitEffectFunction[hitEffect]?.Invoke(enemy.transform.position);
                 }
                 else
                 {
@@ -170,5 +180,7 @@ public abstract class PlayerSkills
         {
             desiredHitbox.HitColliders.Remove(unrelatedCollider);
         }
+
+        return totalDamageDealt;
     }
 }

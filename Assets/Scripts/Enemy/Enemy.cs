@@ -7,6 +7,7 @@ using UnityEngine.UI;
 // This class will handle both HP bar update and health update
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Enemy : Health
 {
     public int SpawnCost => spawnCost;
@@ -106,6 +107,13 @@ public class Enemy : Health
     private GameObject projectilePrefab;
     private ObjectPool projectilePool;
 
+    // Hurt effects
+    [SerializeField]
+    private Color hurtColor = new Color(0.75f, 0.0f, 0.0f);
+    private Color originalColor;
+    private SpriteRenderer spriteRenderer;
+    private float flashEffectDuration = 0.15f;
+
     // Other stuff
     private Rigidbody2D rigidbody2D;
     private Animator animator;
@@ -129,12 +137,17 @@ public class Enemy : Health
                 TakeSuperArmorDamage(superArmorDamage);
             }
 
+            // Knock back
             KnockedBack(knockBackAmplitude);
             enemyAnimation.PlayFlinchAnimation();
 
             // Show floating damage number
             FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
             HandleHealthChange();
+
+            // Flash hurt color
+            spriteRenderer.color = hurtColor;
+            CoroutineUtility.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
         }
     }
 
@@ -231,6 +244,10 @@ public class Enemy : Health
 
     private void EnableEnemy()
     {
+        // GetComponent
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+
         // Enemy shouldn't be stunned at first, set it to inactive
         stunStars.SetActive(false);
 
@@ -265,8 +282,13 @@ public class Enemy : Health
         // Spawn item
         TrySpawnItem();
 
-        // Disable health bar
+        // Reset color
+        spriteRenderer.color = originalColor;
+
+        // Disable health bar, super armor bar, and stun stars
         hpBar.gameObject.SetActive(false);
+        superArmorBar.gameObject.SetActive(false);
+        stunStars.SetActive(false);
 
         // Play Dead animation
         enemyAnimation.PlayDeadAnimation();
@@ -302,20 +324,21 @@ public class Enemy : Health
     {
         Transform player = PlayerMovement.Instance.transform;
         rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);
-        if (player.position.x > transform.position.x)
+
+        Vector2 direction;
+        switch (PlayerMovement.Instance.TurnDirection)
         {
-            // Player is on the right
-            // Knock left
-            Vector2 direction = Vector2.left;
-            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
+            case MovementState.Left:
+                direction = Vector2.left;
+                break;
+            case MovementState.Right:
+                direction = Vector2.right;
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException("MovementState enum not recognized");
         }
-        else if (player.position.x < transform.position.x)
-        {
-            // Player is on the left
-            // Knock right
-            Vector2 direction = Vector2.right;
-            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
-        }
+
+        rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
     }
 
     private void HandleSuperArmorUIChange()

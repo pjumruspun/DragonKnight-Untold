@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1738964386786973919}
   - component: {fileID: 1738964386786973729}
   - component: {fileID: 1738964386786973728}
+  - component: {fileID: 4582279271211583108}
   m_Layer: 0
   m_Name: Singleton
   m_TagString: Untagged
@@ -67,6 +68,10 @@ MonoBehaviour:
   arrowPoolSize: 30
   itemPickupPrefab: {fileID: 4204306999793631647, guid: d7b451dd1ffed4b5a8c3c05540637b9e, type: 3}
   itemPickupPoolSize: 10
+  slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
+  slashEffectPoolsize: 5
+  slashEffectRandomAngle: 20
+  slashEffectDestroyDuration: 0.5
 --- !u!114 &1738964386786973728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,3 +93,16 @@ MonoBehaviour:
   commonItems:
   - {fileID: 11400000, guid: c3cc87b701e8b4d39a8dcca86807f213, type: 2}
   - {fileID: 11400000, guid: c5ba2c90c8c14448caa67081ed97102a, type: 2}
+--- !u!114 &4582279271211583108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138724b8d5fac4e2d89f42db4b326144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 500538367555941616, guid: b043a9ba7df854ab88527379856c9b96, type: 3}

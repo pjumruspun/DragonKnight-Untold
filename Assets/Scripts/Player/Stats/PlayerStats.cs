@@ -38,7 +38,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     {
         0.5f,
         3.0f,
-        1.0f,
+        5.0f,
         1.0f
     };
     private float[] baseSkillDamage = new float[4]

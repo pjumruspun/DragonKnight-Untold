@@ -6,7 +6,7 @@ public class ButtonEvent : MonoBehaviour
 {
     public void StartGame()
     {
-        GameStateManager.Instance.StartGame();
+        LevelChanger.LoadScene(Scenes.Camp);
     }
 
     public void ResumeGame()
@@ -16,7 +16,7 @@ public class ButtonEvent : MonoBehaviour
 
     public void MainMenu()
     {
-        GameStateManager.Instance.LoadMainMenu();
+        LevelChanger.LoadScene(Scenes.MainMenu);
     }
 
     public void ShowOptions()

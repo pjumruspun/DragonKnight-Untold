@@ -5,6 +5,14 @@ using System;
 
 public class DragonSkills : PlayerSkills
 {
+    private const float slashAnimLength = 0.3f;
+    private const float skill1KnockUpAmplitude = 3.0f;
+    private const float skill1KnockBackAmplitude = 2.0f;
+    private const float skill1AnticipationRatio = 0.3f;
+    private const float skill1LockMovementRatio = 0.6f;
+    private const float skill1AnimStopRatio = 0.2f;
+    private const float skill1ScreenShakeDuration = 0.3f;
+    private const float skill1ScreenShakePower = 0.15f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4]
@@ -16,27 +24,41 @@ public class DragonSkills : PlayerSkills
     };
     private float[] dragonAttackCooldown = new float[4]
     {
-        0.5f,
+        0.7f,
         1.0f,
         1.0f,
         1.0f
     };
 
-    private float dragonSuperArmorAttack = 50.0f;
+    private float dragonSuperArmorAttack = 100.0f;
     private GameObject fireBreath;
+    private GameObject clawSlash;
+    private Animator clawSlashAnim;
     private Coroutine fireBreathCoroutine;
 
     public DragonSkills(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
-        GameObject fireBreath
+        GameObject fireBreath,
+        GameObject clawSlash
     ) : base(transform)
     {
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
-
         this.fireBreath.SetActive(false);
+
+        this.clawSlash = clawSlash;
+        this.clawSlash.SetActive(false);
+
+        if (this.clawSlash.TryGetComponent<Animator>(out Animator animator))
+        {
+            this.clawSlashAnim = animator;
+        }
+        else
+        {
+            throw new System.NullReferenceException("Cannot get Animator component from clawSlash GameObject");
+        }
     }
 
     public override float[] GetCurrentCooldown()
@@ -49,27 +71,7 @@ public class DragonSkills : PlayerSkills
         return currentCooldown[skillNumber] / dragonAttackCooldown[skillNumber];
     }
 
-    // public override float GetCurrentCooldown(int skillNumber, float timeSinceLastExecuted, bool percentage = false)
-    // {
-    //     if (skillNumber < 0 || skillNumber > 3)
-    //     {
-    //         throw new System.InvalidOperationException($"Error skillNumber {skillNumber} is not in between 0 and 3");
-    //     }
-    //     else
-    //     {
-    //         float cooldown = dragonAttackCooldown[skillNumber];
-    //         float current = cooldown - timeSinceLastExecuted;
-    //         if (percentage)
-    //         {
-    //             // Normalized with cooldown
-    //             current = current / cooldown;
-    //         }
-
-    //         return current < 0.0f ? 0.0f : current;
-    //     }
-    // }
-
-    public override void Skill1(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public override void Skill1()
     {
         currentCooldown[0] = dragonAttackCooldown[0];
 
@@ -78,18 +80,57 @@ public class DragonSkills : PlayerSkills
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
-        CoroutineUtility.Instance.CreateCoroutine(
-            AttackWithHitbox(
+        float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+
+        // Lock movement
+        movement.LockMovementBySkill(skill1LockMovementRatio * animLength, true, true);
+        movement.LockJumpBySkill(skill1LockMovementRatio * animLength);
+
+        // Actual attack damage applied
+        float attackDelay = skill1AnticipationRatio * animLength;
+
+        CoroutineUtility.ExecDelay(() =>
+        {
+            // Attack
+            float totalDamage = AttackWithHitbox(
                 dragonPrimaryHitbox,
                 damage,
                 dragonSuperArmorAttack,
-                knockUpAmplitude: 3.0f,
-                knockBackAmplitude: 2.0f,
-                delay: 0.2f
-        ));
+                knockUpAmplitude: skill1KnockUpAmplitude,
+                knockBackAmplitude: skill1KnockBackAmplitude,
+                hitEffect: HitEffect.Slash
+            );
+
+            if (totalDamage > 0.0f)
+            {
+                // Time stop
+                float timeStopDuration = animLength * skill1AnimStopRatio;
+                // Stop player's animator
+                TimeStopper.StopAnimator(PlayerAnimation.Instance.GetAnimator, timeStopDuration);
+
+                // Stop claw slash's animator
+                TimeStopper.StopAnimator(clawSlashAnim, timeStopDuration);
+
+                // Screen shaking
+                ScreenShake.Instance.StartShaking(skill1ScreenShakeDuration, skill1ScreenShakePower);
+            }
+        }, attackDelay);
+
+        // Claw slash effect
+        // On
+        CoroutineUtility.ExecDelay(() =>
+        {
+            this.clawSlash.SetActive(true);
+        }, attackDelay / 2);
+
+        // Off
+        CoroutineUtility.ExecDelay(() =>
+        {
+            this.clawSlash.SetActive(false);
+        }, attackDelay + slashAnimLength);
     }
 
-    public override void Skill2(Vector3 currentPlayerPosition, Vector2 forwardVector)
+    public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
 
@@ -125,9 +166,7 @@ public class DragonSkills : PlayerSkills
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            CoroutineUtility.Instance.CreateCoroutine(
-                AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f)
-            );
+            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f);
         }
     }
 }

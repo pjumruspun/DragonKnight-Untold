@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class EnemySpawner : MonoSingleton<EnemySpawner>
 {
     [SerializeField]
-    private Transform player;
+    private bool shouldSpawn = true;
     [SerializeField]
     private Tilemap tilemap;
     [SerializeField]
@@ -21,6 +21,18 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private int maxSpawnAmount = 50;
     private float lastTimeSpawned = 0.0f;
     private float currentSpawnAmount = 0;
+    private Transform player;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        EventPublisher.PlayerSpawn += AssignTransform;
+    }
+
+    private void AssignTransform(Transform player)
+    {
+        this.player = player;
+    }
 
     private void Start()
     {
@@ -31,11 +43,12 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private void OnDestroy()
     {
         EventPublisher.EnemyDead -= ProcessSpawnAmount;
+        EventPublisher.PlayerSpawn -= AssignTransform;
     }
 
     private void Update()
     {
-        if (Time.time - lastTimeSpawned >= spawnInterval && currentSpawnAmount < maxSpawnAmount)
+        if (shouldSpawn && Time.time - lastTimeSpawned >= spawnInterval && currentSpawnAmount < maxSpawnAmount)
         {
             // Try spawn
             MassSpawnEnemy();
@@ -51,7 +64,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             spawnAmountThisInterval += TrySpawnEnemy();
         }
 
-        Debug.Log($"Spawn amount increased from {currentSpawnAmount} to {currentSpawnAmount + spawnAmountThisInterval}");
         currentSpawnAmount += spawnAmountThisInterval;
     }
 
@@ -84,7 +96,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     private void ProcessSpawnAmount(Enemy enemy)
     {
-        Debug.Log($"{enemy.name} is dead, reduce cost from {currentSpawnAmount} to {currentSpawnAmount - enemy.SpawnCost}");
         currentSpawnAmount -= enemy.SpawnCost;
     }
 }
