@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class Enemy : Health
 {
     public int SpawnCost => spawnCost;
+    public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
     public ObjectPool Projectile => projectilePool;
     public bool IsRanged => isRanged;

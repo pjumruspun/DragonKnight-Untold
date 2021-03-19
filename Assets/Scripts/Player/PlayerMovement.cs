@@ -15,7 +15,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private int maxDragonJumpCount = 3;
     private int dragonJumpCount = 0;
     [SerializeField]
-    private float dragonGlidingSpeed = 8.0f;
+    private float dragonGlidingSpeedMultiplier = 2.0f;
     [SerializeField]
     private float jumpingForce = 7.0f;
     [SerializeField]
@@ -43,8 +43,9 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private float lockDuration = 0.0f;
 
     // Moving by skills
-    private bool isMovingBySkill = false;
-    private float movingDuration = 0.0f;
+    private bool isForcedToMove = false;
+    private Vector2 forceMoveDirection;
+    private float forceMoveDuration = 0.0f;
     private float movingSpeed = 0.0f;
     private ForceMode2D forceMode = ForceMode2D.Force;
 
@@ -96,12 +97,22 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         }
     }
 
-    public void AddForceBySkill(Vector2 force)
+    public void AddForceBySkill(Vector2 force, bool disableOldVy = false)
     {
+        if (disableOldVy)
+        {
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0.0f);
+        }
+
         rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+
+        // Experimental X movement
+        // Need to find a way to properly move x
+        ForceMove(new Vector2(force.x, 0.0f), force.x * 10.0f, 1.5f, ForceMode2D.Force, groundOnly: false);
     }
 
-    public void MoveForwardBySkill(
+    public void ForceMove(
+        Vector2 direction,
         float speed,
         float duration,
         ForceMode2D forceMode = ForceMode2D.Force,
@@ -113,11 +124,19 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             return;
         }
 
-        isMovingBySkill = true;
-        movingDuration = duration;
+        forceMoveDirection = direction;
+        isForcedToMove = true;
+        forceMoveDuration = duration;
         movingSpeed = speed;
         this.forceMode = forceMode;
     }
+
+    public void MoveForwardBySkill(
+        float speed,
+        float duration,
+        ForceMode2D forceMode = ForceMode2D.Force,
+        bool groundOnly = true
+    ) => ForceMove(ForwardVector, speed, duration, forceMode, groundOnly);
 
     // Set reset lockers
     public void LockFlipBySkill(bool lockFlip) => isFlipLockedBySkills = lockFlip;
@@ -224,7 +243,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             ProcessPlayerLanding();
             ProcessGlide();
             ProcessStopAllMovement();
-            ProcessMoveBySkill();
+            ProcessForceMove();
         }
 
         ProcessLockState();
@@ -313,7 +332,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             if (DragonGauge.Instance.IsDragonForm && !isGrounded)
             {
                 // The dragon is gliding
-                velocityX = horizontalMovement * dragonGlidingSpeed;
+                velocityX = horizontalMovement * PlayerStats.Instance.MovementSpeed * dragonGlidingSpeedMultiplier;
             }
             else
             {
@@ -321,6 +340,12 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             }
 
             rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+            // Velocity Clamp
+            // if (Mathf.Abs(rigidbody2D.velocity.x) <= Mathf.Abs(velocityX))
+            // {
+            //     rigidbody2D.AddForce(new Vector2(velocityX, 0.0f), ForceMode.VelocityChange);
+            //     Debug.Log(rigidbody2D.velocity.x);
+            // }
         }
     }
 
@@ -407,16 +432,17 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         lockDuration = duration;
     }
 
-    private void ProcessMoveBySkill()
+    private void ProcessForceMove()
     {
-        if (isMovingBySkill)
+        if (isForcedToMove)
         {
-            movingDuration -= Time.deltaTime;
-            rigidbody2D.AddForce(ForwardVector.normalized * movingSpeed, forceMode);
-            if (movingDuration <= 0.0f)
+            forceMoveDuration -= Time.fixedDeltaTime;
+            float fraction = Mathf.Lerp(forceMoveDuration, 0.0f, Time.fixedDeltaTime);
+            rigidbody2D.AddForce(forceMoveDirection.normalized * movingSpeed, forceMode);
+            if (forceMoveDuration <= 0.0f)
             {
-                isMovingBySkill = false;
-                movingDuration = 0.0f;
+                isForcedToMove = false;
+                forceMoveDuration = 0.0f;
                 rigidbody2D.velocity = Vector2.zero;
             }
         }
@@ -468,23 +494,4 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         turn = side;
         transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
     }
-
-    // private void UpdateMoveSpeedOnChangeClass(PlayerClass playerClass)
-    // {
-    //     PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-    //     ClassConfig config;
-    //     switch (playerClass)
-    //     {
-    //         case PlayerClass.Sword:
-    //             config = playerConfig.SwordConfig;
-    //             break;
-    //         case PlayerClass.Archer:
-    //             config = playerConfig.ArcherConfig;
-    //             break;
-    //         default:
-    //             throw new System.InvalidOperationException();
-    //     }
-
-    //     baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, config.agi);
-    // }
 }

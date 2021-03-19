@@ -47,13 +47,11 @@ public class LevelChanger : MonoSingleton<LevelChanger>
 
     public void FadeOut()
     {
-        Debug.Log("Fade out");
         animator.SetTrigger("FadeOut");
     }
 
     private void FadeIn(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("FAde in");
         animator.SetTrigger("FadeIn");
     }
 

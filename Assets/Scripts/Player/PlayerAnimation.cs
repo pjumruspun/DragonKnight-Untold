@@ -253,7 +253,6 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
 
     private void AdjustAttackSpeed()
     {
-        print(PlayerStats.Instance.AttackSpeed);
         animator.SetFloat("AttackSpeed", PlayerStats.Instance.AttackSpeed);
     }
 }

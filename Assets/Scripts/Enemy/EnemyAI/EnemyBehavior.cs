@@ -105,7 +105,7 @@ public class EnemyBehavior : StateMachineBehaviour
         }
     }
 
-    protected void ListenToAttackSignal()
+    protected virtual void ListenToAttackSignal()
     {
         bool readyToAttack = enemy.CurrentCooldown < 0.01f;
         if (DistanceToPlayerX <= enemy.AttackRange && readyToAttack)

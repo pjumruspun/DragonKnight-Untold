@@ -9,6 +9,7 @@ public class EnemyChase : EnemyBehavior
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
         Chase();
+        ListenToAttackSignal();
     }
 
     private void Chase()
@@ -29,32 +30,12 @@ public class EnemyChase : EnemyBehavior
                 // Go left
                 GoLeft();
             }
-            // else if (enemy.IsRanged)
-            // {
-            //     // In between, only for ranged enemies
-            //     // Too close when on the left, or right side
-            //     bool tooCloseLeft = transform.position.x > player.position.x - enemy.AttackRange + spaceOffset;
-            //     bool tooCloseRight = transform.position.x < player.position.x + enemy.AttackRange - spaceOffset;
-            //     if (tooCloseLeft)
-            //     {
-            //         // Should walk left until reached preferable attack range
-            //         GoLeft();
-            //     }
-            //     else if (tooCloseRight)
-            //     {
-            //         // Should walk right until reached preferable attack range
-            //         // Go right
-            //         GoRight();
-            //     }
-            // }
         }
         else
         {
             // Switch state
             animator.SetTrigger("Patrol");
         }
-
-        ListenToAttackSignal();
     }
 
     private void GoLeft()

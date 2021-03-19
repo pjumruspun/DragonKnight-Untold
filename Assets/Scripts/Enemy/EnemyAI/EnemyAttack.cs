@@ -11,7 +11,7 @@ public class EnemyAttack : EnemyBehavior
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         enemy.CurrentCooldown = enemy.AttackCooldown;
-        CoroutineUtility.Instance.StartCoroutine(AttackWithDelay(enemy.AttackDelay));
+        ProcessAttack();
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -20,28 +20,40 @@ public class EnemyAttack : EnemyBehavior
         ListenToChaseSignal();
     }
 
-    private IEnumerator AttackWithDelay(float delay)
+    protected virtual void ProcessAttack()
     {
-        yield return new WaitForSeconds(delay);
+        CoroutineUtility.ExecDelay(() => Attack(), enemy.AttackDelay);
+    }
+
+    protected virtual void Attack()
+    {
         if (enemy.IsRanged)
         {
             RangedAttack();
         }
         else
         {
-            MeleeAttack();
+            MeleeAttack(enemy.EnemyAttackHitbox);
         }
     }
 
-    private void MeleeAttack()
+    protected virtual void MeleeAttack(AttackHitbox hitbox, float knockBackAmplitude = 0.0f, float knockUpAmplitude = 0.0f)
     {
-        AttackHitbox hitbox = enemy.EnemyAttackHitbox;
         HashSet<Collider2D> colliders = hitbox.HitColliders;
         foreach (Collider2D collider in colliders)
         {
             if (collider.TryGetComponent<PlayerHealth>(out PlayerHealth player))
             {
                 player.TakeDamage(enemy.AttackDamage);
+            }
+
+            bool shouldKnock = knockBackAmplitude > 0.0f || knockUpAmplitude > 0.0f;
+
+            if (shouldKnock && collider.TryGetComponent<PlayerMovement>(out PlayerMovement movement))
+            {
+                Vector2 fx = enemy.ForwardVector * knockBackAmplitude;
+                Vector2 fy = Vector2.up * knockUpAmplitude;
+                movement.AddForceBySkill(fx + fy, false);
             }
         }
     }
