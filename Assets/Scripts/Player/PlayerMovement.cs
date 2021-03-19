@@ -437,7 +437,6 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         if (isForcedToMove)
         {
             forceMoveDuration -= Time.fixedDeltaTime;
-            float fraction = Mathf.Lerp(forceMoveDuration, 0.0f, Time.fixedDeltaTime);
             rigidbody2D.AddForce(forceMoveDirection.normalized * movingSpeed, forceMode);
             if (forceMoveDuration <= 0.0f)
             {
