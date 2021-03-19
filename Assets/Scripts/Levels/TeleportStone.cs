@@ -7,11 +7,6 @@ public class TeleportStone : Interactable
 {
     [SerializeField]
     private Scenes sceneToLoad;
-    private Dictionary<Scenes, string> sceneNames = new Dictionary<Scenes, string>()
-    {
-        { Scenes.Camp, "Camp" },
-        { Scenes.Tutorial, "Gameplay" },
-    };
 
     public override void Interact()
     {
@@ -32,6 +27,6 @@ public class TeleportStone : Interactable
 
     private void Teleport()
     {
-        SceneManager.LoadScene(sceneNames[sceneToLoad]);
+        LevelChanger.LoadScene(sceneToLoad);
     }
 }

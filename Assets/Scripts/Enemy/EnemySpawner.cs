@@ -64,7 +64,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             spawnAmountThisInterval += TrySpawnEnemy();
         }
 
-        Debug.Log($"Spawn amount increased from {currentSpawnAmount} to {currentSpawnAmount + spawnAmountThisInterval}");
         currentSpawnAmount += spawnAmountThisInterval;
     }
 

@@ -80,7 +80,7 @@ public class SwordSkills : PlayerSkills
 
         // Then attack
         float anticipationPeriod = animLength * skill1AnticipationRatio;
-        CoroutineUtility.Instance.ExecDelay(() =>
+        CoroutineUtility.ExecDelay(() =>
             AttackWithHitbox(
                 swordPrimaryHitbox,
                 damage,
@@ -119,7 +119,7 @@ public class SwordSkills : PlayerSkills
         movement.LockJumpBySkill(lockMovementDuration);
 
         // Dash ahead
-        CoroutineUtility.Instance.ExecDelay(() =>
+        CoroutineUtility.ExecDelay(() =>
         {
             movement.MoveForwardBySkill(
                 PlayerStats.Instance.MovementSpeed * skill3SpeedMultiplier,
@@ -146,7 +146,7 @@ public class SwordSkills : PlayerSkills
 
         // Attack
         float anticipationPeriod = animLength * skill3AttackAnticipationRatio;
-        CoroutineUtility.Instance.ExecDelay(() =>
+        CoroutineUtility.ExecDelay(() =>
         {
             float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude, hitEffect: HitEffect.Slash);
             if (damageDealt > 0.0f) // If manage to hit something

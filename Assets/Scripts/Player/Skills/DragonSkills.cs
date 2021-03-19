@@ -89,7 +89,7 @@ public class DragonSkills : PlayerSkills
         // Actual attack damage applied
         float attackDelay = skill1AnticipationRatio * animLength;
 
-        CoroutineUtility.Instance.ExecDelay(() =>
+        CoroutineUtility.ExecDelay(() =>
         {
             // Attack
             float totalDamage = AttackWithHitbox(
@@ -118,13 +118,13 @@ public class DragonSkills : PlayerSkills
 
         // Claw slash effect
         // On
-        CoroutineUtility.Instance.ExecDelay(() =>
+        CoroutineUtility.ExecDelay(() =>
         {
             this.clawSlash.SetActive(true);
         }, attackDelay / 2);
 
         // Off
-        CoroutineUtility.Instance.ExecDelay(() =>
+        CoroutineUtility.ExecDelay(() =>
         {
             this.clawSlash.SetActive(false);
         }, attackDelay + slashAnimLength);

@@ -56,7 +56,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         float rotationZ = Random.Range(-slashEffectRandomAngle, slashEffectRandomAngle);
         Quaternion rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
         GameObject slashEffect = ObjectManager.Instance.SlashEffect.SpawnObject(spawnPosition, rotation);
-        CoroutineUtility.Instance.ExecDelay(() => ObjectManager.Instance.SlashEffect.ReturnObject(slashEffect), slashEffectDestroyDuration);
+        CoroutineUtility.ExecDelay(() => ObjectManager.Instance.SlashEffect.ReturnObject(slashEffect), slashEffectDestroyDuration);
     }
 
     private void Start()

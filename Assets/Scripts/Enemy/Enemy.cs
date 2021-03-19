@@ -147,7 +147,7 @@ public class Enemy : Health
 
             // Flash hurt color
             spriteRenderer.color = hurtColor;
-            CoroutineUtility.Instance.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
+            CoroutineUtility.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
         }
     }
 
