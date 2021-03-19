@@ -53,7 +53,7 @@ public class EnemyAttack : EnemyBehavior
             {
                 Vector2 fx = enemy.ForwardVector * knockBackAmplitude;
                 Vector2 fy = Vector2.up * knockUpAmplitude;
-                movement.AddForceBySkill(fx + fy, false);
+                movement.KnockBack(fx + fy);
             }
         }
     }

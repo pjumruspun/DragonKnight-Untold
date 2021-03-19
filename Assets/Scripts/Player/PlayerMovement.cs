@@ -42,12 +42,15 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private bool stateLock = false;
     private float lockDuration = 0.0f;
 
-    // Moving by skills
+    // Forced movement
     private bool isForcedToMove = false;
     private Vector2 forceMoveDirection;
     private float forceMoveDuration = 0.0f;
     private float movingSpeed = 0.0f;
     private ForceMode2D forceMode = ForceMode2D.Force;
+
+    // Knocked back
+    private bool isKnockedBack = false;
 
     // This could be cached and put private
     // Letting other classes access through property instead
@@ -97,6 +100,12 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         }
     }
 
+    public void KnockBack(Vector2 force)
+    {
+        isKnockedBack = true;
+        AddForceBySkill(force, true);
+    }
+
     public void AddForceBySkill(Vector2 force, bool disableOldVy = false)
     {
         if (disableOldVy)
@@ -108,7 +117,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
         // Experimental X movement
         // Need to find a way to properly move x
-        ForceMove(new Vector2(force.x, 0.0f), force.x * 10.0f, 1.5f, ForceMode2D.Force, groundOnly: false);
+        // ForceMove(new Vector2(force.x, 0.0f), force.x * 10.0f, 1.5f, ForceMode2D.Force, groundOnly: false);
     }
 
     public void ForceMove(
@@ -212,8 +221,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Subscribe
         EventPublisher.PlayerJump += Jump;
         EventPublisher.PlayerLand += ResetDragonJumpCount;
-        // EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
-        // EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
+        EventPublisher.PlayerLand += ResetKnockbackState;
     }
 
     private void OnDestroy()
@@ -221,8 +229,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Unsubscribe
         EventPublisher.PlayerJump -= Jump;
         EventPublisher.PlayerLand -= ResetDragonJumpCount;
-        // EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
-        // EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
+        EventPublisher.PlayerLand -= ResetKnockbackState;
     }
 
     // Update for listening to input
@@ -328,7 +335,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
                     break;
             }
 
-            float velocityX = 0.0f;
+            float velocityX = isKnockedBack ? rigidbody2D.velocity.x : 0.0f;
             if (DragonGauge.Instance.IsDragonForm && !isGrounded)
             {
                 // The dragon is gliding
@@ -339,13 +346,17 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
                 velocityX = horizontalMovement * PlayerStats.Instance.MovementSpeed;
             }
 
-            rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
-            // Velocity Clamp
-            // if (Mathf.Abs(rigidbody2D.velocity.x) <= Mathf.Abs(velocityX))
-            // {
-            //     rigidbody2D.AddForce(new Vector2(velocityX, 0.0f), ForceMode.VelocityChange);
-            //     Debug.Log(rigidbody2D.velocity.x);
-            // }
+            if (isKnockedBack)
+            {
+                if (Mathf.Abs(rigidbody2D.velocity.x) < Mathf.Abs(velocityX))
+                {
+                    rigidbody2D.AddForce(new Vector2(velocityX * 3.0f, 0.0f), ForceMode.Force);
+                }
+            }
+            else
+            {
+                rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+            }
         }
     }
 
@@ -471,6 +482,11 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         }
 
         lastFrameWasGrounded = isGrounded;
+    }
+
+    private void ResetKnockbackState()
+    {
+        isKnockedBack = false;
     }
 
     private void Turn(MovementState side)

@@ -17,7 +17,6 @@ public class MeleeBossAttack : EnemyAttack
 
     protected override void ProcessAttack()
     {
-
         CoroutineUtility.ExecDelay(() => Attack(), attackDelay);
     }
 
