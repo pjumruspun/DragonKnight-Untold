@@ -5,6 +5,7 @@ using UnityEngine;
 
 public abstract class Health : MonoBehaviour
 {
+    public float HealthPercentage => currentHealth / maxHealth;
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
     public bool IsDead => currentHealth <= 0.01f;

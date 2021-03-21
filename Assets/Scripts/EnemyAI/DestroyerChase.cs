@@ -45,7 +45,7 @@ public class DestroyerChase : EnemyChase
 
     private const float jumpYPower = 3.0f;
 
-    private bool jumpStompEnabled => (enemy.CurrentHealth / enemy.MaxHealth) <= jumpStompEnableThreshold;
+    private bool jumpStompEnabled => (enemy.HealthPercentage) <= jumpStompEnableThreshold;
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -90,12 +90,9 @@ public class DestroyerChase : EnemyChase
 
     private void ListenToSpeedGainSignal()
     {
-        float enemyHpPercentage = enemy.CurrentHealth / enemy.MaxHealth;
-        if (enemyHpPercentage <= gainSpeedThreshold)
+        if (enemy.HealthPercentage <= gainSpeedThreshold)
         {
             enemy.ActionSpeed = actionSpeedToGain;
-            Debug.Log(animator.speed);
-            Debug.Log(enemy.AttackCooldown);
         }
     }
 }

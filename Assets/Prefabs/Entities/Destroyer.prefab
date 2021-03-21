@@ -932,7 +932,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6415880568046649087}
-  - component: {fileID: 6415880568046649085}
+  - component: {fileID: 3558264992210606126}
   - component: {fileID: 6415880568046649056}
   - component: {fileID: 6415880568046649057}
   - component: {fileID: 6415880568046649086}
@@ -964,7 +964,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6415880568046649085
+--- !u!114 &3558264992210606126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -973,18 +973,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 6415880568046649058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2172c7b4fb3da442c90601d1ddb8c9a3, type: 3}
+  m_Script: {fileID: 11500000, guid: bdbe807db3b6f4c2cad2863b8ead884e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isFlinchable: 0
   spawnCost: 5
-  enemyBaseSpeed: 2.5
-  randomSpeedFactor: 0
-  chasingRange: 10
+  enemyBaseSpeed: 1.5
+  randomSpeedFactor: 0.5
+  chasingRange: 20
   chasingInterval: 0.5
-  canSeeThroughWalls: 1
+  canSeeThroughWalls: 0
   groundDetector: {fileID: 2419719778490068726}
-  enemyMaxHealth: 1500
+  startMaxHealth: 1500
   hpBar: {fileID: 4100709551577818779}
   secondsToDespawn: 2
   showSuperArmorBar: 1
@@ -996,10 +995,10 @@ MonoBehaviour:
   attackDamage: 15
   attackCooldown: 3
   attackRange: 1
-  attackDelay: 0.6
-  attackHitbox: {fileID: 3368399695676752305}
+  attackDelay: 0.3
+  attackHitbox: {fileID: 0}
   projectilePrefab: {fileID: 0}
-  hurtColor: {r: 0.5, g: 0, b: 0, a: 1}
+  hurtColor: {r: 0.75, g: 0, b: 0, a: 1}
 --- !u!212 &6415880568046649056
 SpriteRenderer:
   m_ObjectHideFlags: 0

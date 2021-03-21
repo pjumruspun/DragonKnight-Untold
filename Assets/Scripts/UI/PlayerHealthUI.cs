@@ -7,10 +7,8 @@ public class PlayerHealthUI : MonoBehaviour
 {
     [SerializeField]
     private bool showHPText = true;
-
     [SerializeField]
     private Image healthFill;
-
     [SerializeField]
     private Text hpText;
 

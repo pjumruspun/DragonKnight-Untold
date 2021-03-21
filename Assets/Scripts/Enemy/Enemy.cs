@@ -41,12 +41,7 @@ public class Enemy : Health
     public float ChasingInterval => chasingInterval;
     public bool CanSeeThroughWalls => canSeeThroughWalls;
     public Transform GroundDetector => groundDetector;
-    [HideInInspector]
     public bool ShouldChase { get; set; }
-
-    [SerializeField]
-    [Tooltip("Would this monster flinch when attacked?")]
-    private bool isFlinchable = true;
 
     // How rare is this monster? The higher, the rarer
     [SerializeField]
@@ -78,9 +73,9 @@ public class Enemy : Health
     [Header("Health Parameters")]
     // Health system
     [SerializeField]
-    private float enemyMaxHealth = 150.0f;
+    private float startMaxHealth = 150.0f;
     [SerializeField]
-    private Slider hpBar;
+    protected Slider hpBar;
     [SerializeField]
     private float secondsToDespawn = 2.0f;
 
@@ -91,7 +86,7 @@ public class Enemy : Health
     [SerializeField]
     private float maxSuperArmor = 100;
     [SerializeField]
-    private Slider superArmorBar;
+    protected Slider superArmorBar;
     [SerializeField]
     private float secondsBeforeGetUp = 1.5f;
     [SerializeField]
@@ -141,7 +136,7 @@ public class Enemy : Health
     private MovementState turnDirection = MovementState.Right;
 
     // Adapter method
-    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
+    public virtual void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
     {
         if (!IsDead)
         {
@@ -162,10 +157,7 @@ public class Enemy : Health
             KnockedBack(knockBackAmplitude);
 
             // Flinch
-            if (isFlinchable)
-            {
-                enemyAnimation.PlayFlinchAnimation();
-            }
+            Flinch();
 
             // Show floating damage number
             FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
@@ -263,12 +255,17 @@ public class Enemy : Health
         EnableEnemy();
     }
 
+    protected virtual void Flinch()
+    {
+        enemyAnimation.PlayFlinchAnimation();
+    }
+
     private void OnEnable()
     {
         EnableEnemy();
     }
 
-    private void EnableEnemy()
+    protected virtual void EnableEnemy()
     {
         // GetComponent
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -281,7 +278,7 @@ public class Enemy : Health
         superArmorBar.gameObject.SetActive(showSuperArmorBar);
 
         // Set health and super armor
-        maxHealth = enemyMaxHealth;
+        base.maxHealth = startMaxHealth;
         superArmor = maxSuperArmor;
 
         // Set projectile if ranged
@@ -300,7 +297,7 @@ public class Enemy : Health
     protected override void HandleHealthChange()
     {
         // Update HP Bar
-        hpBar.value = currentHealth / maxHealth;
+        hpBar.value = HealthPercentage;
     }
 
     protected override void HandleDeath()

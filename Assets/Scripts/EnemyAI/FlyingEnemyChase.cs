@@ -4,6 +4,7 @@ using UnityEngine;
 using Pathfinding;
 
 #pragma warning disable 0108
+#pragma warning disable 0414
 public class FlyingEnemyChase : EnemyBehavior
 {
     private Seeker seeker;

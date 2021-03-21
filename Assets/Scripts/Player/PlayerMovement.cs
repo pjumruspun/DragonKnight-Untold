@@ -350,7 +350,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             {
                 if (Mathf.Abs(rigidbody2D.velocity.x) < Mathf.Abs(velocityX))
                 {
-                    rigidbody2D.AddForce(new Vector2(velocityX * 3.0f, 0.0f), ForceMode.Force);
+                    rigidbody2D.AddForce(new Vector2(velocityX * 3.0f, 0.0f), ForceMode2D.Force);
                 }
             }
             else
