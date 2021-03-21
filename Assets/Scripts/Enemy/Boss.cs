@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Boss : Enemy
 {
+    private static readonly float timeFreezeOnDead = 0.5f;
+    private static readonly float screenShakeDurOnDead = 0.4f;
+    private static readonly float screenShakePowOnDead = 0.2f;
+
     protected override void EnableEnemy()
     {
         base.EnableEnemy();
@@ -25,6 +29,10 @@ public class Boss : Enemy
     {
         base.HandleDeath();
         BossEvents.TriggerBossDead(this);
+
+        // Stop time for a little, and shake the screen
+        TimeStopper.TimeStop(timeFreezeOnDead);
+        ScreenShake.Instance.StartShaking(screenShakeDurOnDead, screenShakePowOnDead);
     }
 
     protected override void Flinch()

@@ -106,7 +106,7 @@ Transform:
   m_Children:
   - {fileID: 6459334453156027134}
   m_Father: {fileID: 5097646329903057362}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6253411847552138164
 Animator:
@@ -177,8 +177,8 @@ RectTransform:
   - {fileID: 5097646331231469322}
   - {fileID: 5097646330652239716}
   - {fileID: 5097646329886012980}
-  - {fileID: 4087894357349137140}
   - {fileID: 8500942262271936578}
+  - {fileID: 4087894357349137140}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -282,7 +282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8839033499862040042, guid: 4aa001f7daaa844f7a0e72ccdd627df4, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8839033499862040042, guid: 4aa001f7daaa844f7a0e72ccdd627df4, type: 3}
       propertyPath: m_AnchorMax.x
