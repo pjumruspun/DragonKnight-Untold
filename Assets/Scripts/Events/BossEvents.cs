@@ -7,10 +7,12 @@ public class BossEvents
     public delegate void OnBossSpawn(Boss boss);
     public delegate void OnBossHpChange(Boss boss);
     public delegate void OnBossDead(Boss boss);
+    public delegate void OnBossSAChange(Boss boss);
 
     public static event OnBossSpawn BossSpawn;
     public static event OnBossHpChange BossHpChange;
     public static event OnBossDead BossDead;
+    public static event OnBossSAChange BossSAChange;
 
     public static void TriggerBossSpawn(Boss boss)
     {
@@ -25,5 +27,10 @@ public class BossEvents
     public static void TriggerBossDead(Boss boss)
     {
         BossDead?.Invoke(boss);
+    }
+
+    public static void TriggerBossSAChange(Boss boss)
+    {
+        BossSAChange?.Invoke(boss);
     }
 }

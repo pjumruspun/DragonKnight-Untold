@@ -24,6 +24,7 @@ public class Enemy : Health
     }
 
     public int SpawnCost => spawnCost;
+    public float SuperArmorPercentage => superArmor / maxSuperArmor;
     public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
     public ObjectPool Projectile => projectilePool;
@@ -337,7 +338,6 @@ public class Enemy : Health
             superArmor = 0.0f;
         }
 
-        // Debug.Log($"Super armor = {superArmor}");
         HandleSuperArmorUIChange();
     }
 
@@ -368,7 +368,7 @@ public class Enemy : Health
         rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
     }
 
-    private void HandleSuperArmorUIChange()
+    protected virtual void HandleSuperArmorUIChange()
     {
         // Update super armor bar
         superArmorBar.value = superArmor / maxSuperArmor;

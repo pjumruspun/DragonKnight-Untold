@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boss : Enemy
 {
-    private static readonly float timeFreezeOnDead = 0.5f;
+    private static readonly float timeFreezeOnDead = 0.0f;
     private static readonly float screenShakeDurOnDead = 0.4f;
     private static readonly float screenShakePowOnDead = 0.2f;
 
@@ -25,19 +25,33 @@ public class Boss : Enemy
         BossEvents.TriggerBossHpChange(this);
     }
 
+    protected override void HandleSuperArmorUIChange()
+    {
+        BossEvents.TriggerBossSAChange(this);
+    }
+
     protected override void HandleDeath()
     {
         base.HandleDeath();
         BossEvents.TriggerBossDead(this);
 
-        // Stop time for a little, and shake the screen
-        TimeStopper.TimeStop(timeFreezeOnDead);
-        ScreenShake.Instance.StartShaking(screenShakeDurOnDead, screenShakePowOnDead);
+        ShowEffectsAfterDead();
     }
 
     protected override void Flinch()
     {
         // Boss cannot flinch from attacks
+    }
+
+    private void ShowEffectsAfterDead()
+    {
+        // Stop time for a little, and shake the screen
+        TimeStopper.TimeStop(timeFreezeOnDead);
+        CoroutineUtility.ExecDelay(() =>
+            ScreenShake.Instance.StartShaking(screenShakeDurOnDead, screenShakePowOnDead),
+            timeFreezeOnDead,
+            true
+        );
     }
 
     private void DisableFloatingBars()

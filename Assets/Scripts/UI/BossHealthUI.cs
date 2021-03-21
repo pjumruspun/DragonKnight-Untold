@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossHealthUI : MonoSingleton<BossHealthUI>
+public class BossHealthUI : MonoBehaviour
 {
     [SerializeField]
     private bool showHpPercentage = true;
@@ -14,11 +14,10 @@ public class BossHealthUI : MonoSingleton<BossHealthUI>
     [SerializeField]
     private Text hpText;
     [SerializeField]
-    private float delayHideAfterBossDead = 5.0f;
+    private float delayHideAfterBossDead = 0.0f;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         BossEvents.BossSpawn += ShowHpUI;
     }
 
