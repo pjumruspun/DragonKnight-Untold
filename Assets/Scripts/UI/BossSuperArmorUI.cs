@@ -14,6 +14,7 @@ public class BossSuperArmorUI : MonoBehaviour
 
     private void Awake()
     {
+        superArmorUI.SetActive(false);
         BossEvents.BossSpawn += ShowSAUI;
     }
 

@@ -18,6 +18,7 @@ public class BossHealthUI : MonoBehaviour
 
     private void Awake()
     {
+        healthUIPanel.SetActive(false);
         BossEvents.BossSpawn += ShowHpUI;
     }
 
