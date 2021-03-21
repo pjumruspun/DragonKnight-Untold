@@ -37,18 +37,27 @@ public class EnemyAttack : EnemyBehavior
         }
     }
 
-    protected virtual void MeleeAttack(AttackHitbox hitbox, float knockBackAmplitude = 0.0f, float knockUpAmplitude = 0.0f)
+    protected virtual float MeleeAttack(AttackHitbox hitbox, float knockBackAmplitude = 0.0f, float knockUpAmplitude = 0.0f, float overrideDamage = 0.0f)
     {
+        float totalDamage = 0.0f;
         HashSet<Collider2D> colliders = hitbox.HitColliders;
         foreach (Collider2D collider in colliders)
         {
             if (collider.TryGetComponent<PlayerHealth>(out PlayerHealth player))
             {
-                player.TakeDamage(enemy.AttackDamage);
+                if (overrideDamage > 0.0f)
+                {
+                    player.TakeDamage(overrideDamage);
+                    totalDamage += overrideDamage;
+                }
+                else
+                {
+                    player.TakeDamage(enemy.AttackDamage);
+                    totalDamage += enemy.AttackDamage;
+                }
             }
 
             bool shouldKnock = knockBackAmplitude > 0.0f || knockUpAmplitude > 0.0f;
-
             if (shouldKnock && collider.TryGetComponent<PlayerMovement>(out PlayerMovement movement))
             {
                 Vector2 fx = enemy.ForwardVector * knockBackAmplitude;
@@ -56,6 +65,8 @@ public class EnemyAttack : EnemyBehavior
                 movement.KnockBack(fx + fy);
             }
         }
+
+        return totalDamage;
     }
 
     private void RangedAttack()

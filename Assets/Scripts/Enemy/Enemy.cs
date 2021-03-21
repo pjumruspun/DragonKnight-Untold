@@ -10,6 +10,19 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Enemy : Health
 {
+    public float ActionSpeed
+    {
+        get
+        {
+            return actionSpeed;
+        }
+        set
+        {
+            actionSpeed = value;
+            animator.speed = value;
+        }
+    }
+
     public int SpawnCost => spawnCost;
     public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
@@ -18,18 +31,22 @@ public class Enemy : Health
     public float AttackDamage => attackDamage;
     public AttackHitbox EnemyAttackHitbox => attackHitbox;
     public float AttackRange => attackRange;
-    public float AttackCooldown => attackCooldown;
-    public float AttackDelay => attackDelay;
+    public float AttackCooldown => attackCooldown / actionSpeed;
+    public float AttackDelay => attackDelay / actionSpeed;
     public float CurrentCooldown { get; set; }
     public float SecondsBeforeGetUp => secondsBeforeGetUp;
-    public float EnemyBaseSpeed => enemyBaseSpeed;
-    public float RandomSpeedFactor => randomSpeedFactor;
+    public float EnemyBaseSpeed => enemyBaseSpeed * actionSpeed;
+    public float RandomSpeedFactor => randomSpeedFactor * actionSpeed;
     public float ChasingRange => chasingRange;
     public float ChasingInterval => chasingInterval;
     public bool CanSeeThroughWalls => canSeeThroughWalls;
     public Transform GroundDetector => groundDetector;
     [HideInInspector]
     public bool ShouldChase { get; set; }
+
+    [SerializeField]
+    [Tooltip("Would this monster flinch when attacked?")]
+    private bool isFlinchable = true;
 
     // How rare is this monster? The higher, the rarer
     [SerializeField]
@@ -115,6 +132,9 @@ public class Enemy : Health
     private SpriteRenderer spriteRenderer;
     private float flashEffectDuration = 0.15f;
 
+    // Action speed
+    private float actionSpeed = 1.0f;
+
     // Other stuff
     private Rigidbody2D rigidbody2D;
     private Animator animator;
@@ -140,7 +160,12 @@ public class Enemy : Health
 
             // Knock back
             KnockedBack(knockBackAmplitude);
-            enemyAnimation.PlayFlinchAnimation();
+
+            // Flinch
+            if (isFlinchable)
+            {
+                enemyAnimation.PlayFlinchAnimation();
+            }
 
             // Show floating damage number
             FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
@@ -280,6 +305,10 @@ public class Enemy : Health
 
     protected override void HandleDeath()
     {
+        // Reset action speed in case if changed
+        actionSpeed = 1.0f;
+        animator.speed = 1.0f;
+
         // Spawn item
         TrySpawnItem();
 

@@ -358,7 +358,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.03, y: 0.12}
+  m_Offset: {x: 0.03, y: -0.27}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -369,7 +369,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.4, y: 1.25}
+  m_Size: {x: 2.4, y: 0.97}
   m_EdgeRadius: 0
 --- !u!114 &8069621604953464835
 MonoBehaviour:
@@ -976,6 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2172c7b4fb3da442c90601d1ddb8c9a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFlinchable: 0
   spawnCost: 5
   enemyBaseSpeed: 2.5
   randomSpeedFactor: 0
@@ -983,7 +984,7 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 1
   groundDetector: {fileID: 2419719778490068726}
-  enemyMaxHealth: 500
+  enemyMaxHealth: 1500
   hpBar: {fileID: 4100709551577818779}
   secondsToDespawn: 2
   showSuperArmorBar: 1
@@ -993,7 +994,7 @@ MonoBehaviour:
   stunStars: {fileID: 1828762843847529045}
   isRanged: 0
   attackDamage: 15
-  attackCooldown: 2
+  attackCooldown: 3
   attackRange: 1
   attackDelay: 0.6
   attackHitbox: {fileID: 3368399695676752305}
