@@ -8,6 +8,14 @@ public class Boss : Enemy
     private static readonly float screenShakeDurOnDead = 0.4f;
     private static readonly float screenShakePowOnDead = 0.2f;
 
+    public override void TakeDamage(float damage, bool crit, float superArmorDamage = 0, float knockUpAmplitude = 0, float knockBackAmplitude = 0)
+    {
+        base.TakeDamage(damage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
+
+        // Boss receives SA damage equals to damage received
+        TakeSuperArmorDamage(damage);
+    }
+
     protected override void EnableEnemy()
     {
         base.EnableEnemy();

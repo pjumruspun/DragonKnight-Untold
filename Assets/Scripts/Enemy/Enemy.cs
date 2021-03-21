@@ -328,7 +328,7 @@ public class Enemy : Health
         EventPublisher.TriggerEnemyDead(this);
     }
 
-    private void TakeSuperArmorDamage(float superArmorDamage)
+    protected void TakeSuperArmorDamage(float superArmorDamage)
     {
         superArmor -= superArmorDamage;
         if (superArmor < 0.01f)
