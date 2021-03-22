@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class Inventory : MonoSingleton<Inventory>
 {
-    public Dictionary<Item, int> ItemCount => itemCount;
-    private List<Item> items = new List<Item>();
-    private Dictionary<Item, int> itemCount = new Dictionary<Item, int>();
+
 
     public void Add(Item item)
     {
-        items.Add(item);
-        if (itemCount.TryGetValue(item, out int count))
+        InventoryStatic.items.Add(item);
+        if (InventoryStatic.itemCount.TryGetValue(item, out int count))
         {
             // Item exist
-            ++itemCount[item];
+            ++InventoryStatic.itemCount[item];
         }
         else
         {
             // Item not exist
-            itemCount[item] = 1;
+            InventoryStatic.itemCount[item] = 1;
         }
 
         EventPublisher.TriggerInventoryChange();
@@ -27,11 +25,11 @@ public class Inventory : MonoSingleton<Inventory>
 
     public void Remove(Item item)
     {
-        items.Remove(item);
-        --itemCount[item];
-        if (itemCount[item] == 0)
+        InventoryStatic.items.Remove(item);
+        --InventoryStatic.itemCount[item];
+        if (InventoryStatic.itemCount[item] == 0)
         {
-            itemCount.Remove(item);
+            InventoryStatic.itemCount.Remove(item);
         }
 
         EventPublisher.TriggerInventoryChange();
@@ -40,6 +38,7 @@ public class Inventory : MonoSingleton<Inventory>
     private void Start()
     {
         EventPublisher.InventoryChange += CalculateItemStats;
+        CalculateItemStats();
     }
 
     private void OnDestroy()
@@ -50,7 +49,7 @@ public class Inventory : MonoSingleton<Inventory>
     private void CalculateItemStats()
     {
         ItemStats accumulatedStats = new ItemStats();
-        foreach (var item in items)
+        foreach (var item in InventoryStatic.items)
         {
             // Debug.Log(item.stats);
             accumulatedStats = accumulatedStats + item.stats;

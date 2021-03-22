@@ -18,9 +18,14 @@ public class ItemUI : MonoSingleton<ItemUI>
         EventPublisher.InventoryChange -= UpdateItemDisplay;
     }
 
+    private void OnEnable()
+    {
+        UpdateItemDisplay();
+    }
+
     private void UpdateItemDisplay()
     {
-        foreach (var itemCount in Inventory.Instance.ItemCount)
+        foreach (var itemCount in InventoryStatic.itemCount)
         {
             Item item = itemCount.Key;
             int count = itemCount.Value;
