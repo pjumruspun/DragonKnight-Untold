@@ -65,7 +65,10 @@ public class PlayerSkillsUI : MonoBehaviour
             Sprite[] icons = SkillsRepository.Dragon.GetIcons.Cast<Sprite>().ToArray();
             for (int i = 0; i < 4; ++i)
             {
-                skillIcons[i].sprite = icons[i];
+                if (skillIcons[i] != null)
+                {
+                    skillIcons[i].sprite = icons[i];
+                }
             }
         }
         else
@@ -80,7 +83,10 @@ public class PlayerSkillsUI : MonoBehaviour
         Sprite[] icons = skills.GetIcons.Cast<Sprite>().ToArray();
         for (int i = 0; i < 4; ++i)
         {
-            skillIcons[i].sprite = icons[i];
+            if (skillIcons[i] != null)
+            {
+                skillIcons[i].sprite = icons[i];
+            }
         }
     }
 }
