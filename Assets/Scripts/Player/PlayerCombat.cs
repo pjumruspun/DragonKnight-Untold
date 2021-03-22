@@ -20,7 +20,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     [SerializeField]
     private GameObject clawSlash;
 
-    private DragonSkills dragonSkills;
+    private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
     private PlayerClass currentClass;
     private BuffManager buffManager;
@@ -51,6 +51,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.StopFireBreath += StopFireBreath;
 
         // Initialize player starting class, player will get to choose this later
+        InitializeSkills();
         ChangeClass(PlayerClass.Sword);
 
         // Initialize buff manager
@@ -178,10 +179,10 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         currentClass = playerClass;
 
         // Change current skill sets
-        humanSkills = CreatePlayerSkill(playerClass);
+        humanSkills = GetPlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
+        // dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private Vector2 GetForwardVector()
@@ -199,20 +200,27 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
     }
 
-    private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
+    private PlayerSkills GetPlayerSkill(PlayerClass playerClass)
     {
         // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
                 // Send this.stats pointer in
-                return new SwordSkills(transform, swordPrimaryHitbox);
+                return SkillsRepository.Sword;
             case PlayerClass.Archer:
                 // Send this.stats pointer in
-                return new ArcherSkills(transform);
+                return SkillsRepository.Archer;
             default:
                 throw new System.ArgumentOutOfRangeException();
         }
+    }
+
+    private void InitializeSkills()
+    {
+        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox);
+        SkillsRepository.Archer.Initialize(transform);
+        SkillsRepository.Dragon.Initialize(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private PlayerSkills CurrentSkills()

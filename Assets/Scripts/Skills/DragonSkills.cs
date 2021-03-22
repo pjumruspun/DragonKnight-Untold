@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using System.Linq;
 
+[CreateAssetMenu(fileName = "New Dragon Skills", menuName = "Roguelite/Skills/Dragon")]
 public class DragonSkills : PlayerSkills
 {
     private const float slashAnimLength = 0.3f;
@@ -15,20 +16,8 @@ public class DragonSkills : PlayerSkills
     private const float skill1ScreenShakePower = 0.15f;
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox fireBreathHitbox;
-    private float[] dragonAttackDamage = new float[4]
-    {
-        30.0f,
-        30.0f,
-        30.0f,
-        30.0f
-    };
-    private float[] dragonAttackCooldown = new float[4]
-    {
-        0.7f,
-        1.0f,
-        1.0f,
-        1.0f
-    };
+    private float[] dragonAttackDamage = new float[4];
+    private float[] dragonAttackCooldown = new float[4];
 
     private float dragonSuperArmorAttack = 100.0f;
     private GameObject fireBreath;
@@ -36,13 +25,15 @@ public class DragonSkills : PlayerSkills
     private Animator clawSlashAnim;
     private Coroutine fireBreathCoroutine;
 
-    public DragonSkills(
+    public void Initialize(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
         GameObject fireBreath,
         GameObject clawSlash
-    ) : base(transform)
+    )
     {
+        base.Initialize(transform);
+
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
@@ -59,6 +50,10 @@ public class DragonSkills : PlayerSkills
         {
             throw new System.NullReferenceException("Cannot get Animator component from clawSlash GameObject");
         }
+
+        // Initialize base skill damage and cooldown
+        dragonAttackCooldown = SkillsRepository.Dragon.GetBaseSkillCooldowns.Cast<float>().ToArray();
+        dragonAttackDamage = SkillsRepository.Dragon.GetBaseSkillDamage.Cast<float>().ToArray();
     }
 
     public override float[] GetCurrentCooldown()
@@ -138,7 +133,7 @@ public class DragonSkills : PlayerSkills
         float damage = dragonAttackDamage[1];
 
         // Dragon Skill 2
-        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(0.05f, 0.33f));
+        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, 0.05f, 0.33f));
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
         movement.LockMovementBySkill(true);
@@ -158,14 +153,14 @@ public class DragonSkills : PlayerSkills
         movement.LockMovementBySkill(false);
     }
 
-    private IEnumerator DelayedFireBreath(float delay, float interval)
+    private IEnumerator DelayedFireBreath(float damage, float delay, float interval)
     {
         yield return new WaitForSeconds(delay);
         fireBreath.SetActive(true);
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, 10.0f, 0.0f, 1.25f);
+            AttackWithHitbox(fireBreathHitbox, damage, 0.0f, 1.25f);
         }
     }
 }

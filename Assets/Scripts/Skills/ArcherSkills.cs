@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "New Archer Skills", menuName = "Roguelite/Skills/Archer")]
 public class ArcherSkills : PlayerSkills
 {
     private const float archerSkill2LockMovementTime = 0.5f;
     private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
-
-    public ArcherSkills(Transform transform) : base(transform) { }
 
     public override void Skill1()
     {

@@ -48,7 +48,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
             }
         }
 
-        throw new System.IndexOutOfRangeException();
+        throw new System.Exception($"Skill name: {name} activated by skillNumber: {skillNumber} cannot be found");
     }
 
     public void PlayDashAttackAnimation()

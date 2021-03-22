@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "New Sword Skills", menuName = "Roguelite/Skills/Sword")]
 public class SwordSkills : PlayerSkills
 {
     public int CurrentCombo => currentCombo;
@@ -32,11 +33,9 @@ public class SwordSkills : PlayerSkills
     private int currentCombo = 0;
     private float lastAttackTime = 0.0f;
 
-    public SwordSkills(
-        Transform transform,
-        AttackHitbox swordPrimaryHitbox
-    ) : base(transform)
+    public void Initialize(Transform transform, AttackHitbox swordPrimaryHitbox)
     {
+        base.Initialize(transform);
         this.swordPrimaryHitbox = swordPrimaryHitbox;
     }
 

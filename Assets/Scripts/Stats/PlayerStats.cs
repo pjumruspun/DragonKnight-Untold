@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
@@ -34,20 +35,8 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     [SerializeField]
     private Stats<float> cooldownReduction = new Stats<float>(1.0f); // Only affects skill 2, 3, and 4
     private float basePlayerMaxHealth = 200;
-    private float[] baseSkillCooldown = new float[4]
-    {
-        0.5f,
-        3.0f,
-        5.0f,
-        1.0f
-    };
-    private float[] baseSkillDamage = new float[4]
-    {
-        20.0f,
-        30.0f,
-        20.0f,
-        20.0f
-    };
+    private float[] baseSkillCooldown = new float[4];
+    private float[] baseSkillDamage = new float[4];
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
@@ -129,6 +118,14 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         vit = new Stats<int>(10);
         tal = new Stats<int>(10);
         luk = new Stats<int>(10);
+
+        // Events
+        EventPublisher.PlayerChangeClass += AdjustSkillParams;
+    }
+
+    private void OnDestroy()
+    {
+        EventPublisher.PlayerChangeClass -= AdjustSkillParams;
     }
 
     private float CalculateCritChance()
@@ -153,5 +150,24 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         // Only skill 1 is affected by attack speed
         results[0] /= attackSpeed.GetValue;
         return results;
+    }
+
+    private void AdjustSkillParams(PlayerClass playerClass)
+    {
+        PlayerSkills skills;
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                skills = SkillsRepository.Sword;
+                break;
+            case PlayerClass.Archer:
+                skills = SkillsRepository.Archer;
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException();
+        }
+
+        baseSkillCooldown = skills.GetBaseSkillCooldowns.Cast<float>().ToArray();
+        baseSkillDamage = skills.GetBaseSkillDamage.Cast<float>().ToArray();
     }
 }

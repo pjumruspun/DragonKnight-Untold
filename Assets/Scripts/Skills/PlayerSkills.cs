@@ -1,9 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-public abstract class PlayerSkills
+public abstract class PlayerSkills : ScriptableObject
 {
+    public IEnumerable<float> GetBaseSkillCooldowns => from skill in skills select skill.baseCooldown;
+    public IEnumerable<float> GetBaseSkillDamage => from skill in skills select skill.baseDamage;
+
+    [SerializeField]
+    protected Skill[] skills = new Skill[4];
+
     // Cache
     protected Transform transform;
     protected PlayerMovement movement;
@@ -30,7 +37,7 @@ public abstract class PlayerSkills
         return currentCooldown[skillNumber] / PlayerStats.Instance.SkillCooldown[skillNumber];
     }
 
-    public PlayerSkills(Transform transform)
+    public virtual void Initialize(Transform transform)
     {
         // Cache
         movement = PlayerMovement.Instance;
