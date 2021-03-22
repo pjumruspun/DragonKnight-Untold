@@ -73,7 +73,7 @@ public class PlayerSkillsUI : MonoBehaviour
         }
         else
         {
-            ChangeSkillIcons(PlayerCombat.Instance.CurrentClass);
+            ChangeSkillIcons(PlayerClassStatic.currentClass);
         }
     }
 

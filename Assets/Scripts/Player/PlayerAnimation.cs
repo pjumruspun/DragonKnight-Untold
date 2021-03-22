@@ -73,6 +73,8 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerChangeClass += ChangeHumanAnimator;
         EventPublisher.StopFireBreath += PlayStopFireBreathAnimation;
         EventPublisher.PlayerStatsChange += AdjustAttackSpeed;
+
+        ChangeHumanAnimator(PlayerClassStatic.currentClass);
     }
 
     private void Update()
@@ -107,7 +109,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 }
                 else
                 {
-                    switch (PlayerCombat.Instance.CurrentClass)
+                    switch (PlayerClassStatic.currentClass)
                     {
                         case PlayerClass.Sword:
                             CoroutineUtility.Instance.ExecAtEndFrame(() =>
@@ -239,7 +241,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         }
         else
         {
-            switch (PlayerCombat.Instance.CurrentClass)
+            switch (PlayerClassStatic.currentClass)
             {
                 case PlayerClass.Sword:
                     return 0;

@@ -5,8 +5,7 @@ using UnityEngine;
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
     public int SwordCombo =>
-        currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
-    public PlayerClass CurrentClass => currentClass;
+        PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
 
     [Header("Hitboxes")]
     [SerializeField]
@@ -22,7 +21,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
-    private PlayerClass currentClass;
     private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
@@ -52,7 +50,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
         // Initialize player starting class, player will get to choose this later
         InitializeSkills();
-        ChangeClass(PlayerClass.Sword);
+        ChangeClass(PlayerClassStatic.currentClass);
 
         // Initialize buff manager
         buffManager = new BuffManager();
@@ -74,7 +72,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (currentClass == PlayerClass.Sword)
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
             {
                 ChangeClass(PlayerClass.Archer);
             }
@@ -176,7 +174,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Don't forget to transfer items and perks here once it's done
 
         // Change class label
-        currentClass = playerClass;
+        PlayerClassStatic.currentClass = playerClass;
 
         // Change current skill sets
         humanSkills = GetPlayerSkill(playerClass);
