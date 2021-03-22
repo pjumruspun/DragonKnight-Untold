@@ -15,13 +15,17 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
 
     private void Start()
     {
-        GameObject spawnPoint = GameObject.FindGameObjectWithTag("Spawn Point");
-        if (spawnPoint == null)
+        if (GameStateManager.State == GameState.Gameplay)
         {
-            Debug.LogAssertion("Spawn point not exist in the scene");
-        }
+            // Spawn if in game
+            GameObject spawnPoint = GameObject.FindGameObjectWithTag("Spawn Point");
+            if (spawnPoint == null)
+            {
+                Debug.LogAssertion("Spawn point not exist in the scene");
+            }
 
-        GameObject player = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
-        EventPublisher.TriggerPlayerSpawn(player.transform);
+            GameObject player = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
+            EventPublisher.TriggerPlayerSpawn(player.transform);
+        }
     }
 }

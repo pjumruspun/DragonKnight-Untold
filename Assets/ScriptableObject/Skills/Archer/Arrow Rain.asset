@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Arrow Rain
   m_EditorClassIdentifier: 
   skillName: New Skill
-  skillIcon: {fileID: 0}
-  baseDamage: 0
-  baseCooldown: 1
+  skillIcon: {fileID: 21300000, guid: 43aca96dbb11f4d4ebefe4c5815a4c8c, type: 3}
+  baseDamage: 3
+  baseCooldown: 2

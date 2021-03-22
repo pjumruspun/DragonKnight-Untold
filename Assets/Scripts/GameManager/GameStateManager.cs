@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoSingleton<GameStateManager>
 {
-    public GameState State => gameState;
+    public static GameState State => Instance.gameState;
     private GameState gameState;
 
     protected override void Awake()

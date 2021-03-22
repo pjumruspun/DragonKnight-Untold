@@ -31,8 +31,15 @@ public class LevelChanger : MonoSingleton<LevelChanger>
             {
                 SceneManager.LoadScene(sceneNames[scene]);
                 Instance.isTransitioning = false;
+                GameEvents.TriggerPause(false);
             }, Instance.sceneTransitionTime);
         }
+    }
+
+    public static void LoadSceneInstant(Scenes scene)
+    {
+        SceneManager.LoadScene(sceneNames[scene]);
+        GameEvents.TriggerPause(false);
     }
 
     private void OnEnable()

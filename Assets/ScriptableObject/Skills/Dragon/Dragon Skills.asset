@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1eca67df29574044bf5ea8d7982a904, type: 3}
   m_Name: Dragon Skills
   m_EditorClassIdentifier: 
+  skills:
+  - {fileID: 11400000, guid: e8374c7eb1e684848b2754af14fb1b78, type: 2}
+  - {fileID: 11400000, guid: 0ce35b0254ea94bb9992b5fe97368339, type: 2}
+  - {fileID: 11400000, guid: 893547d2e4462477f8d5a28437e0daf8, type: 2}
+  - {fileID: 11400000, guid: 002bbbaeef7c14bb4bda0c40d92175f7, type: 2}
