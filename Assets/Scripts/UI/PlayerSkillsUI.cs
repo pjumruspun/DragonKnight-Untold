@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PlayerSkillsUI : MonoBehaviour
 {
@@ -11,6 +12,20 @@ public class PlayerSkillsUI : MonoBehaviour
     private Image[] cooldownMasks;
     [SerializeField]
     private Text[] cooldownlabels;
+
+    private Sprite originalSkillSprite;
+
+    private void Start()
+    {
+        EventPublisher.PlayerChangeClass += ChangeSkillIcons;
+        EventPublisher.PlayerShapeshift += ChangeSkillIcons;
+    }
+
+    private void OnDestroy()
+    {
+        EventPublisher.PlayerChangeClass += ChangeSkillIcons;
+        EventPublisher.PlayerShapeshift -= ChangeSkillIcons;
+    }
 
     private void Update()
     {
@@ -40,6 +55,32 @@ public class PlayerSkillsUI : MonoBehaviour
             }
             int cooldownInt = (int)Mathf.Ceil(currentCooldowns[i]);
             cooldownlabels[i].text = $"{cooldownInt}";
+        }
+    }
+
+    private void ChangeSkillIcons(bool isDragon)
+    {
+        if (isDragon)
+        {
+            Sprite[] icons = SkillsRepository.Dragon.GetIcons.Cast<Sprite>().ToArray();
+            for (int i = 0; i < 4; ++i)
+            {
+                skillIcons[i].sprite = icons[i];
+            }
+        }
+        else
+        {
+            ChangeSkillIcons(PlayerCombat.Instance.CurrentClass);
+        }
+    }
+
+    private void ChangeSkillIcons(PlayerClass playerClass)
+    {
+        PlayerSkills skills = SkillsRepository.GetSkills(playerClass);
+        Sprite[] icons = skills.GetIcons.Cast<Sprite>().ToArray();
+        for (int i = 0; i < 4; ++i)
+        {
+            skillIcons[i].sprite = icons[i];
         }
     }
 }

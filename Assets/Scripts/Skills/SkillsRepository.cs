@@ -14,4 +14,17 @@ public class SkillsRepository : MonoSingleton<SkillsRepository>
     private ArcherSkills archerSkills;
     [SerializeField]
     private DragonSkills dragonSkills;
+
+    public static PlayerSkills GetSkills(PlayerClass playerClass)
+    {
+        switch (playerClass)
+        {
+            case PlayerClass.Sword:
+                return Sword;
+            case PlayerClass.Archer:
+                return Archer;
+            default:
+                throw new System.ArgumentOutOfRangeException();
+        }
+    }
 }
