@@ -10,24 +10,38 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Enemy : Health
 {
+    public float ActionSpeed
+    {
+        get
+        {
+            return actionSpeed;
+        }
+        set
+        {
+            actionSpeed = value;
+            animator.speed = value;
+        }
+    }
+
     public int SpawnCost => spawnCost;
+    public float SuperArmorPercentage => superArmor / maxSuperArmor;
+    public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
     public ObjectPool Projectile => projectilePool;
     public bool IsRanged => isRanged;
     public float AttackDamage => attackDamage;
     public AttackHitbox EnemyAttackHitbox => attackHitbox;
     public float AttackRange => attackRange;
-    public float AttackCooldown => attackCooldown;
-    public float AttackDelay => attackDelay;
+    public float AttackCooldown => attackCooldown / actionSpeed;
+    public float AttackDelay => attackDelay / actionSpeed;
     public float CurrentCooldown { get; set; }
     public float SecondsBeforeGetUp => secondsBeforeGetUp;
-    public float EnemyBaseSpeed => enemyBaseSpeed;
-    public float RandomSpeedFactor => randomSpeedFactor;
+    public float EnemyBaseSpeed => enemyBaseSpeed * actionSpeed;
+    public float RandomSpeedFactor => randomSpeedFactor * actionSpeed;
     public float ChasingRange => chasingRange;
     public float ChasingInterval => chasingInterval;
     public bool CanSeeThroughWalls => canSeeThroughWalls;
     public Transform GroundDetector => groundDetector;
-    [HideInInspector]
     public bool ShouldChase { get; set; }
 
     // How rare is this monster? The higher, the rarer
@@ -60,9 +74,9 @@ public class Enemy : Health
     [Header("Health Parameters")]
     // Health system
     [SerializeField]
-    private float enemyMaxHealth = 150.0f;
+    private float startMaxHealth = 150.0f;
     [SerializeField]
-    private Slider hpBar;
+    protected Slider hpBar;
     [SerializeField]
     private float secondsToDespawn = 2.0f;
 
@@ -73,7 +87,7 @@ public class Enemy : Health
     [SerializeField]
     private float maxSuperArmor = 100;
     [SerializeField]
-    private Slider superArmorBar;
+    protected Slider superArmorBar;
     [SerializeField]
     private float secondsBeforeGetUp = 1.5f;
     [SerializeField]
@@ -114,13 +128,16 @@ public class Enemy : Health
     private SpriteRenderer spriteRenderer;
     private float flashEffectDuration = 0.15f;
 
+    // Action speed
+    private float actionSpeed = 1.0f;
+
     // Other stuff
     private Rigidbody2D rigidbody2D;
     private Animator animator;
     private MovementState turnDirection = MovementState.Right;
 
     // Adapter method
-    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
+    public virtual void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
     {
         if (!IsDead)
         {
@@ -139,7 +156,9 @@ public class Enemy : Health
 
             // Knock back
             KnockedBack(knockBackAmplitude);
-            enemyAnimation.PlayFlinchAnimation();
+
+            // Flinch
+            Flinch();
 
             // Show floating damage number
             FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
@@ -237,12 +256,17 @@ public class Enemy : Health
         EnableEnemy();
     }
 
+    protected virtual void Flinch()
+    {
+        enemyAnimation.PlayFlinchAnimation();
+    }
+
     private void OnEnable()
     {
         EnableEnemy();
     }
 
-    private void EnableEnemy()
+    protected virtual void EnableEnemy()
     {
         // GetComponent
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -255,7 +279,7 @@ public class Enemy : Health
         superArmorBar.gameObject.SetActive(showSuperArmorBar);
 
         // Set health and super armor
-        maxHealth = enemyMaxHealth;
+        base.maxHealth = startMaxHealth;
         superArmor = maxSuperArmor;
 
         // Set projectile if ranged
@@ -274,11 +298,15 @@ public class Enemy : Health
     protected override void HandleHealthChange()
     {
         // Update HP Bar
-        hpBar.value = currentHealth / maxHealth;
+        hpBar.value = HealthPercentage;
     }
 
     protected override void HandleDeath()
     {
+        // Reset action speed in case if changed
+        actionSpeed = 1.0f;
+        animator.speed = 1.0f;
+
         // Spawn item
         TrySpawnItem();
 
@@ -300,7 +328,7 @@ public class Enemy : Health
         EventPublisher.TriggerEnemyDead(this);
     }
 
-    private void TakeSuperArmorDamage(float superArmorDamage)
+    protected void TakeSuperArmorDamage(float superArmorDamage)
     {
         superArmor -= superArmorDamage;
         if (superArmor < 0.01f)
@@ -310,7 +338,6 @@ public class Enemy : Health
             superArmor = 0.0f;
         }
 
-        // Debug.Log($"Super armor = {superArmor}");
         HandleSuperArmorUIChange();
     }
 
@@ -341,7 +368,7 @@ public class Enemy : Health
         rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
     }
 
-    private void HandleSuperArmorUIChange()
+    protected virtual void HandleSuperArmorUIChange()
     {
         // Update super armor bar
         superArmorBar.value = superArmor / maxSuperArmor;

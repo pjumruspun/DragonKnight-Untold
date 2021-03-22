@@ -139,7 +139,6 @@ public class DragonSkills : PlayerSkills
 
         // Dragon Skill 2
         fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(0.05f, 0.33f));
-        Debug.Log("Fire breath start");
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
         movement.LockMovementBySkill(true);
