@@ -15,16 +15,56 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
 
     private void Start()
     {
+        // CoroutineUtility.ExecDelay(() => SpawnPlayer(), Time.deltaTime);
+        SpawnPlayer();
+    }
+
+    private void SpawnPlayer()
+    {
         if (GameStateManager.State == GameState.Gameplay)
         {
             // Spawn if in game
-            GameObject spawnPoint = GameObject.FindGameObjectWithTag("Spawn Point");
-            if (spawnPoint == null)
+            GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
+            if (spawnPoints.Length == 0)
             {
-                Debug.LogAssertion("Spawn point not exist in the scene");
+                throw new System.Exception("Spawn point not exist in the scene");
             }
 
-            GameObject player = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
+            List<SpawnPosition> possibleSpawnPositions = new List<SpawnPosition>();
+
+            // Spawn player with appropriate spawn point
+            foreach (var spawn in spawnPoints)
+            {
+                if (spawn.TryGetComponent<SpawnPosition>(out SpawnPosition spawnPosition))
+                {
+                    // If last stage player exit at left side, player should spawn at the right side of the new stage
+                    // And vise versa
+                    if (spawnPosition.Side != StageManager.lastStageExitSide)
+                    {
+                        possibleSpawnPositions.Add(spawnPosition);
+                    }
+                }
+                else
+                {
+                    throw new System.Exception($"Object {spawn.name} does not have SpawnPoint script attached to.");
+                }
+            }
+
+            if (possibleSpawnPositions.Count == 0)
+            {
+                throw new System.Exception($"Could not spawn player because there is no possible spawn location.");
+            }
+
+            int random = Random.Range(0, possibleSpawnPositions.Count);
+
+            // Unblock the gate
+            possibleSpawnPositions[random].Unblock();
+
+            // Disable portal
+            possibleSpawnPositions[random].DisableTeleportArea();
+
+            // And spawn player there
+            GameObject player = Instantiate(playerPrefab, possibleSpawnPositions[random].transform.position, Quaternion.identity);
             EventPublisher.TriggerPlayerSpawn(player.transform);
         }
     }

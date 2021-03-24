@@ -49,8 +49,14 @@ public class GameStateManager : MonoSingleton<GameStateManager>
             gameState = GameState.Gameplay;
             GameEvents.TriggerPause(false);
         }
+        else if (scene.name.Split('_')[0] == "Level")
+        {
+            gameState = GameState.Gameplay;
+            GameEvents.TriggerPause(false);
+        }
         else
         {
+            gameState = GameState.Gameplay;
             Debug.LogWarning("Loaded an unregistered scene");
         }
     }

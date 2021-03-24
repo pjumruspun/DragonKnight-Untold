@@ -14,9 +14,8 @@ public class CameraFollow : MonoSingleton<CameraFollow>
     private Vector3 desiredPosition = Vector3.zero;
     private Transform followTransform;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
         EventPublisher.PlayerSpawn += AssignTransform;
     }
 
@@ -37,12 +36,13 @@ public class CameraFollow : MonoSingleton<CameraFollow>
 
     private void Follow()
     {
-        Transform mainCamera = Camera.main.transform;
+        // Check first if player is referenced
         if (followTransform == null)
         {
-            Debug.LogAssertion("Error: followTransform is null");
-            return;
+            followTransform = PlayerFinder.FindByTag().transform;
         }
+
+        Transform mainCamera = Camera.main.transform;
 
         float x = followTransform.position.x;
         float y = followTransform.position.y;

@@ -10,8 +10,13 @@ public class LevelChanger : MonoSingleton<LevelChanger>
 
     [SerializeField]
     private float sceneTransitionTime = 1.0f;
+    [SerializeField]
+    private string levelNamePrefix = "Level_";
+    [SerializeField]
+    private int levelCount = 1;
     private Animator animator;
     private bool isTransitioning = false;
+
 
     private static readonly Dictionary<Scenes, string> sceneNames = new Dictionary<Scenes, string>()
     {
@@ -19,6 +24,31 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         { Scenes.Tutorial, "Gameplay" },
         { Scenes.MainMenu, "MainMenu" },
     };
+
+    public static void LoadRandomLevel()
+    {
+        int random = Random.Range(1, Instance.levelCount + 1);
+        while (random == StageManager.currentSceneIndex)
+        {
+            // Random until gets other scene
+            random = Random.Range(1, Instance.levelCount + 1);
+        }
+
+        string nameOfSceneToLoad = Instance.levelNamePrefix + random.ToString();
+
+        if (!Instance.isTransitioning)
+        {
+            Instance.isTransitioning = true;
+            LevelChanger.Instance.FadeOut();
+            CoroutineUtility.ExecDelay(() =>
+            {
+
+                SceneManager.LoadScene(nameOfSceneToLoad);
+                Instance.isTransitioning = false;
+                GameEvents.TriggerPause(false);
+            }, Instance.sceneTransitionTime);
+        }
+    }
 
     public static void LoadScene(Scenes scene)
     {
@@ -66,5 +96,13 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         base.Awake();
         animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        string[] words = currentSceneName.Split('_');
+        int index = int.Parse(words[words.Length - 1]);
+        StageManager.currentSceneIndex = index;
     }
 }

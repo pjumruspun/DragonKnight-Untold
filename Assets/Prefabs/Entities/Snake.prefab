@@ -883,7 +883,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8164413801992587744}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.53, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1201546198728153724}
@@ -905,6 +905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2172c7b4fb3da442c90601d1ddb8c9a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnEffect: 1
   spawnCost: 5
   enemyBaseSpeed: 1.5
   randomSpeedFactor: 0.5
@@ -912,7 +913,7 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 1
   groundDetector: {fileID: 707214862651218420}
-  enemyMaxHealth: 150
+  startMaxHealth: 150
   hpBar: {fileID: 1201546197379584409}
   secondsToDespawn: 2
   showSuperArmorBar: 1

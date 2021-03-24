@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3282760044992471894}
   - component: {fileID: 3282760044992471881}
   - component: {fileID: 3282760044992471880}
+  - component: {fileID: 154852864825570490}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -50,7 +51,7 @@ MonoBehaviour:
   castRadius: 2
   spawnInterval: 20
   spawnAmountPerInterval: 25
-  maxSpawnAmount: 100
+  maxSpawnAmountAtTime: 30
 --- !u!114 &3282760044992471880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,3 +67,18 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 7845668831850652229, guid: 406199930399b412398fc5239a13599d, type: 3}
   - {fileID: 8164413801992587744, guid: 9510868298a5f4b61a6eebb847a06443, type: 3}
+  spawnDelay: 0.5
+--- !u!114 &154852864825570490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3282760044992471883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f2ee9ba0ef44848ba9a8c09fcc4532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnEffectExpireTime: 1.5
+  greenFireColumnPrefab: {fileID: 4517412168967460259, guid: 58f5e81ad03ff4366826dae31bf006c7, type: 3}

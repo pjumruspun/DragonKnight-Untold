@@ -23,6 +23,7 @@ public class Enemy : Health
         }
     }
 
+    public SpawnEffect GetSpawnEffect => spawnEffect;
     public int SpawnCost => spawnCost;
     public float SuperArmorPercentage => superArmor / maxSuperArmor;
     public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
@@ -44,10 +45,12 @@ public class Enemy : Health
     public Transform GroundDetector => groundDetector;
     public bool ShouldChase { get; set; }
 
-    // How rare is this monster? The higher, the rarer
+
+    [Header("Enemy Spawning")]
     [SerializeField]
-    [Header("Enemy Spawn Cost")]
-    private int spawnCost = 5;
+    private SpawnEffect spawnEffect;
+    [SerializeField]
+    private int spawnCost = 5; // How rare is this monster? The higher, the rarer
 
     // Enemy AI parameters
     [Header("Enemy Movement Parameters")]

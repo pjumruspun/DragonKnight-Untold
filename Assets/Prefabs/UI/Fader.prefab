@@ -140,3 +140,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneTransitionTime: 1
+  levelNamePrefix: Level_
+  levelCount: 3
