@@ -118,8 +118,9 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         randomY = Mathf.Ceil(randomY);
         Debug.DrawLine(player.position, randomPosition, Color.green, 2.0f);
 
-        int spawnCost = 1; EnemyRepository.Instance.SpawnRandomEnemy(randomPosition);
-        return spawnCost;
+        Enemy spawnedEnemy = EnemyRepository.Instance.SpawnRandomEnemy(randomPosition);
+        Debug.Log(spawnedEnemy.name);
+        return spawnedEnemy.SpawnCost;
     }
 
     private bool IsGroundPosition(float positionX, float positionY)

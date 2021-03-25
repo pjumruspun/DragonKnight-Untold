@@ -234,6 +234,11 @@ public class Enemy : Health
         HandleSuperArmorUIChange();
     }
 
+    public void SetRendererActive(bool active)
+    {
+        spriteRenderer.enabled = active;
+    }
+
     protected override void Start()
     {
         // GetComponents
@@ -275,6 +280,9 @@ public class Enemy : Health
         HandleHealthChange();
         HandleSuperArmorUIChange();
         hpBar.gameObject.SetActive(true);
+
+        // So enemy won't instantly attacks when it spawns
+        CurrentCooldown = AttackCooldown;
     }
 
     protected override void HandleHealthChange()
