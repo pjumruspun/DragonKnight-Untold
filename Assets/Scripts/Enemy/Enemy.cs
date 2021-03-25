@@ -28,10 +28,8 @@ public class Enemy : Health
     public float SuperArmorPercentage => superArmor / maxSuperArmor;
     public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
-    public ObjectPool Projectile => projectilePool;
-    public bool IsRanged => isRanged;
     public float AttackDamage => attackDamage;
-    public AttackHitbox EnemyAttackHitbox => attackHitbox;
+
     public float AttackRange => attackRange;
     public float AttackCooldown => attackCooldown / actionSpeed;
     public float AttackDelay => attackDelay / actionSpeed;
@@ -101,10 +99,6 @@ public class Enemy : Health
     private EnemyAnimation enemyAnimation;
 
     [Header("Attack Parameters")]
-    // Attack
-    [Tooltip("Is this enemy ranged or melee?")]
-    [SerializeField]
-    private bool isRanged = false;
     [SerializeField]
     private float attackDamage = 15.0f;
     [SerializeField]
@@ -114,15 +108,6 @@ public class Enemy : Health
     [Tooltip("Delay before the attack is executed")]
     [SerializeField]
     private float attackDelay = 0.3f;
-
-    [Header("Hitbox and projectile")]
-    [Tooltip("Can leave this blank if ranged")]
-    [SerializeField]
-    private AttackHitbox attackHitbox;
-    [Tooltip("Can leave this blank if melee")]
-    [SerializeField]
-    private GameObject projectilePrefab;
-    private ObjectPool projectilePool;
 
     // Hurt effects
     [SerializeField]
@@ -284,12 +269,6 @@ public class Enemy : Health
         // Set health and super armor
         base.maxHealth = startMaxHealth;
         superArmor = maxSuperArmor;
-
-        // Set projectile if ranged
-        if (isRanged && projectilePrefab != null)
-        {
-            projectilePool = new ObjectPool(projectilePrefab, 10);
-        }
 
         base.Start();
 
