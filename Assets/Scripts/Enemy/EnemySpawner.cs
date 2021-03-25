@@ -23,6 +23,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private float currentSpawnAmount = 0;
     private float enemyCostKilledThisStage = 0;
     private Transform player;
+    private const int maxSpawnAttempts = 500;
 
     private void Start()
     {
@@ -44,13 +45,20 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             lastTimeSpawned = Time.time;
         }
 
+        // Debugging
         if (Input.GetKeyDown(KeyCode.E))
         {
-            int spawnCost = 0;
-            while (spawnCost <= 0)
+            for (int i = 0; i < 10; ++i)
             {
-                spawnCost = TrySpawnEnemy();
+                int spawnCost = 0;
+                int currentSpawnAttempt = 0;
+                while (spawnCost <= 0 && currentSpawnAttempt <= maxSpawnAttempts)
+                {
+                    spawnCost = TrySpawnEnemy();
+                    ++currentSpawnAttempt;
+                }
             }
+
         }
     }
 
@@ -73,22 +81,29 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             player = PlayerFinder.FindByTag().transform;
         }
 
-        // Debug
-        float randomX = player.position.x + Random.Range(-spawnRange, spawnRange);
-        float randomY = player.position.y + Random.Range(-spawnRange, spawnRange);
+        float posX = player.position.x;
+        float posY = player.position.y;
+
+        float rightMost = Mathf.Min(posX + spawnRange, Border.Right);
+        float leftMost = Mathf.Max(posX - spawnRange, Border.Left);
+        float topMost = Mathf.Min(posY + spawnRange, Border.Top);
+        float bottomMost = Mathf.Max(posY - spawnRange, Border.Bottom);
+
+        float randomX = Random.Range(leftMost, rightMost);
+        float randomY = Random.Range(bottomMost, topMost);
+
         Vector2 randomPosition = new Vector2(randomX, randomY);
         RaycastHit2D[] hits = Physics2D.CircleCastAll(randomPosition, castRadius, Vector2.zero);
 
-
-        // Check 9 tiles around the random tile
+        // Check 6 tiles around the random tile
         for (int x = (int)randomX - 1; x <= (int)randomX + 1; ++x)
         {
-            for (int y = (int)randomY - 1; y <= (int)randomY + 1; ++y)
+            for (int y = (int)randomY; y <= (int)randomY + 1; ++y)
             {
                 if (!IsTileEmpty(randomX, randomY))
                 {
                     // Something exist at 3 tiles in the middle and upper
-                    Debug.DrawLine(player.position, randomPosition, Color.red, 2.0f);
+                    // Debug.DrawLine(player.position, randomPosition, Color.red, 2.0f);
                     return 0;
                 }
             }
@@ -96,14 +111,14 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
         if (!IsGroundPosition(randomX, randomY))
         {
-            Debug.DrawLine(player.position, randomPosition, Color.red, 2.0f);
+            // Debug.DrawLine(player.position, randomPosition, Color.cyan, 2.0f);
             return 0;
         }
 
         randomY = Mathf.Ceil(randomY);
-        Debug.DrawLine(player.position, randomPosition, Color.green, 5.0f);
+        Debug.DrawLine(player.position, randomPosition, Color.green, 2.0f);
 
-        int spawnCost = EnemyRepository.Instance.SpawnRandomEnemy(randomPosition);
+        int spawnCost = 1; EnemyRepository.Instance.SpawnRandomEnemy(randomPosition);
         return spawnCost;
     }
 
@@ -132,7 +147,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     private bool IsTileEmpty(float positionX, float positionY)
     {
-        return tilemap.GetTile(new Vector3Int(Mathf.CeilToInt(positionX), Mathf.FloorToInt(positionY), 0)) == null;
+        return tilemap.GetTile(new Vector3Int(Mathf.FloorToInt(positionX), Mathf.FloorToInt(positionY), 0)) == null;
     }
 
     private void ProcessSpawnAmount(Enemy enemy)
