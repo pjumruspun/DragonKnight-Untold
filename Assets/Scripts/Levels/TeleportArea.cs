@@ -10,7 +10,7 @@ public class TeleportArea : MonoBehaviour
         if (other.TryGetComponent<PlayerMovement>(out var _))
         {
             // Is player
-            LevelChanger.LoadRandomLevel();
+            LevelChanger.LoadNextLevel();
         }
     }
 }

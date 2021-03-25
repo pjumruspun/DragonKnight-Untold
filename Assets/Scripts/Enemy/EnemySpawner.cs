@@ -142,7 +142,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         if (enemyCostKilledThisStage >= StageManager.CostToPassLevel)
         {
             GameEvents.TriggerCompleteLevel();
-            Debug.Log("Player completed a level!");
         }
     }
 }

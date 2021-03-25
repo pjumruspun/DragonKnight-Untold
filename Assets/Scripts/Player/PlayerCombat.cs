@@ -37,7 +37,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     public float CurrentCooldownPercentage(int skillNumber)
     {
-        return CurrentSkills().CurrentCooldownPercentage(skillNumber);
+        float currentCooldownPercentage = CurrentSkills() == null ? 0.0f : CurrentSkills().CurrentCooldownPercentage(skillNumber);
+        return currentCooldownPercentage;
     }
 
     private void Start()

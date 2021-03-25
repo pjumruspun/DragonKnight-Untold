@@ -25,6 +25,7 @@ public class GameEvents
 
     public static void TriggerMoveToNextLevel()
     {
+        Debug.Log("triggering...");
         MoveToNextLevel?.Invoke();
     }
 }

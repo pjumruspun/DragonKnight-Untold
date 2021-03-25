@@ -54,6 +54,11 @@ public class GameStateManager : MonoSingleton<GameStateManager>
             gameState = GameState.Gameplay;
             GameEvents.TriggerPause(false);
         }
+        else if (scene.name.Split('_')[0] == "Boss")
+        {
+            gameState = GameState.Gameplay;
+            GameEvents.TriggerPause(false);
+        }
         else
         {
             gameState = GameState.Gameplay;
