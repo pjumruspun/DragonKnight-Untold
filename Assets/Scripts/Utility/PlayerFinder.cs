@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class PlayerFinder
 {
-    private const string playerTag = "Player";
-
     public static GameObject FindByTag()
     {
-        GameObject player = GameObject.FindGameObjectWithTag(playerTag);
+        GameObject player = GameObject.FindGameObjectWithTag(Tags.Player);
         if (player == null)
         {
-            throw new System.NullReferenceException($"Cannot find player's GameObject with tag '{playerTag}'");
+            throw new System.NullReferenceException($"Cannot find player's GameObject with tag '{Tags.Player}'");
         }
 
         return player;

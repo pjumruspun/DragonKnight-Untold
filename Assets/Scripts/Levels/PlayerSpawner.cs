@@ -24,7 +24,7 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
         if (GameStateManager.State == GameState.Gameplay)
         {
             // Spawn if in game
-            GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
+            GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag(Tags.SpawnPoint);
             if (spawnPoints.Length == 0)
             {
                 throw new System.Exception("Spawn point not exist in the scene");

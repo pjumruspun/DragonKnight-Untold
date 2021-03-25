@@ -48,6 +48,9 @@ public class CameraFollow : MonoSingleton<CameraFollow>
         float y = followTransform.position.y;
         float z = mainCamera.position.z;
 
+        x = Mathf.Clamp(x, Border.Left, Border.Right);
+        y = Mathf.Clamp(y, Border.Bottom, Border.Top);
+
         MovementState turnDirection = PlayerMovement.Instance.TurnDirection;
         switch (turnDirection)
         {

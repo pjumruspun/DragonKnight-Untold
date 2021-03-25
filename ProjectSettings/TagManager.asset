@@ -7,6 +7,8 @@ TagManager:
   - PauseMenu
   - Spawn Point
   - Ground
+  - Bottom Left Corner
+  - Top Right Corner
   layers:
   - Default
   - TransparentFX
