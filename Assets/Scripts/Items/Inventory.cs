@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Inventory : MonoSingleton<Inventory>
 {
-
-
     public void Add(Item item)
     {
         InventoryStatic.items.Add(item);

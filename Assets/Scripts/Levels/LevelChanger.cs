@@ -13,7 +13,7 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     [SerializeField]
     private string levelNamePrefix = "Level_";
     [SerializeField]
-    private int normalLevelCount = 3;
+    private int normalLevelCount = 4;
     [SerializeField]
     private string bossLevelNamePrefix = "Boss_";
     [SerializeField]
@@ -33,20 +33,19 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         int random = -1;
         string nameOfSceneToLoad = "";
-        Debug.Log("Loading next level");
 
         if (StageManager.currentStage == StageManager.stageCountToFightBoss)
         {
             // Time to fight boss
             // Load Random Boss scene
             random = Random.Range(1, Instance.bossLevelCount + 1);
-            nameOfSceneToLoad += Instance.bossLevelNamePrefix;
+            nameOfSceneToLoad += Instance.bossLevelNamePrefix + random.ToString();
         }
         else if (StageManager.IsBossStage)
         {
             // Just killed boss
-            random = Random.Range(1, Instance.normalLevelCount + 1);
-            nameOfSceneToLoad += Instance.levelNamePrefix;
+            // Load camp
+            nameOfSceneToLoad += sceneNames[Scenes.Camp];
         }
         else
         {
@@ -56,10 +55,8 @@ public class LevelChanger : MonoSingleton<LevelChanger>
                 random = Random.Range(1, Instance.normalLevelCount + 1);
             }
 
-            nameOfSceneToLoad += Instance.levelNamePrefix;
+            nameOfSceneToLoad += Instance.levelNamePrefix + random.ToString();
         }
-
-        nameOfSceneToLoad += random.ToString();
 
         if (!Instance.isTransitioning)
         {
@@ -81,7 +78,6 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         {
             Instance.isTransitioning = true;
             LevelChanger.Instance.FadeOut();
-            Debug.Log(Instance.sceneTransitionTime);
             CoroutineUtility.ExecDelay(() =>
             {
                 SceneManager.LoadScene(sceneNames[scene]);
@@ -95,6 +91,14 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         SceneManager.LoadScene(sceneNames[scene]);
         GameEvents.TriggerPause(false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P)) // Debugging
+        {
+            LoadNextLevel();
+        }
     }
 
     private void OnEnable()
@@ -129,23 +133,28 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         string[] words = currentSceneName.Split('_');
-        int index = int.Parse(words[words.Length - 1]);
-        StageManager.currentSceneIndex = index;
+        string prefix = words[0];
+        if (prefix == levelNamePrefix || prefix == bossLevelNamePrefix)
+        {
+            int index = int.Parse(words[words.Length - 1]);
+            StageManager.currentSceneIndex = index;
+        }
     }
 
     private void IncreaseStage()
     {
-        if (!StageManager.IsBossStage)
+        if (SceneManager.GetActiveScene().name != sceneNames[Scenes.Camp])
         {
-            StageManager.currentStage += 1;
+            if (!StageManager.IsBossStage)
+            {
+                StageManager.currentStage += 1;
+            }
+            else
+            {
+                // Reset stage but increase world
+                StageManager.currentStage = 1;
+                StageManager.currentWorld += 1;
+            }
         }
-        else
-        {
-            // Reset stage but increase world
-            StageManager.currentStage = 1;
-            StageManager.currentWorld += 1;
-        }
-
-        Debug.Log($"Proceeding to stage {StageManager.currentWorld}-{StageManager.currentStage}");
     }
 }
