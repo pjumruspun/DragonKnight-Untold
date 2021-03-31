@@ -13,6 +13,13 @@ public class PlayerHealth : Health
     {
         maxHealth = PlayerStats.Instance.MaxHealth;
         base.Start();
+
+        // Scene transition
+        if (PlayerHealthStatic.currentHealth > 0.0f)
+        {
+            currentHealth = PlayerHealthStatic.currentHealth;
+        }
+
         Invoke("UpdateMaxHealth", Time.deltaTime);
         collider2D = GetComponent<BoxCollider2D>();
         if (playerCollider != null)
@@ -37,6 +44,9 @@ public class PlayerHealth : Health
     private void OnDestroy()
     {
         EventPublisher.PlayerStatsChange -= UpdateMaxHealth;
+
+        // Fetch data if there is scene transition
+        PlayerHealthStatic.currentHealth = currentHealth;
     }
 
     private void UpdateMaxHealth()

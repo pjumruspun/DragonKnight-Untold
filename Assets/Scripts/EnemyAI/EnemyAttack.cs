@@ -27,13 +27,13 @@ public class EnemyAttack : EnemyBehavior
 
     protected virtual void Attack()
     {
-        if (enemy.IsRanged)
+        if (enemy is RangedEnemy)
         {
-            RangedAttack();
+            RangedAttack(((RangedEnemy)enemy).Projectile);
         }
-        else
+        else if (enemy is MeleeEnemy)
         {
-            MeleeAttack(enemy.EnemyAttackHitbox);
+            MeleeAttack(((MeleeEnemy)enemy).EnemyAttackHitbox);
         }
     }
 
@@ -69,9 +69,9 @@ public class EnemyAttack : EnemyBehavior
         return totalDamage;
     }
 
-    private void RangedAttack()
+    private void RangedAttack(ObjectPool projectilePool)
     {
-        GameObject spawnedObject = enemy.Projectile.SpawnObject(transform.position, Quaternion.identity);
+        GameObject spawnedObject = projectilePool.SpawnObject(transform.position, Quaternion.identity);
 
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {

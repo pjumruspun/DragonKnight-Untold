@@ -5,8 +5,7 @@ using UnityEngine;
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
     public int SwordCombo =>
-        currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
-    public PlayerClass CurrentClass => currentClass;
+        PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
 
     [Header("Hitboxes")]
     [SerializeField]
@@ -20,9 +19,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     [SerializeField]
     private GameObject clawSlash;
 
-    private DragonSkills dragonSkills;
+    private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
-    private PlayerClass currentClass;
     private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
@@ -39,7 +37,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     public float CurrentCooldownPercentage(int skillNumber)
     {
-        return CurrentSkills().CurrentCooldownPercentage(skillNumber);
+        float currentCooldownPercentage = CurrentSkills() == null ? 0.0f : CurrentSkills().CurrentCooldownPercentage(skillNumber);
+        return currentCooldownPercentage;
     }
 
     private void Start()
@@ -51,7 +50,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.StopFireBreath += StopFireBreath;
 
         // Initialize player starting class, player will get to choose this later
-        ChangeClass(PlayerClass.Sword);
+        InitializeSkills();
+        ChangeClass(PlayerClassStatic.currentClass);
 
         // Initialize buff manager
         buffManager = new BuffManager();
@@ -73,7 +73,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (currentClass == PlayerClass.Sword)
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
             {
                 ChangeClass(PlayerClass.Archer);
             }
@@ -175,13 +175,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Don't forget to transfer items and perks here once it's done
 
         // Change class label
-        currentClass = playerClass;
+        PlayerClassStatic.currentClass = playerClass;
 
         // Change current skill sets
-        humanSkills = CreatePlayerSkill(playerClass);
+        humanSkills = GetPlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
+        // dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private Vector2 GetForwardVector()
@@ -199,20 +199,27 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
     }
 
-    private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
+    private PlayerSkills GetPlayerSkill(PlayerClass playerClass)
     {
         // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
                 // Send this.stats pointer in
-                return new SwordSkills(transform, swordPrimaryHitbox);
+                return SkillsRepository.Sword;
             case PlayerClass.Archer:
                 // Send this.stats pointer in
-                return new ArcherSkills(transform);
+                return SkillsRepository.Archer;
             default:
                 throw new System.ArgumentOutOfRangeException();
         }
+    }
+
+    private void InitializeSkills()
+    {
+        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox);
+        SkillsRepository.Archer.Initialize(transform);
+        SkillsRepository.Dragon.Initialize(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private PlayerSkills CurrentSkills()

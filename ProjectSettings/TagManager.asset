@@ -6,6 +6,9 @@ TagManager:
   tags:
   - PauseMenu
   - Spawn Point
+  - Ground
+  - Bottom Left Corner
+  - Top Right Corner
   layers:
   - Default
   - TransparentFX
@@ -19,8 +22,8 @@ TagManager:
   - PlayerAttack
   - EnemyProjectile
   - Interactable
-  - 
-  - 
+  - Obstacle
+  - TeleportArea
   - 
   - 
   - 

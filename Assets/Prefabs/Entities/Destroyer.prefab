@@ -932,7 +932,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6415880568046649087}
-  - component: {fileID: 3558264992210606126}
+  - component: {fileID: 3153874577313889661}
   - component: {fileID: 6415880568046649056}
   - component: {fileID: 6415880568046649057}
   - component: {fileID: 6415880568046649086}
@@ -964,7 +964,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3558264992210606126
+--- !u!114 &3153874577313889661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -973,32 +973,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 6415880568046649058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdbe807db3b6f4c2cad2863b8ead884e, type: 3}
+  m_Script: {fileID: 11500000, guid: f508de7331b214aaab63a8ee0ccd4dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnEffect: 0
   spawnCost: 5
   enemyBaseSpeed: 1.5
   randomSpeedFactor: 0.5
-  chasingRange: 20
+  chasingRange: 6
   chasingInterval: 0.5
   canSeeThroughWalls: 0
   groundDetector: {fileID: 2419719778490068726}
-  startMaxHealth: 2000
+  startMaxHealth: 1500
   hpBar: {fileID: 4100709551577818779}
   secondsToDespawn: 2
   showSuperArmorBar: 1
-  maxSuperArmor: 750
+  maxSuperArmor: 600
   superArmorBar: {fileID: 3833112096350911891}
   secondsBeforeGetUp: 1.5
   stunStars: {fileID: 1828762843847529045}
-  isRanged: 0
-  attackDamage: 15
+  attackDamage: 25
   attackCooldown: 3
   attackRange: 1
   attackDelay: 0.3
-  attackHitbox: {fileID: 0}
-  projectilePrefab: {fileID: 0}
   hurtColor: {r: 0.75, g: 0, b: 0, a: 1}
+  attackHitbox: {fileID: 0}
 --- !u!212 &6415880568046649056
 SpriteRenderer:
   m_ObjectHideFlags: 0

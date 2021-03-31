@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : Enemy
+public abstract class Boss : Enemy
 {
     private static readonly float timeFreezeOnDead = 0.0f;
     private static readonly float screenShakeDurOnDead = 0.4f;

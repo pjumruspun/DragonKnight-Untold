@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoSingleton<GameStateManager>
 {
-    public GameState State => gameState;
+    public static GameState State => Instance.gameState;
     private GameState gameState;
 
     protected override void Awake()
@@ -49,8 +49,19 @@ public class GameStateManager : MonoSingleton<GameStateManager>
             gameState = GameState.Gameplay;
             GameEvents.TriggerPause(false);
         }
+        else if (scene.name.Split('_')[0] == "Level")
+        {
+            gameState = GameState.Gameplay;
+            GameEvents.TriggerPause(false);
+        }
+        else if (scene.name.Split('_')[0] == "Boss")
+        {
+            gameState = GameState.Gameplay;
+            GameEvents.TriggerPause(false);
+        }
         else
         {
+            gameState = GameState.Gameplay;
             Debug.LogWarning("Loaded an unregistered scene");
         }
     }

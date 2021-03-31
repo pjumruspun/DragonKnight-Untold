@@ -27,7 +27,7 @@ public class PauseMenu : MonoSingleton<PauseMenu>
 
     private void ListenToPauseSignal()
     {
-        if (InputManager.Pause && GameStateManager.Instance.State == GameState.Gameplay)
+        if (InputManager.Pause && GameStateManager.State == GameState.Gameplay)
         {
             GameEvents.TriggerPause(!isPaused);
         }
