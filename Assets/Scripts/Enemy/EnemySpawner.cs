@@ -119,7 +119,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         Debug.DrawLine(player.position, randomPosition, Color.green, 2.0f);
 
         Enemy spawnedEnemy = EnemyRepository.Instance.SpawnRandomEnemy(randomPosition);
-        Debug.Log(spawnedEnemy.name);
         return spawnedEnemy.SpawnCost;
     }
 
@@ -155,9 +154,13 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     {
         currentSpawnAmount -= enemy.SpawnCost;
         enemyCostKilledThisStage += enemy.SpawnCost;
+
+        // For normal stages, killing more than threshold should let the player pass level
         if (enemyCostKilledThisStage >= StageManager.CostToPassLevel)
         {
             GameEvents.TriggerCompleteLevel();
         }
+
+        // For boss stage, boss should be defeated, which can be found in boss script itself
     }
 }

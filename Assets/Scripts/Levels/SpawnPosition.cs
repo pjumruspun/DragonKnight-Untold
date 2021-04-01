@@ -5,7 +5,8 @@ using UnityEngine;
 public enum SpawnSide
 {
     Right,
-    Left
+    Left,
+    None,
 }
 
 public class SpawnPosition : MonoBehaviour
@@ -14,34 +15,52 @@ public class SpawnPosition : MonoBehaviour
     [SerializeField]
     private GameObject blockingObject;
     [SerializeField]
-    private GameObject gateToNextLevel;
+    private TeleportArea gateToNextLevel;
     [SerializeField]
     private SpawnSide spawnSide;
 
     public void Block()
     {
-        blockingObject.SetActive(true);
+        if (blockingObject != null)
+        {
+            blockingObject.SetActive(true);
+        }
     }
 
     public void Unblock()
     {
-        blockingObject.SetActive(false);
+        if (blockingObject != null)
+        {
+            blockingObject.SetActive(false);
+        }
     }
 
     public void DisableTeleportArea()
     {
-        gateToNextLevel.SetActive(false);
+        if (gateToNextLevel != null)
+        {
+            gateToNextLevel.gameObject.SetActive(false);
+        }
     }
 
     public void EnableTeleportArea()
     {
-        gateToNextLevel.SetActive(true);
+        if (gateToNextLevel != null)
+        {
+            gateToNextLevel.gameObject.SetActive(true);
+        }
     }
 
     private void Start()
     {
         // Unblock when player completes level
         GameEvents.CompleteLevel += Unblock;
+
+        // Tell teleport area which side this portal is
+        if (gateToNextLevel != null)
+        {
+            gateToNextLevel.Initialize(spawnSide);
+        }
     }
 
     private void OnDestroy()

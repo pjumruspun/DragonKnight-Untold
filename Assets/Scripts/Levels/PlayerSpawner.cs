@@ -39,8 +39,17 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
                 {
                     // If last stage player exit at left side, player should spawn at the right side of the new stage
                     // And vise versa
-                    if (spawnPosition.Side != StageManager.lastStageExitSide)
+                    if (spawnPosition.Side == SpawnSide.Left && StageManager.lastStageExitSide == SpawnSide.Right)
                     {
+                        possibleSpawnPositions.Add(spawnPosition);
+                    }
+                    else if (spawnPosition.Side == SpawnSide.Right && StageManager.lastStageExitSide == SpawnSide.Left)
+                    {
+                        possibleSpawnPositions.Add(spawnPosition);
+                    }
+                    else if (spawnPosition.Side == SpawnSide.None)
+                    {
+                        // Camp spawn side
                         possibleSpawnPositions.Add(spawnPosition);
                     }
                 }

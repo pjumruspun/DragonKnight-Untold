@@ -44,6 +44,9 @@ public abstract class Boss : Enemy
         BossEvents.TriggerBossDead(this);
 
         ShowEffectsAfterDead();
+
+        // Complete level in boss level
+        GameEvents.TriggerCompleteLevel();
     }
 
     protected override void Flinch()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // For camera panning and spawn area
 public class Border : MonoSingleton<Border>
@@ -14,6 +15,14 @@ public class Border : MonoSingleton<Border>
     private Transform bottomLeftCorner;
 
     private void Start()
+    {
+        if (SceneManager.GetActiveScene().name != LevelChanger.SceneNames[Scenes.MainMenu])
+        {
+            InitializeBorders();
+        }
+    }
+
+    private void InitializeBorders()
     {
         topRightCorner = GameObject.FindGameObjectWithTag(Tags.TopRightCorner).transform;
         bottomLeftCorner = GameObject.FindGameObjectWithTag(Tags.BottomLeftCorner).transform;

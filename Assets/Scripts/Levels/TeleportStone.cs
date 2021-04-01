@@ -27,6 +27,13 @@ public class TeleportStone : Interactable
 
     private void Teleport()
     {
-        LevelChanger.LoadScene(sceneToLoad);
+        if (sceneToLoad == Scenes.Levels)
+        {
+            LevelChanger.LoadNextLevel();
+        }
+        else
+        {
+            LevelChanger.LoadScene(sceneToLoad);
+        }
     }
 }

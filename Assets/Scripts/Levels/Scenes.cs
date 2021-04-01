@@ -2,5 +2,6 @@ public enum Scenes
 {
     MainMenu,
     Camp,
-    Tutorial
+    Tutorial,
+    Levels,
 }
