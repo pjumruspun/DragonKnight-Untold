@@ -11,7 +11,7 @@ public class PerkList : MonoSingleton<PerkList>
         //EventPublisher.TriggerInventoryChange();
     }
 
-    public void initialRandom()
+    public void InitialRandom()
     {
         //random 2-3 perk
     }
