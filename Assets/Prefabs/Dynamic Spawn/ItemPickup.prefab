@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8948305119536226727}
   - component: {fileID: 6684250022019114827}
-  m_Layer: 14
+  m_Layer: 11
   m_Name: Light from ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
