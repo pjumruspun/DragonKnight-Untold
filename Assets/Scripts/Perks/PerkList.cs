@@ -11,11 +11,6 @@ public class PerkList : MonoSingleton<PerkList>
         //EventPublisher.TriggerInventoryChange();
     }
 
-    public void InitialRandom()
-    {
-        //random 2-3 perk
-    }
-
     public void Upgrade(Perk targetPerk)
     {
         foreach (var perk in PerkListStatic.perks)
