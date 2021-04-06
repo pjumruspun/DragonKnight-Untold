@@ -22,6 +22,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private float enemyCostKilledThisStage = 0;
     private Transform player;
     private const int maxSpawnAttempts = 500;
+    private const float correctionOffsetY = 0.15f;
 
     private void Start()
     {
@@ -111,7 +112,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         }
 
         // Offset correction preventing enemy from spawning underground
-        randomY += 0.15f;
+        randomY += correctionOffsetY;
         Vector2 randomPosition = new Vector2(randomX, randomY);
 
         randomY = Mathf.Ceil(randomY);
