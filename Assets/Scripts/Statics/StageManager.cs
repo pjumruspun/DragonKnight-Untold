@@ -17,6 +17,6 @@ public class StageManager
 
     public static SpawnSide lastStageExitSide = SpawnSide.Left;
     public const int stageCountToFightBoss = 3; // How many normal stages before we fight boss?
-    private const int baseEnemyCostToPassLevel = 6;
+    private const int baseEnemyCostToPassLevel = 20;
     private const float difficultyScalingPerLevel = 0.25f;
 }

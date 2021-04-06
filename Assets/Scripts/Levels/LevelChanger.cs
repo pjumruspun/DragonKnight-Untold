@@ -104,13 +104,11 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     private void OnEnable()
     {
         SceneManager.sceneLoaded += FadeIn;
-        GameEvents.MoveToNextLevel += IncreaseStage;
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= FadeIn;
-        GameEvents.MoveToNextLevel -= IncreaseStage;
     }
 
     public void FadeOut()
@@ -138,23 +136,6 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         {
             int index = int.Parse(words[words.Length - 1]);
             StageManager.currentSceneIndex = index;
-        }
-    }
-
-    private void IncreaseStage()
-    {
-        if (SceneManager.GetActiveScene().name != sceneNames[Scenes.Camp])
-        {
-            if (!StageManager.IsBossStage)
-            {
-                StageManager.currentStage += 1;
-            }
-            else
-            {
-                // Reset stage but increase world
-                StageManager.currentStage = 1;
-                StageManager.currentWorld += 1;
-            }
         }
     }
 }
