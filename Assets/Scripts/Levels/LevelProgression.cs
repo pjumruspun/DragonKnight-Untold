@@ -12,7 +12,6 @@ public class LevelProgression : MonoSingleton<LevelProgression>
     {
         GameEvents.MoveToNextLevel += IncreaseStage;
         EventPublisher.EnemyDead += ProcessSpawnAmount;
-        Debug.Log(Difficulty.EnemyHealthScalingFactor);
     }
 
     private void OnDestroy()
