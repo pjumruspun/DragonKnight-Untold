@@ -6,6 +6,7 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
 {
     [SerializeField]
     private GameObject playerPrefab;
+    private List<SpawnPosition> spawnPosToEnableWhenComplete = new List<SpawnPosition>();
 
     protected override void Awake()
     {
@@ -17,6 +18,12 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
     {
         // CoroutineUtility.ExecDelay(() => SpawnPlayer(), Time.deltaTime);
         SpawnPlayer();
+        GameEvents.CompleteLevel += ReEnableExits;
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.CompleteLevel -= ReEnableExits;
     }
 
     private void SpawnPlayer()
@@ -24,8 +31,8 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
         if (GameStateManager.State == GameState.Gameplay)
         {
             // Spawn if in game
-            GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag(Tags.SpawnPoint);
-            if (spawnPoints.Length == 0)
+            GameObject[] allSpawnPoints = GameObject.FindGameObjectsWithTag(Tags.SpawnPoint);
+            if (allSpawnPoints.Length == 0)
             {
                 throw new System.Exception("Spawn point not exist in the scene");
             }
@@ -33,7 +40,7 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
             List<SpawnPosition> possibleSpawnPositions = new List<SpawnPosition>();
 
             // Spawn player with appropriate spawn point
-            foreach (var spawn in spawnPoints)
+            foreach (var spawn in allSpawnPoints)
             {
                 if (spawn.TryGetComponent<SpawnPosition>(out SpawnPosition spawnPosition))
                 {
@@ -64,17 +71,36 @@ public class PlayerSpawner : MonoSingleton<PlayerSpawner>
                 throw new System.Exception($"Could not spawn player because there is no possible spawn location.");
             }
 
+            // The spawn position will the player spawn at
             int random = Random.Range(0, possibleSpawnPositions.Count);
+            SpawnPosition spawnPositionToSpawn = possibleSpawnPositions[random];
 
             // Unblock the gate
-            possibleSpawnPositions[random].Unblock();
+            spawnPositionToSpawn.Unblock();
 
-            // Disable portal
-            possibleSpawnPositions[random].DisableTeleportArea();
+            // Disable all exits
+            foreach (var spawnPoint in allSpawnPoints)
+            {
+                SpawnPosition spawnPosition = spawnPoint.GetComponent<SpawnPosition>();
+                spawnPosition.DisableTeleportArea();
+                // Keep track of all non-spawn exits to enable later
+                if (spawnPosition != spawnPositionToSpawn)
+                {
+                    spawnPosToEnableWhenComplete.Add(spawnPosition);
+                }
+            }
 
             // And spawn player there
-            GameObject player = Instantiate(playerPrefab, possibleSpawnPositions[random].transform.position, Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab, spawnPositionToSpawn.transform.position, Quaternion.identity);
             EventPublisher.TriggerPlayerSpawn(player.transform);
+        }
+    }
+
+    private void ReEnableExits()
+    {
+        foreach (var spawnPosition in spawnPosToEnableWhenComplete)
+        {
+            spawnPosition.EnableTeleportArea();
         }
     }
 }

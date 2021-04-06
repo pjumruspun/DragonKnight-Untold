@@ -39,6 +39,7 @@ public class SpawnPosition : MonoBehaviour
     {
         if (gateToNextLevel != null)
         {
+            print($"Disabling {gateToNextLevel.gameObject.name}");
             gateToNextLevel.gameObject.SetActive(false);
         }
     }
@@ -47,6 +48,7 @@ public class SpawnPosition : MonoBehaviour
     {
         if (gateToNextLevel != null)
         {
+            print($"Enabling {gateToNextLevel.gameObject.name}");
             gateToNextLevel.gameObject.SetActive(true);
         }
     }
