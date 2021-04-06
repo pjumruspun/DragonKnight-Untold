@@ -12,6 +12,7 @@ public class EventPublisher
     public delegate void OnPlayerUseSkill(int number);
     public delegate void OnPlayerShapeshift(bool isDragon);
     public delegate void OnPlayerHealthChange();
+    public delegate void OnPlayerTakeDamage();
     public delegate void OnDragonGaugeChange(float dragonGauge);
     public delegate void OnPlayerDead();
     public delegate void OnPlayerChangeClass(PlayerClass pc);
@@ -31,6 +32,7 @@ public class EventPublisher
     public static event OnPlayerUseSkill PlayerUseSkill;
     public static event OnPlayerShapeshift PlayerShapeshift;
     public static event OnPlayerHealthChange PlayerHealthChange;
+    public static event OnPlayerTakeDamage PlayerTakeDamage;
     public static event OnDragonGaugeChange DragonGaugeChange;
     public static event OnPlayerDead PlayerDead;
     public static event OnPlayerChangeClass PlayerChangeClass;
@@ -76,6 +78,11 @@ public class EventPublisher
     public static void TriggerPlayerHealthChange()
     {
         PlayerHealthChange?.Invoke();
+    }
+
+    public static void TriggerPlayerTakeDamage()
+    {
+        PlayerTakeDamage?.Invoke();
     }
 
     public static void TriggerDragonGaugeChange(float dragonGauge)
