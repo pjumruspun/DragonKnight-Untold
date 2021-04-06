@@ -69,6 +69,6 @@ public class ItemPickup : Interactable
 
         // Remove gameObject from the scene
         // Need to change to disable object pool later
-        ObjectManager.Instance.ItemPickups.ReturnObject(gameObject);
+        ObjectManager.Instance.ItemPickups.ReturnObject(transform.parent.gameObject);
     }
 }
