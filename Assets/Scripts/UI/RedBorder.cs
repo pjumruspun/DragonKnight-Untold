@@ -20,7 +20,7 @@ public class RedBorder : MonoBehaviour
         EventPublisher.PlayerHealthChange += ProcessBreathingRedBorder;
     }
 
-    private void Destroy()
+    private void OnDestroy()
     {
         EventPublisher.PlayerTakeDamage -= FlashBorder;
         EventPublisher.PlayerHealthChange -= ProcessBreathingRedBorder;
