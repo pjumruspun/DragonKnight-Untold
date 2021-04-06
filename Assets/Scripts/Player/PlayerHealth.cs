@@ -9,6 +9,12 @@ public class PlayerHealth : Health
     [SerializeField]
     private BoxCollider2D playerCollider;
 
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        EventPublisher.TriggerPlayerTakeDamage();
+    }
+
     override protected void Start()
     {
         maxHealth = PlayerStats.Instance.MaxHealth;
