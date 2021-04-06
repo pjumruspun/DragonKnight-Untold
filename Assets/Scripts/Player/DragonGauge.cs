@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DragonGauge : MonoSingleton<DragonGauge>
 {
-    public static float CurrentShapeshiftCooldownPercentage => (Instance.currentShapeshiftCooldown / shapeshiftCooldown) * 100;
+    public static float CurrentShapeshiftCooldownPercentage => Instance.currentShapeshiftCooldown / shapeshiftCooldown;
     public static float CurrentShapeshiftCooldown => Instance.currentShapeshiftCooldown;
     public float MaxDragonEnergy => maxDragonEnergy;
     public bool IsDragonForm => isDragonForm;
