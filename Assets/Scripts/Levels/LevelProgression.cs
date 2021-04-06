@@ -12,6 +12,7 @@ public class LevelProgression : MonoSingleton<LevelProgression>
     {
         GameEvents.MoveToNextLevel += IncreaseStage;
         EventPublisher.EnemyDead += ProcessSpawnAmount;
+        Debug.Log(Difficulty.EnemyHealthScalingFactor);
     }
 
     private void OnDestroy()
@@ -40,7 +41,6 @@ public class LevelProgression : MonoSingleton<LevelProgression>
     private void ProcessSpawnAmount(Enemy enemy)
     {
         enemyCostKilledThisStage += enemy.SpawnCost;
-        Debug.Log($"{enemyCostKilledThisStage}/{StageManager.CostToPassLevel}");
 
         // For normal stages, killing more than threshold should let the player pass level
         if (enemyCostKilledThisStage >= StageManager.CostToPassLevel)

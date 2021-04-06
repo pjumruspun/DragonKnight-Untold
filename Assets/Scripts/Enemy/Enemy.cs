@@ -28,7 +28,7 @@ public class Enemy : Health
     public float SuperArmorPercentage => superArmor / maxSuperArmor;
     public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
-    public float AttackDamage => attackDamage;
+    public float AttackDamage => attackDamage * Difficulty.EnemyAttackScalingFactor;
 
     public float AttackRange => attackRange;
     public float AttackCooldown => attackCooldown / actionSpeed;
@@ -272,7 +272,7 @@ public class Enemy : Health
         superArmorBar.gameObject.SetActive(showSuperArmorBar);
 
         // Set health and super armor
-        base.maxHealth = startMaxHealth;
+        base.maxHealth = startMaxHealth * Difficulty.EnemyHealthScalingFactor;
         superArmor = maxSuperArmor;
 
         base.Start();
