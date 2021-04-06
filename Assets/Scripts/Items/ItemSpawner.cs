@@ -33,7 +33,8 @@ public class ItemSpawner : MonoBehaviour
         }
 
         // Try get ItemPickup component
-        if (spawnedItem.TryGetComponent<ItemPickup>(out ItemPickup itemPickup))
+        var itemPickup = spawnedItem.GetComponentInChildren<ItemPickup>();
+        if (itemPickup != null)
         {
             Item randomItem;
             // Choose rarity

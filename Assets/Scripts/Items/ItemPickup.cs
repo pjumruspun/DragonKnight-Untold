@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class ItemPickup : Interactable
 {
+    [SerializeField]
+    SpriteRenderer spriteRenderer;
     [SerializeField]
     private Item item;
 
@@ -39,8 +40,7 @@ public class ItemPickup : Interactable
 
     private void RenderSprite()
     {
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        renderer.sprite = item.icon;
+        spriteRenderer.sprite = item.icon;
     }
 
     private void PickItem()
