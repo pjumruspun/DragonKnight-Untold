@@ -32,6 +32,7 @@ public class MeleeBossAttack : EnemyAttack
     private float screenShakeDuration = 0.3f;
     [SerializeField]
     private float screenShakePower = 0.15f;
+    private float calculatedDamage => damage * Difficulty.EnemyAttackScalingFactor;
 
     private AttackHitbox attackHitbox;
 
@@ -47,7 +48,7 @@ public class MeleeBossAttack : EnemyAttack
             FindAttackHitboxByName();
         }
 
-        float damageDealt = MeleeAttack(attackHitbox, knockBackAmplitude, knockUpAmplitude, damage);
+        float damageDealt = MeleeAttack(attackHitbox, knockBackAmplitude, knockUpAmplitude, calculatedDamage);
         if (damageDealt > 0.0f)
         {
             // Hit player successfully
