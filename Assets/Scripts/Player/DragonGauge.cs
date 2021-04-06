@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DragonGauge : MonoSingleton<DragonGauge>
 {
+    public static float CurrentShapeshiftCooldownPercentage => (Instance.currentShapeshiftCooldown / shapeshiftCooldown) * 100;
+    public static float CurrentShapeshiftCooldown => Instance.currentShapeshiftCooldown;
     public float MaxDragonEnergy => maxDragonEnergy;
     public bool IsDragonForm => isDragonForm;
     [SerializeField]
@@ -15,6 +17,8 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     private bool isDragonForm = false;
     private const float maxDragonEnergy = 100.0f;
     private float dragonEnergy;
+    private const float shapeshiftCooldown = 3.0f;
+    private float currentShapeshiftCooldown = 0.0f;
 
     private void Start()
     {
@@ -34,6 +38,8 @@ public class DragonGauge : MonoSingleton<DragonGauge>
             ListenToShapeshiftEvent();
             ProcessDragonEnergy();
         }
+
+        ProcessDragonCooldown();
     }
 
     private void ListenToShapeshiftEvent()
@@ -48,6 +54,11 @@ public class DragonGauge : MonoSingleton<DragonGauge>
 
     private void ShapeShift()
     {
+        if (!isDragonForm)
+        {
+            currentShapeshiftCooldown = shapeshiftCooldown;
+        }
+
         isDragonForm = !isDragonForm;
         EventPublisher.TriggerPlayerShapeshift(isDragonForm);
     }
@@ -79,7 +90,14 @@ public class DragonGauge : MonoSingleton<DragonGauge>
 
     private bool CanShapeShift()
     {
-        return dragonEnergy > 0.0f;
+        if (!isDragonForm)
+        {
+            return dragonEnergy > 0.0f && currentShapeshiftCooldown < 0.01f;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private void StripDragonForm(PlayerClass playerClass)
@@ -90,6 +108,18 @@ public class DragonGauge : MonoSingleton<DragonGauge>
             // Player dragon down
             isDragonForm = false;
             EventPublisher.TriggerPlayerShapeshift(false);
+        }
+    }
+
+    private void ProcessDragonCooldown()
+    {
+        if (currentShapeshiftCooldown > 0.0f)
+        {
+            currentShapeshiftCooldown -= Time.deltaTime;
+        }
+        else if (currentShapeshiftCooldown < 0.0f)
+        {
+            currentShapeshiftCooldown = 0.0f;
         }
     }
 }
