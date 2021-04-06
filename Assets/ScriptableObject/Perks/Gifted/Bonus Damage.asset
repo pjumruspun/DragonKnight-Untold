@@ -36,5 +36,5 @@ MonoBehaviour:
     AttackSpeedMultModifier: 0
     CooldownReductionMultModifier: 0
   PerkLevel: 1
-  Chance: 1
+  Chance: 10
   type: 0
