@@ -12,8 +12,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     [SerializeField]
     private float spawnRange = 10.0f;
     [SerializeField]
-    private float castRadius = 2.0f;
-    [SerializeField]
     private float spawnInterval = 15.0f;
     [SerializeField]
     private int spawnAmountPerInterval = 15;
@@ -24,6 +22,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private float enemyCostKilledThisStage = 0;
     private Transform player;
     private const int maxSpawnAttempts = 500;
+    private const float correctionOffsetY = 0.15f;
 
     private void Start()
     {
@@ -92,9 +91,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         float randomX = Random.Range(leftMost, rightMost);
         float randomY = Random.Range(bottomMost, topMost);
 
-        Vector2 randomPosition = new Vector2(randomX, randomY);
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(randomPosition, castRadius, Vector2.zero);
-
         // Check 6 tiles around the random tile
         for (int x = (int)randomX - 1; x <= (int)randomX + 1; ++x)
         {
@@ -114,6 +110,10 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             // Debug.DrawLine(player.position, randomPosition, Color.cyan, 2.0f);
             return 0;
         }
+
+        // Offset correction preventing enemy from spawning underground
+        randomY += correctionOffsetY;
+        Vector2 randomPosition = new Vector2(randomX, randomY);
 
         randomY = Mathf.Ceil(randomY);
         Debug.DrawLine(player.position, randomPosition, Color.green, 2.0f);
