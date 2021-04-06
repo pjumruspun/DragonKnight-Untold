@@ -2,11 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class ItemPickup : Interactable
 {
     [SerializeField]
+    SpriteRenderer spriteRenderer;
+    [SerializeField]
+    SpriteRenderer lightFromGround;
+    [SerializeField]
     private Item item;
+    private Color normalItemColor = new Color(0.9f, 0.9f, 0.9f);
+    private Color rareItemColor = new Color(0.0f, 0.9f, 0.1f);
+    private Color ultraRareItemColor = new Color(0.1f, 0.3f, 1.0f);
 
     public override void Interact()
     {
@@ -17,6 +23,20 @@ public class ItemPickup : Interactable
     public void AssignItem(Item item)
     {
         this.item = item;
+        switch (item.rarity)
+        {
+            case ItemRarity.Common:
+                lightFromGround.color = normalItemColor;
+                break;
+            case ItemRarity.Rare:
+                lightFromGround.color = rareItemColor;
+                break;
+            case ItemRarity.UltraRare:
+                lightFromGround.color = ultraRareItemColor;
+                break;
+            default:
+                throw new System.IndexOutOfRangeException($"Unhandled enum ItemRarity: {item.rarity}");
+        }
         EnableItem();
     }
 
@@ -39,8 +59,7 @@ public class ItemPickup : Interactable
 
     private void RenderSprite()
     {
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        renderer.sprite = item.icon;
+        spriteRenderer.sprite = item.icon;
     }
 
     private void PickItem()
