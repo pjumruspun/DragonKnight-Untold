@@ -21,7 +21,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private int maxSpawnAmountAtTime = 30;
     private float lastTimeSpawned = 0.0f;
     private float currentSpawnAmount = 0;
-    private float enemyCostKilledThisStage = 0;
     private Transform player;
     private const int maxSpawnAttempts = 500;
 
@@ -153,14 +152,5 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private void ProcessSpawnAmount(Enemy enemy)
     {
         currentSpawnAmount -= enemy.SpawnCost;
-        enemyCostKilledThisStage += enemy.SpawnCost;
-
-        // For normal stages, killing more than threshold should let the player pass level
-        if (enemyCostKilledThisStage >= StageManager.CostToPassLevel)
-        {
-            GameEvents.TriggerCompleteLevel();
-        }
-
-        // For boss stage, boss should be defeated, which can be found in boss script itself
     }
 }
