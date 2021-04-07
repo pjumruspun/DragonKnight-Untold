@@ -74,25 +74,6 @@ public class PlayerHealth : Health
         EventPublisher.TriggerPlayerHealthChange();
     }
 
-    // private void AdjustMaxHealth(Stats stats)
-    // {
-    //     float finalMaxHealth = PlayerStats.CalculateMaxHealth(ConfigContainer.Instance.GetPlayerConfig.MaxHealth, stats.vit);
-    //     if (finalMaxHealth > maxHealth)
-    //     {
-    //         // Increase current health with the same amount of max health increased
-    //         float maxHealthIncreased = finalMaxHealth - maxHealth;
-    //         currentHealth += maxHealthIncreased;
-    //     }
-
-    //     maxHealth = finalMaxHealth;
-    //     if (currentHealth > maxHealth)
-    //     {
-    //         currentHealth = maxHealth;
-    //     }
-
-    //     EventPublisher.TriggerPlayerHealthChange();
-    // }
-
     private void Awake()
     {
         if (Instance == null)
@@ -103,5 +84,11 @@ public class PlayerHealth : Health
         {
             DestroyImmediate(gameObject);
         }
+    }
+
+    private void OnRestartGame()
+    {
+        // Set to -1.0f so that PlayerHealth doesn't import health from PlayerHealthStatic
+        PlayerHealthStatic.currentHealth = -1.0f;
     }
 }

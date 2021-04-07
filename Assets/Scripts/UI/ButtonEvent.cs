@@ -14,6 +14,11 @@ public class ButtonEvent : MonoBehaviour
         GameEvents.TriggerPause(false);
     }
 
+    public void RestartGame()
+    {
+        GameEvents.TriggerRestartGame();
+    }
+
     public void MainMenu()
     {
         LevelChanger.LoadSceneInstant(Scenes.MainMenu);

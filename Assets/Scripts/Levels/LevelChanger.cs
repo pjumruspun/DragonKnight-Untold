@@ -110,6 +110,7 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= FadeIn;
+        GameEvents.RestartGame += OnRestartGame;
     }
 
     public void FadeOut()
@@ -140,5 +141,14 @@ public class LevelChanger : MonoSingleton<LevelChanger>
             StageManager.currentSceneIndex = index;
             Debug.Log($"index={StageManager.currentSceneIndex}");
         }
+
+        GameEvents.RestartGame += OnRestartGame;
+    }
+
+    private void OnRestartGame()
+    {
+        StageManager.currentStage = 1;
+        StageManager.currentWorld = 1;
+        LoadScene(Scenes.Camp);
     }
 }
