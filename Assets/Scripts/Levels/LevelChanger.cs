@@ -13,7 +13,7 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     [SerializeField]
     private string levelNamePrefix = "Level_";
     [SerializeField]
-    private int normalLevelCount = 4;
+    private int normalLevelCount = 2;
     [SerializeField]
     private string bossLevelNamePrefix = "Boss_";
     [SerializeField]
@@ -49,10 +49,11 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         }
         else
         {
+            Debug.Log($"loading anything that is not {StageManager.currentSceneIndex}");
             while (random <= -1 || random == StageManager.currentSceneIndex)
             {
                 // Random until gets other scene
-                random = Random.Range(1, Instance.normalLevelCount + 1);
+                random = Random.Range(1, Instance.normalLevelCount);
             }
 
             nameOfSceneToLoad += Instance.levelNamePrefix + random.ToString();
@@ -132,10 +133,12 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         string currentSceneName = SceneManager.GetActiveScene().name;
         string[] words = currentSceneName.Split('_');
         string prefix = words[0];
+        prefix += '_';
         if (prefix == levelNamePrefix || prefix == bossLevelNamePrefix)
         {
             int index = int.Parse(words[words.Length - 1]);
             StageManager.currentSceneIndex = index;
+            Debug.Log($"index={StageManager.currentSceneIndex}");
         }
     }
 }
