@@ -15,6 +15,11 @@ public class DragonSkills : PlayerSkills
     private const float skill1ScreenShakeDuration = 0.3f;
     private const float skill1ScreenShakePower = 0.15f;
 
+    // Skill 2 params
+    private const float skill2KnockUpAmplitude = 0.5f;
+    private const float skill2Delay = 0.05f;
+    private const float skill2Interval = 0.20f;
+
     // Skill 3 params
     private const float skill3LockMovementRatio = 1.0f;
     private const float skill3SpeedMultiplier = 2.0f;
@@ -160,7 +165,7 @@ public class DragonSkills : PlayerSkills
         float damage = dragonAttackDamage[1];
 
         // Dragon Skill 2
-        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, 0.05f, 0.33f));
+        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, skill2Delay, skill2Interval));
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
         movement.LockMovementBySkill(true);
@@ -249,7 +254,7 @@ public class DragonSkills : PlayerSkills
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, damage, 0.0f, 1.25f);
+            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: skill2KnockUpAmplitude);
         }
     }
 }

@@ -1099,6 +1099,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6827793534718501572, guid: 8a5702479ff474cf59a4f405b58ee5f0, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827793534718501572, guid: 8a5702479ff474cf59a4f405b58ee5f0, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827793534718501572, guid: 8a5702479ff474cf59a4f405b58ee5f0, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -825998113
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a5702479ff474cf59a4f405b58ee5f0, type: 3}
 --- !u!1 &5625801596219501986 stripped
