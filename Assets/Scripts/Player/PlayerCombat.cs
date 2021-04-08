@@ -110,11 +110,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
         }
-        else if (InputManager.Skill2Release && DragonGauge.Instance.IsDragonForm)
-        {
-            // Stop fire breath
-            EventPublisher.TriggerStopFireBreath();
-        }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
             EventPublisher.TriggerPlayerUseSkill(2);
@@ -133,6 +128,11 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             {
                 EventPublisher.TriggerPlayerUseSkill(3);
             }
+        }
+        else if (InputManager.UltimateRelease && DragonGauge.Instance.IsDragonForm)
+        {
+            // Stop fire breath
+            EventPublisher.TriggerStopFireBreath();
         }
     }
 
@@ -171,13 +171,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         if (!isDragon)
         {
             // Stop fire breath if dragon down
-            dragonSkills.Skill2Release();
+            dragonSkills.UltimateRelease();
         }
     }
 
     private void StopFireBreath()
     {
-        dragonSkills.Skill2Release();
+        dragonSkills.UltimateRelease();
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)

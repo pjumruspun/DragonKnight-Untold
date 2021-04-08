@@ -175,6 +175,12 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 }
                 break;
             case 1:
+                animator.SetTrigger("Skill2");
+                break;
+            case 2:
+                animator.SetTrigger("Skill3");
+                break;
+            case 3:
                 if (DragonGauge.Instance.IsDragonForm)
                 {
                     // Fire breath
@@ -182,14 +188,8 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 }
                 else
                 {
-                    animator.SetTrigger("Skill2");
+                    animator.SetTrigger("Ultimate");
                 }
-                break;
-            case 2:
-                animator.SetTrigger("Skill3");
-                break;
-            case 3:
-                animator.SetTrigger("Ultimate");
                 break;
             default:
                 throw new System.InvalidOperationException();

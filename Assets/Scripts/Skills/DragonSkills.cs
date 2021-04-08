@@ -15,17 +15,17 @@ public class DragonSkills : PlayerSkills
     private const float skill1ScreenShakeDuration = 0.3f;
     private const float skill1ScreenShakePower = 0.15f;
 
-    // Skill 2 params
-    private const float skill2KnockUpAmplitude = 0.5f;
-    private const float skill2Delay = 0.05f;
-    private const float skill2Interval = 0.20f;
-
     // Skill 3 params
     private const float skill3LockMovementRatio = 1.0f;
     private const float skill3SpeedMultiplier = 2.0f;
     private const float skill3KnockUpAmplitude = 3.5f;
     private const float skill3KnockBackAmplitude = 0.5f;
     private const float skill3TotalCooldownReduction = 0.6f;
+
+    // Ultimate params
+    private const float ultKnockUpAmplitude = 0.5f;
+    private const float ultDelay = 0.05f;
+    private const float ultInterval = 0.20f;
 
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox dragonVortexHitbox;
@@ -157,21 +157,7 @@ public class DragonSkills : PlayerSkills
         }, attackDelay + slashAnimLength);
     }
 
-    public override void Skill2()
-    {
-        currentCooldown[1] = dragonAttackCooldown[1];
-
-        // Skill 2 = dragonAttackDamage[1]
-        float damage = dragonAttackDamage[1];
-
-        // Dragon Skill 2
-        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, skill2Delay, skill2Interval));
-        movement.LockJumpBySkill(true);
-        movement.LockFlipBySkill(true);
-        movement.LockMovementBySkill(true);
-    }
-
-    public void Skill2Release()
+    public void UltimateRelease()
     {
         fireBreath.SetActive(false);
         if (fireBreathCoroutine != null)
@@ -247,6 +233,19 @@ public class DragonSkills : PlayerSkills
         }
     }
 
+    public override void UltimateSkill()
+    {
+        currentCooldown[3] = dragonAttackCooldown[3];
+
+        // Ult = dragonAttackDamage[3]
+        float damage = dragonAttackDamage[3];
+
+        fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, ultDelay, ultInterval));
+        movement.LockJumpBySkill(true);
+        movement.LockFlipBySkill(true);
+        movement.LockMovementBySkill(true);
+    }
+
     private IEnumerator DelayedFireBreath(float damage, float delay, float interval)
     {
         yield return new WaitForSeconds(delay);
@@ -254,7 +253,7 @@ public class DragonSkills : PlayerSkills
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: skill2KnockUpAmplitude);
+            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude);
         }
     }
 }

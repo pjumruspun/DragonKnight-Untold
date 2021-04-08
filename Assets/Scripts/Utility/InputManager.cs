@@ -8,9 +8,9 @@ public class InputManager
     public static bool HoldUp => Input.GetKey(KeyCode.UpArrow);
     public static bool PrimaryAttack => Input.GetKey(KeyCode.Space);
     public static bool Skill2 => Input.GetKeyDown(KeyCode.Z);
-    public static bool Skill2Release => Input.GetKeyUp(KeyCode.Z);
     public static bool Skill3 => Input.GetKeyDown(KeyCode.X);
     public static bool UltimateSkill => Input.GetKeyDown(KeyCode.C);
+    public static bool UltimateRelease => Input.GetKeyUp(KeyCode.C);
     public static bool Shapeshift => Input.GetKeyDown(KeyCode.LeftShift);
     public static bool Interact => Input.GetKeyDown(KeyCode.F);
     public static bool Pause => Input.GetKeyDown(KeyCode.Escape);
