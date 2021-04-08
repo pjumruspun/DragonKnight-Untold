@@ -29,7 +29,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         // Skill 2
         { 1, new string[]{ "Sword_Attack4", "?", "?"}},
         // Skill 3
-        { 2, new string[]{ "Sword_Dash", "?", "?"}},
+        { 2, new string[]{ "Sword_Dash", "?", "Night_Vortex"}},
     };
 
     public float GetAnimLength(string name)

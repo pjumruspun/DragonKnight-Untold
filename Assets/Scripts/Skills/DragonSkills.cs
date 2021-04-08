@@ -14,7 +14,16 @@ public class DragonSkills : PlayerSkills
     private const float skill1AnimStopRatio = 0.2f;
     private const float skill1ScreenShakeDuration = 0.3f;
     private const float skill1ScreenShakePower = 0.15f;
+
+    // Skill 3 params
+    private const float skill3LockMovementRatio = 1.0f;
+    private const float skill3SpeedMultiplier = 2.0f;
+    private const float skill3KnockUpAmplitude = 3.5f;
+    private const float skill3KnockBackAmplitude = 0.5f;
+    private const float skill3TotalCooldownReduction = 0.6f;
+
     private AttackHitbox dragonPrimaryHitbox;
+    private AttackHitbox dragonVortexHitbox;
     private AttackHitbox fireBreathHitbox;
     private float[] dragonAttackDamage = new float[4];
     private float[] dragonAttackCooldown = new float[4];
@@ -22,25 +31,34 @@ public class DragonSkills : PlayerSkills
     private float dragonSuperArmorAttack = 100.0f;
     private GameObject fireBreath;
     private GameObject clawSlash;
+    private GameObject dragonDashEffect;
     private Animator clawSlashAnim;
+    private Animator dashAnim;
     private Coroutine fireBreathCoroutine;
 
     public void Initialize(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
+        AttackHitbox dragonVortexHitbox,
         GameObject fireBreath,
-        GameObject clawSlash
+        GameObject clawSlash,
+        GameObject dragonDashEffect
     )
     {
         base.Initialize(transform);
 
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
+        this.dragonVortexHitbox = dragonVortexHitbox;
+
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
         this.fireBreath.SetActive(false);
 
         this.clawSlash = clawSlash;
         this.clawSlash.SetActive(false);
+
+        this.dragonDashEffect = dragonDashEffect;
+        this.dragonDashEffect.SetActive(false);
 
         if (this.clawSlash.TryGetComponent<Animator>(out Animator animator))
         {
@@ -49,6 +67,15 @@ public class DragonSkills : PlayerSkills
         else
         {
             throw new System.NullReferenceException("Cannot get Animator component from clawSlash GameObject");
+        }
+
+        if (this.dragonDashEffect.TryGetComponent<Animator>(out Animator dashAnim))
+        {
+            this.dashAnim = dashAnim;
+        }
+        else
+        {
+            throw new System.NullReferenceException("Cannot get Animator component from dragonDashEffect GameObject");
         }
 
         // Initialize base skill damage and cooldown
@@ -151,6 +178,68 @@ public class DragonSkills : PlayerSkills
         movement.LockJumpBySkill(false);
         movement.LockFlipBySkill(false);
         movement.LockMovementBySkill(false);
+    }
+
+    public override void Skill3()
+    {
+        currentCooldown[2] = dragonAttackCooldown[2];
+
+        float damage = dragonAttackDamage[2];
+        float animLength = PlayerAnimation.Instance.GetAnimLength(2);
+        float lockMovementDuration = animLength * skill3LockMovementRatio;
+
+        movement.LockMovementBySkill(lockMovementDuration, true, true);
+        movement.LockJumpBySkill(lockMovementDuration);
+
+        // Dash upward
+        Vector2 moveVector = Vector2.up + movement.ForwardVector * 0.2f;
+        movement.ForceMove(
+            moveVector,
+            PlayerStats.Instance.MovementSpeed * skill3SpeedMultiplier,
+            animLength,
+            groundOnly: false,
+            forceMode: ForceMode2D.Impulse
+        );
+
+        // Dash effect
+        dragonDashEffect.SetActive(true);
+        CoroutineUtility.ExecDelay(() => dragonDashEffect.SetActive(false), animLength);
+
+        // Attack
+        int totalHits = 3;
+        for (int i = 0; i < totalHits; ++i)
+        {
+            float superArmorDamage;
+            if (i == 0)
+            {
+                superArmorDamage = 100;
+            }
+            else
+            {
+                superArmorDamage = 0;
+            }
+
+            CoroutineUtility.ExecDelay(() =>
+            {
+                // Attack
+                // First time knock up
+                float totalDamage = AttackWithHitbox(
+                    dragonPrimaryHitbox,
+                    damage / totalHits,
+                    superArmorDamage,
+                    knockUpAmplitude: skill3KnockUpAmplitude,
+                    knockBackAmplitude: skill3KnockBackAmplitude,
+                    hitEffect: HitEffect.Slash
+                );
+
+                // If hit, reduce cooldown
+                if (totalDamage > 0.01f)
+                {
+                    currentCooldown[2] -= (dragonAttackCooldown[2] * skill3TotalCooldownReduction / totalHits);
+                }
+
+            }, i * (animLength / totalHits));
+        }
     }
 
     private IEnumerator DelayedFireBreath(float damage, float delay, float interval)

@@ -12,12 +12,16 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonPrimaryHitbox;
+    [SerializeField]
+    private AttackHitbox dragonVortexHitbox;
 
     [Header("Skill Effects")]
     [SerializeField]
     private GameObject fireBreath;
     [SerializeField]
     private GameObject clawSlash;
+    [SerializeField]
+    private GameObject dragonDashEffect;
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
@@ -225,7 +229,9 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox);
         SkillsRepository.Archer.Initialize(transform);
-        SkillsRepository.Dragon.Initialize(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
+        SkillsRepository.Dragon.Initialize(
+            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
+        );
     }
 
     private PlayerSkills CurrentSkills()
