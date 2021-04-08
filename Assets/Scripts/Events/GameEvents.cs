@@ -8,10 +8,12 @@ public class GameEvents
     public delegate void OnPause(bool pause);
     public delegate void OnCompleteLevel();
     public delegate void OnMoveToNextLevel();
+    public delegate void OnRestartGame();
 
     public static event OnPause Pause;
     public static event OnCompleteLevel CompleteLevel;
     public static event OnMoveToNextLevel MoveToNextLevel;
+    public static event OnRestartGame RestartGame;
 
     public static void TriggerPause(bool pause)
     {
@@ -26,5 +28,10 @@ public class GameEvents
     public static void TriggerMoveToNextLevel()
     {
         MoveToNextLevel?.Invoke();
+    }
+
+    public static void TriggerRestartGame()
+    {
+        RestartGame?.Invoke();
     }
 }
