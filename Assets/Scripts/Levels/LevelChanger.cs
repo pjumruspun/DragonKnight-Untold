@@ -139,7 +139,6 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         {
             int index = int.Parse(words[words.Length - 1]);
             StageManager.currentSceneIndex = index;
-            Debug.Log($"index={StageManager.currentSceneIndex}");
         }
 
         GameEvents.RestartGame += OnRestartGame;

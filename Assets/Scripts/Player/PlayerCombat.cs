@@ -12,16 +12,19 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonPrimaryHitbox;
+    [SerializeField]
+    private AttackHitbox dragonVortexHitbox;
 
     [Header("Skill Effects")]
     [SerializeField]
     private GameObject fireBreath;
     [SerializeField]
     private GameObject clawSlash;
+    [SerializeField]
+    private GameObject dragonDashEffect;
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
-    private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
     {
@@ -52,9 +55,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Initialize player starting class, player will get to choose this later
         InitializeSkills();
         ChangeClass(PlayerClassStatic.currentClass);
-
-        // Initialize buff manager
-        buffManager = new BuffManager();
     }
 
     private void OnDestroy()
@@ -68,7 +68,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void Update()
     {
         ProcessSkillCooldown();
-        buffManager.UpdateBuffManager();
+        BuffManager.UpdateBuffManager();
 
         // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
@@ -81,12 +81,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             {
                 ChangeClass(PlayerClass.Sword);
             }
-        }
-
-        // Debugging only
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            buffManager.AddSwordUltBuff();
         }
 
         // If the player is still alive
@@ -116,14 +110,29 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
         }
-        else if (InputManager.Skill2Release && DragonGauge.Instance.IsDragonForm)
-        {
-            // Stop fire breath
-            EventPublisher.TriggerStopFireBreath();
-        }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
             EventPublisher.TriggerPlayerUseSkill(2);
+        }
+        else if (InputManager.UltimateSkill && IsSkillReady(3))
+        {
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
+            {
+                // For sword, ultimate can be activated only when on ground
+                if (PlayerMovement.Instance.IsGrounded())
+                {
+                    EventPublisher.TriggerPlayerUseSkill(3);
+                }
+            }
+            else
+            {
+                EventPublisher.TriggerPlayerUseSkill(3);
+            }
+        }
+        else if (InputManager.UltimateRelease && DragonGauge.Instance.IsDragonForm)
+        {
+            // Stop fire breath
+            EventPublisher.TriggerStopFireBreath();
         }
     }
 
@@ -150,7 +159,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
                 CurrentSkills().Skill3();
                 break;
             case 3:
-                throw new System.NotImplementedException();
+                CurrentSkills().UltimateSkill();
+                break;
             default:
                 throw new System.InvalidOperationException();
         }
@@ -161,13 +171,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         if (!isDragon)
         {
             // Stop fire breath if dragon down
-            dragonSkills.Skill2Release();
+            dragonSkills.UltimateRelease();
         }
     }
 
     private void StopFireBreath()
     {
-        dragonSkills.Skill2Release();
+        dragonSkills.UltimateRelease();
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -219,7 +229,9 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox);
         SkillsRepository.Archer.Initialize(transform);
-        SkillsRepository.Dragon.Initialize(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
+        SkillsRepository.Dragon.Initialize(
+            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
+        );
     }
 
     private PlayerSkills CurrentSkills()

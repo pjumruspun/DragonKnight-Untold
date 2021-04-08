@@ -8,8 +8,8 @@ public class SwordSkills : PlayerSkills
     public int CurrentCombo => currentCombo;
 
     // Skill 1 params
-    private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 175.0f, 50.0f };
-    private readonly float[] skill1KnockBackAmplitudes = new float[3] { 2.0f, 4.0f, 2.0f };
+    private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 50.0f, 150.0f };
+    private readonly float[] skill1KnockBackAmplitudes = new float[3] { 2.0f, 2.0f, 4.0f };
     private const float skill1KnockUpAmplitude = 2.0f;
     private const float skill1PushDurationRatio = 0.1f;
     private const float skill1LockMovementRatio = 0.7f;
@@ -25,6 +25,23 @@ public class SwordSkills : PlayerSkills
     private const float skill3SpeedMultiplier = 3.5f;
     private const float skill3KnockAmplitude = 2.0f;
     private const float skill3CooldownResetRatio = 0.6f;
+
+    // Ultimate skill variables
+    private bool hasCounterAttacked = false;
+    private InvulBuff currentInvulBuff = null;
+
+    // Parry skill params
+    private const float parryAttackLockMovementRatio = 0.7f;
+    private const float parryInvulDuration = 1.0f;
+
+    // Counter params
+    private readonly float[] counterAttackTimeRatio = new float[3] { 0.1f, 0.3f, 0.7f };
+    private readonly float[] counterAttackDamageRatio = new float[3] { 0.25f, 0.25f, 0.5f };
+    private readonly float[] counterKnockUpAmplitude = new float[3] { 1.5f, 2.0f, 2.0f };
+    private const float counterTimeStopRatio = 0.2f;
+    private const float counterScreenShakeDuration = 0.3f;
+    private const float counterScreenShakePower = 0.15f;
+    private const float counterSuperArmorAttack = 100.0f;
 
     private AttackHitbox swordPrimaryHitbox;
 
@@ -154,6 +171,117 @@ public class SwordSkills : PlayerSkills
                 currentCooldown[2] = PlayerStats.Instance.SkillCooldown[2] * (1.0f - skill3CooldownResetRatio);
             }
         }, anticipationPeriod);
+    }
+
+    public override void UltimateSkill()
+    {
+        base.UltimateSkill();
+
+        // Ensure that animation is playing correctly
+        PlayerAnimation.Instance.ResetParryTrigger();
+
+        movement.LockMovementBySkill(parryInvulDuration, true, true);
+        movement.LockJumpBySkill(parryInvulDuration);
+
+        // Give blocking buff
+        InvulBuff invulBuff = new InvulBuff(parryInvulDuration);
+
+        // When the buff ends, try to counter attack
+        invulBuff.OnUpdate += TryCounterAttack;
+        invulBuff.Callback += ResetCounterAtttackVar;
+        currentInvulBuff = invulBuff;
+        BuffManager.AddBuff(invulBuff);
+    }
+
+    private void TryCounterAttack()
+    {
+        if (!hasCounterAttacked && PlayerHealth.Instance.HasSuccessfullyBlocked)
+        {
+            CounterAttack();
+        }
+    }
+
+    private void CounterAttack()
+    {
+        // Notify that player has already counter attacked
+        hasCounterAttacked = true;
+
+        // Play animation
+        PlayerAnimation.Instance.PlayCounterAnimation();
+
+        PlayerHealth.Instance.SetHasBlocked(false);
+
+        float animLength = PlayerAnimation.Instance.GetAnimLength("Sword_Counter");
+
+        // Three fold attack
+        ThreeFoldAttack(animLength);
+
+        // Delayed unlock movement depends on anim length
+        CoroutineUtility.ExecDelay(() =>
+        {
+            movement.ForceUnlockJump();
+            movement.ForceUnlockMovement();
+        }, animLength * 1.0f);
+
+        // Upon successful counter, extends invul window by anim length
+        currentInvulBuff.SetDuration(currentInvulBuff.DurationLeft + animLength * 1.0f);
+    }
+
+    private void ThreeFoldAttack(float animLength)
+    {
+        float damage = PlayerStats.Instance.BaseSkillDamage[3];
+
+        // First
+        CoroutineUtility.ExecDelay(() =>
+            AttackWithHitbox(
+                swordPrimaryHitbox,
+                damage * counterAttackDamageRatio[0],
+                knockUpAmplitude: counterKnockUpAmplitude[0],
+                hitEffect: HitEffect.Slash
+            ), counterAttackTimeRatio[0] * animLength
+        );
+
+        // Second
+        CoroutineUtility.ExecDelay(() =>
+            AttackWithHitbox(
+                swordPrimaryHitbox,
+                damage * counterAttackDamageRatio[1],
+                knockUpAmplitude: counterKnockUpAmplitude[1],
+                hitEffect: HitEffect.Slash
+            ), counterAttackTimeRatio[1] * animLength
+        );
+
+        // Third, also screen shake and destroy enemy's super armor
+        CoroutineUtility.ExecDelay(() =>
+        {
+            float totalDamage = AttackWithHitbox(
+                swordPrimaryHitbox,
+                damage * counterAttackDamageRatio[2],
+                knockUpAmplitude: counterKnockUpAmplitude[2],
+                hitEffect: HitEffect.Slash,
+                superArmorDamage: counterSuperArmorAttack
+            );
+
+            if (totalDamage > 0.0f)
+            {
+                // Time stop
+                float timeStopDuration = animLength * counterTimeStopRatio;
+                // Stop player's animator
+                TimeStopper.StopAnimator(PlayerAnimation.Instance.GetAnimator, timeStopDuration);
+
+                // Screen shaking
+                ScreenShake.Instance.StartShaking(counterScreenShakeDuration, counterScreenShakePower);
+            }
+        }, counterAttackTimeRatio[2] * animLength);
+    }
+
+    private void ResetCounterAtttackVar()
+    {
+        Debug.Log("Reset");
+        hasCounterAttacked = false;
+        PlayerHealth.Instance.SetHasBlocked(false);
+        PlayerAnimation.Instance.StopParrying();
+        currentInvulBuff = null;
     }
 
     private IEnumerator SwordWave(float damage, Vector2 forwardVector, float delay)

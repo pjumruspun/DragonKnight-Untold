@@ -29,8 +29,24 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         // Skill 2
         { 1, new string[]{ "Sword_Attack4", "?", "?"}},
         // Skill 3
-        { 2, new string[]{ "Sword_Dash", "?", "?"}},
+        { 2, new string[]{ "Sword_Dash", "?", "Night_Vortex"}},
     };
+
+    public float GetAnimLength(string name)
+    {
+        AnimationClip[] anims = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < anims.Length; ++i)
+        {
+            if (anims[i].name == name)
+            {
+                // Debug.Log($"{anims[i].name}: {anims[i].length}");
+                // Animations are hastened by player's attack speed
+                return anims[i].length / PlayerStats.Instance.AttackSpeed;
+            }
+        }
+
+        throw new System.Exception($"Anim name: {name} cannot be found");
+    }
 
     // Animation clip length according to skill number
     // Already consider player's state like dragon/class
@@ -55,6 +71,24 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     {
         // Skill 2 animation is the same as dash attack animation
         animator.SetTrigger("Skill2");
+    }
+
+    public void PlayCounterAnimation()
+    {
+        animator.SetTrigger("Counter");
+        animator.ResetTrigger("StopParry");
+    }
+
+    public void StopParrying()
+    {
+        animator.SetTrigger("StopParry");
+        animator.ResetTrigger("Counter");
+    }
+
+    public void ResetParryTrigger()
+    {
+        animator.ResetTrigger("StopParry");
+        animator.ResetTrigger("Counter");
     }
 
     private void Start()
@@ -141,6 +175,12 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 }
                 break;
             case 1:
+                animator.SetTrigger("Skill2");
+                break;
+            case 2:
+                animator.SetTrigger("Skill3");
+                break;
+            case 3:
                 if (DragonGauge.Instance.IsDragonForm)
                 {
                     // Fire breath
@@ -148,14 +188,9 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 }
                 else
                 {
-                    animator.SetTrigger("Skill2");
+                    animator.SetTrigger("Ultimate");
                 }
                 break;
-            case 2:
-                animator.SetTrigger("Skill3");
-                break;
-            case 3:
-                throw new System.NotImplementedException();
             default:
                 throw new System.InvalidOperationException();
         }
