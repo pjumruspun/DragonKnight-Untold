@@ -221,7 +221,7 @@ public class SwordSkills : PlayerSkills
         {
             movement.ForceUnlockJump();
             movement.ForceUnlockMovement();
-        }, animLength * 0.9f);
+        }, animLength * 1.0f);
 
         // Upon successful counter, extends invul window by anim length
         currentInvulBuff.SetDuration(currentInvulBuff.DurationLeft + animLength * 1.0f);

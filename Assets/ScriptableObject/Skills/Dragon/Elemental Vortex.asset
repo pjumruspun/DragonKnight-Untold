@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
-  m_Name: Skill3
+  m_Name: Elemental Vortex
   m_EditorClassIdentifier: 
   skillName: New Skill
   skillIcon: {fileID: 0}
-  baseDamage: 0
-  baseCooldown: 1
+  baseDamage: 15
+  baseCooldown: 3
