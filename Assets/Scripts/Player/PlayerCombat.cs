@@ -21,7 +21,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
-    private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
     {
@@ -52,9 +51,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Initialize player starting class, player will get to choose this later
         InitializeSkills();
         ChangeClass(PlayerClassStatic.currentClass);
-
-        // Initialize buff manager
-        buffManager = new BuffManager();
     }
 
     private void OnDestroy()
@@ -68,7 +64,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void Update()
     {
         ProcessSkillCooldown();
-        buffManager.UpdateBuffManager();
+        BuffManager.UpdateBuffManager();
 
         // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
@@ -81,12 +77,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             {
                 ChangeClass(PlayerClass.Sword);
             }
-        }
-
-        // Debugging only
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            buffManager.AddSwordUltBuff();
         }
 
         // If the player is still alive
@@ -125,6 +115,21 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             EventPublisher.TriggerPlayerUseSkill(2);
         }
+        else if (InputManager.UltimateSkill && IsSkillReady(3))
+        {
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
+            {
+                // For sword, ultimate can be activated only when on ground
+                if (PlayerMovement.Instance.IsGrounded())
+                {
+                    EventPublisher.TriggerPlayerUseSkill(3);
+                }
+            }
+            else
+            {
+                EventPublisher.TriggerPlayerUseSkill(3);
+            }
+        }
     }
 
     private bool IsSkillReady(int skillNumber)
@@ -150,7 +155,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
                 CurrentSkills().Skill3();
                 break;
             case 3:
-                throw new System.NotImplementedException();
+                CurrentSkills().UltimateSkill();
+                break;
             default:
                 throw new System.InvalidOperationException();
         }

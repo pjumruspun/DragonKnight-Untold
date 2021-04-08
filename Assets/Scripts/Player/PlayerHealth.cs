@@ -6,13 +6,37 @@ public class PlayerHealth : Health
 {
     // Can't multiple inherit so we need to handmade a singleton here
     public static PlayerHealth Instance { get; private set; }
+    public bool HasSuccessfullyBlocked => hasSuccessfullyBlocked;
     [SerializeField]
     private BoxCollider2D playerCollider;
 
+    // Buff stuff
+    private bool isInvulnerable = false;
+    private bool hasSuccessfullyBlocked = false;
+
+    public void SetInvul(bool invul)
+    {
+        isInvulnerable = invul;
+    }
+
+    public void SetHasBlocked(bool hasBlocked)
+    {
+        hasSuccessfullyBlocked = hasBlocked;
+    }
+
     public override void TakeDamage(float damage)
     {
-        base.TakeDamage(damage);
-        EventPublisher.TriggerPlayerTakeDamage();
+        if (isInvulnerable)
+        {
+            hasSuccessfullyBlocked = true;
+            // Spawn block effect
+            FloatingTextSpawner.Spawn("Blocked!", transform.position);
+        }
+        else
+        {
+            base.TakeDamage(damage);
+            EventPublisher.TriggerPlayerTakeDamage();
+        }
     }
 
     override protected void Start()

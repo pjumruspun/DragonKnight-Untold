@@ -90,6 +90,14 @@ public abstract class PlayerSkills : ScriptableObject
     }
 
     /// <summary>
+    /// Execute ultimate skill
+    /// </summary>
+    public virtual void UltimateSkill()
+    {
+        currentCooldown[3] = PlayerStats.Instance.SkillCooldown[3];
+    }
+
+    /// <summary>
     /// Spawn a projectile which is created by "objectPool". Make sure that the projectile script has
     /// target marked as "Enemy".
     /// </summary>

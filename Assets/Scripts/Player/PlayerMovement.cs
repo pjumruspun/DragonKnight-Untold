@@ -162,6 +162,11 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         isMovementLockedBySkills = lockMovement;
     }
 
+
+    public void ForceUnlockMovement() => UnlockState();
+
+    public void ForceUnlockJump() => isJumpLockedBySkills = false;
+
     public void LockJumpBySkill(bool lockJump) => isJumpLockedBySkills = lockJump;
 
     // Release automatically lockers
@@ -424,17 +429,21 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             if (lockDuration <= 0.0f)
             {
                 // Unlock
-                stateLock = false;
-                // Debug.Log("Unlock");
-
-                // Unlock
-                isMovementLockedBySkills = false;
-                this.stopAllMovement = false;
-                // Reenable gravity
-                rigidbody2D.gravityScale = originalGravityScale;
-                // Debug.Log("Unlock successfully");
+                UnlockState();
             }
         }
+    }
+
+    private void UnlockState()
+    {
+        stateLock = false;
+        // Debug.Log("Unlock");
+
+        // Unlock
+        isMovementLockedBySkills = false;
+        this.stopAllMovement = false;
+        // Reenable gravity
+        rigidbody2D.gravityScale = originalGravityScale;
     }
 
     private void LockState(float duration)

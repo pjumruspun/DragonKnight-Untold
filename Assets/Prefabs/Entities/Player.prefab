@@ -422,7 +422,7 @@ Animator:
   m_GameObject: {fileID: 500538367555941616}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bf4c21aa9ea2c46eaacd84529fb66e89, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9d1afd29a38ee4f14ba67faffcf92ca4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -460,7 +460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawJumpingRay: 0
   maxDragonJumpCount: 3
-  dragonGlidingSpeed: 8
+  dragonGlidingSpeedMultiplier: 2
   jumpingForce: 8
   distanceToGround: 0.6
   glideFallingSpeed: 1

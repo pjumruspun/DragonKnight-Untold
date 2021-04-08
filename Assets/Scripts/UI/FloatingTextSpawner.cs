@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloatingDamageManager : MonoSingleton<FloatingDamageManager>
+public class FloatingTextSpawner : MonoSingleton<FloatingTextSpawner>
 {
     [SerializeField]
     private float secondsToDespawn = 2.0f; // 2.0 seconds and the damage will despawn
 
-    public void Spawn(float damage, Vector3 position, bool crit)
+    public static void Spawn(float damage, Vector3 position, bool crit)
     {
         GameObject floatingDamage;
         if (crit)
@@ -32,11 +32,23 @@ public class FloatingDamageManager : MonoSingleton<FloatingDamageManager>
             Debug.LogAssertion($"Failed to get TextMesh component from {floatingDamage.name} GameObject.");
         }
 
-        StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(floatingDamage, secondsToDespawn));
+        Instance.StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(floatingDamage, Instance.secondsToDespawn));
     }
 
-    private void Start()
+    public static void Spawn(string text, Vector3 position)
     {
+        GameObject floatingText = ObjectManager.Instance.FloatingDamage.SpawnObject(position);
 
+        if (floatingText.TryGetComponent<TextMesh>(out TextMesh textMesh))
+        {
+            // Set text to the text mesh
+            textMesh.text = $"{text}";
+        }
+        else
+        {
+            Debug.LogAssertion($"Failed to get TextMesh component from {floatingText.name} GameObject.");
+        }
+
+        Instance.StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(floatingText, Instance.secondsToDespawn));
     }
 }

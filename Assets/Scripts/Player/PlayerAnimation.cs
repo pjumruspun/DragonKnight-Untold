@@ -32,6 +32,22 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         { 2, new string[]{ "Sword_Dash", "?", "?"}},
     };
 
+    public float GetAnimLength(string name)
+    {
+        AnimationClip[] anims = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < anims.Length; ++i)
+        {
+            if (anims[i].name == name)
+            {
+                // Debug.Log($"{anims[i].name}: {anims[i].length}");
+                // Animations are hastened by player's attack speed
+                return anims[i].length / PlayerStats.Instance.AttackSpeed;
+            }
+        }
+
+        throw new System.Exception($"Anim name: {name} cannot be found");
+    }
+
     // Animation clip length according to skill number
     // Already consider player's state like dragon/class
     public float GetAnimLength(int skillNumber)
@@ -55,6 +71,24 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     {
         // Skill 2 animation is the same as dash attack animation
         animator.SetTrigger("Skill2");
+    }
+
+    public void PlayCounterAnimation()
+    {
+        animator.SetTrigger("Counter");
+        animator.ResetTrigger("StopParry");
+    }
+
+    public void StopParrying()
+    {
+        animator.SetTrigger("StopParry");
+        animator.ResetTrigger("Counter");
+    }
+
+    public void ResetParryTrigger()
+    {
+        animator.ResetTrigger("StopParry");
+        animator.ResetTrigger("Counter");
     }
 
     private void Start()
@@ -155,7 +189,8 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
                 animator.SetTrigger("Skill3");
                 break;
             case 3:
-                throw new System.NotImplementedException();
+                animator.SetTrigger("Ultimate");
+                break;
             default:
                 throw new System.InvalidOperationException();
         }

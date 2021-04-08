@@ -149,7 +149,7 @@ public class Enemy : Health
             Flinch();
 
             // Show floating damage number
-            FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
+            FloatingTextSpawner.Spawn(damage, transform.position, crit);
             HandleHealthChange();
 
             // Flash hurt color
