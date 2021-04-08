@@ -158,11 +158,6 @@ public class Enemy : Health
         }
     }
 
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-    }
-
     public void AdjustFlipping()
     {
         if (rigidbody2D.velocity.x < -0.01f)

@@ -24,18 +24,20 @@ public class PlayerHealth : Health
         hasSuccessfullyBlocked = hasBlocked;
     }
 
-    public override void TakeDamage(float damage)
+    public override float TakeDamage(float damage)
     {
         if (isInvulnerable)
         {
             hasSuccessfullyBlocked = true;
             // Spawn block effect
             FloatingTextSpawner.Spawn("Blocked!", transform.position);
+            return 0.0f;
         }
         else
         {
             base.TakeDamage(damage);
             EventPublisher.TriggerPlayerTakeDamage();
+            return damage;
         }
     }
 

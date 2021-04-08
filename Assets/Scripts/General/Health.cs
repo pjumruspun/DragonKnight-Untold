@@ -15,7 +15,7 @@ public abstract class Health : MonoBehaviour
 #pragma warning disable 0108
     protected Collider2D collider2D;
 
-    public virtual void TakeDamage(float damage)
+    public virtual float TakeDamage(float damage)
     {
         if (!IsDead)
         {
@@ -31,6 +31,8 @@ public abstract class Health : MonoBehaviour
 
             HandleHealthChange();
         }
+
+        return damage;
     }
 
     protected abstract void HandleHealthChange();
