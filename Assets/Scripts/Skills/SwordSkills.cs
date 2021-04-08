@@ -8,8 +8,8 @@ public class SwordSkills : PlayerSkills
     public int CurrentCombo => currentCombo;
 
     // Skill 1 params
-    private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 175.0f, 50.0f };
-    private readonly float[] skill1KnockBackAmplitudes = new float[3] { 2.0f, 4.0f, 2.0f };
+    private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 50.0f, 150.0f };
+    private readonly float[] skill1KnockBackAmplitudes = new float[3] { 2.0f, 2.0f, 4.0f };
     private const float skill1KnockUpAmplitude = 2.0f;
     private const float skill1PushDurationRatio = 0.1f;
     private const float skill1LockMovementRatio = 0.7f;
