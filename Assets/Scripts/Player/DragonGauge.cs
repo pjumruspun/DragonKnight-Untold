@@ -8,22 +8,25 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     public static float CurrentShapeshiftCooldown => Instance.currentShapeshiftCooldown;
     public float MaxDragonEnergy => maxDragonEnergy;
     public bool IsDragonForm => isDragonForm;
-    [SerializeField]
-    private float startingDragonEnergy = 50.0f;
+    private const float startingDragonEnergy = 100.0f;
     [SerializeField]
     private float drainingRate = 2.0f;
     [SerializeField]
     private float regenRate = 1.0f;
     private bool isDragonForm = false;
     private const float maxDragonEnergy = 100.0f;
-    private float dragonEnergy;
     private const float shapeshiftCooldown = 3.0f;
     private float currentShapeshiftCooldown = 0.0f;
 
     private void Start()
     {
         EventPublisher.PlayerChangeClass += StripDragonForm;
-        dragonEnergy = startingDragonEnergy;
+        if (DragonGaugeStatic.dragonEnergy < 0.0f)
+        {
+            // Because dragonEnergy is set to -1.0f by default
+            // This means we only set dragonEnergy to startingDragonEnergy when initializing
+            DragonGaugeStatic.dragonEnergy = startingDragonEnergy;
+        }
     }
 
     private void OnDestroy()
@@ -68,9 +71,9 @@ public class DragonGauge : MonoSingleton<DragonGauge>
         if (isDragonForm)
         {
             // Drain energy
-            dragonEnergy -= drainingRate * Time.deltaTime;
+            DragonGaugeStatic.dragonEnergy -= drainingRate * Time.deltaTime;
             // Strip dragon form if dragon energy is empty
-            if (dragonEnergy <= 0.0f)
+            if (DragonGaugeStatic.dragonEnergy <= 0.0f)
             {
                 ShapeShift();
             }
@@ -79,20 +82,20 @@ public class DragonGauge : MonoSingleton<DragonGauge>
         {
             // Regen?
             // Could be attacking and gain energy here too
-            if (dragonEnergy < maxDragonEnergy)
+            if (DragonGaugeStatic.dragonEnergy < maxDragonEnergy)
             {
-                dragonEnergy += regenRate * Time.deltaTime;
+                DragonGaugeStatic.dragonEnergy += regenRate * Time.deltaTime;
             }
         }
 
-        EventPublisher.TriggerDragonGaugeChange(dragonEnergy);
+        EventPublisher.TriggerDragonGaugeChange(DragonGaugeStatic.dragonEnergy);
     }
 
     private bool CanShapeShift()
     {
         if (!isDragonForm)
         {
-            return dragonEnergy > 0.0f && currentShapeshiftCooldown < 0.01f;
+            return DragonGaugeStatic.dragonEnergy > 0.0f && currentShapeshiftCooldown < 0.01f;
         }
         else
         {
