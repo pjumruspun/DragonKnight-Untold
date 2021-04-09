@@ -85,6 +85,8 @@ MonoBehaviour:
   swordWavePoolSize: 5
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
   arrowPoolSize: 30
+  chargedArrowsPrefab: {fileID: 3962329292907818302, guid: 4a26c7e0a76954002a8c98382ef6e6f7, type: 3}
+  chargedArrowsPoolSize: 3
   itemPickupPrefab: {fileID: 4204306999793631647, guid: d7b451dd1ffed4b5a8c3c05540637b9e, type: 3}
   itemPickupPoolSize: 10
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}

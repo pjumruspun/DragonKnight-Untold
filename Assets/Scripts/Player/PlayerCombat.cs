@@ -53,6 +53,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
+        EventPublisher.StopChargeShot += StopChargeShot;
 
         // Initialize player starting class, player will get to choose this later
         InitializeSkills();
@@ -65,6 +66,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
+        EventPublisher.StopChargeShot -= StopChargeShot;
     }
 
     private void Update()
@@ -111,6 +113,15 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
+        }
+        else if ( // If player releases charge shot
+            InputManager.Skill2Release &&
+            PlayerClassStatic.currentClass == PlayerClass.Archer
+            && PlayerMovement.Instance.IsGrounded()
+        )
+        {
+            // Release
+            (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
         }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
@@ -180,6 +191,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void StopFireBreath()
     {
         dragonSkills.UltimateRelease();
+    }
+
+    private void StopChargeShot()
+    {
+        if (PlayerClassStatic.currentClass == PlayerClass.Archer)
+        {
+            (CurrentSkills() as ArcherSkills).Skill2Release();
+        }
+        else
+        {
+            throw new System.InvalidOperationException("Attempt to call StopChargeShot when player is not an archer.");
+        }
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)

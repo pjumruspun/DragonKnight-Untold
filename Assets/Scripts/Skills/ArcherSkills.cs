@@ -8,6 +8,30 @@ public class ArcherSkills : PlayerSkills
     private const float archerSkill2LockMovementTime = 0.5f;
     private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
 
+    // Arrow Rain params
+    private const int arrowsEachShot = 5;
+    private const int totalFireRounds = 3;
+    private const float fireArrowsInterval = 0.3f;
+
+    // Charge shot variables
+    private Coroutine chargeShot;
+    private int currentChargeLevel = 0;
+
+    // Charge shot params
+    private const int maxChargeLevel = 3;
+    private const float chargeTimePerLevel = 1.0f;
+    private const float skill2PlayerKnockBackAmplitude = 10.0f;
+    private const float chargedShotKnockBackAmplitude = 5.0f;
+    private const float chargedShotKnockUpAmplitude = 4.0f;
+    private bool shouldReleaseChargeShot = false;
+
+    public override void Initialize(Transform transform)
+    {
+        base.Initialize(transform);
+
+        EventPublisher.StopChargeShot += NotifySkill2ToRelease;
+    }
+
     public override void Skill1()
     {
         base.Skill1();
@@ -22,6 +46,76 @@ public class ArcherSkills : PlayerSkills
     {
         base.Skill2();
 
+        if (movement.IsGrounded())
+        {
+            Skill2GroundVariant();
+        }
+        else
+        {
+            Skill2AirVariant();
+        }
+    }
+
+    public void NotifySkill2ToRelease()
+    {
+        if (currentChargeLevel >= 1)
+        {
+            EventPublisher.TriggerStopChargeShot();
+        }
+        else
+        {
+            shouldReleaseChargeShot = true;
+        }
+    }
+
+    public void Skill2Release()
+    {
+        // Spawn arrow
+        float damage = PlayerStats.Instance.BaseSkillDamage[0];
+        AttackWithProjectile(
+            ref ObjectManager.Instance.ChargedArrows,
+            damage,
+            transform.position,
+            movement.ForwardVector,
+            knockBackAmplitude: chargedShotKnockBackAmplitude,
+            knockUpAmplitude: chargedShotKnockUpAmplitude,
+            hitEffect: HitEffect.Slash
+        );
+
+        // Knock back
+        float animLength = PlayerAnimation.Instance.GetAnimLength("Archer_Charge_End");
+        Vector2 moveVector = -movement.ForwardVector;
+        movement.ForceMove(
+            moveVector,
+            skill2PlayerKnockBackAmplitude,
+            animLength,
+            groundOnly: false,
+            forceMode: ForceMode2D.Impulse
+        );
+
+        // Release movement lock after done knocking back player
+        CoroutineUtility.ExecDelay(() =>
+        {
+            movement.LockJumpBySkill(false);
+            movement.LockFlipBySkill(false);
+            movement.LockMovementBySkill(false);
+        }, animLength);
+
+        // Stop animation
+        PlayerAnimation.Instance.StopChargingShot();
+
+        // Kill coroutine
+        if (chargeShot != null)
+        {
+            CoroutineUtility.Instance.KillCoroutine(chargeShot);
+        }
+
+        // Reset charge level
+        currentChargeLevel = 0;
+    }
+
+    private void Skill2AirVariant()
+    {
         // Skill 2 = skillDamage[1]
         float damage = PlayerStats.Instance.BaseSkillDamage[1];
 
@@ -44,17 +138,49 @@ public class ArcherSkills : PlayerSkills
         }
 
         // Then spawn arrow rains
-        int arrowCount = 3; // configs.ArcherSkill2ArrowCount;
-        float interval = 0.3f; // configs.ArcherSkill2Interval;
-        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(arrowCount, damage, movement.ForwardVector, interval));
+        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, movement.ForwardVector, fireArrowsInterval));
     }
 
-    private IEnumerator ArrowRain(int count, float damage, Vector2 forwardVector, float interval)
+    private void Skill2GroundVariant()
+    {
+        // Charge shot
+        chargeShot = CoroutineUtility.Instance.CreateCoroutine(IncreaseChargeLevel());
+
+        // Reset Trigger
+        PlayerAnimation.Instance.ResetChargeShotTrigger();
+
+        // Lock movement
+        movement.LockJumpBySkill(true);
+        movement.LockFlipBySkill(true);
+        movement.LockMovementBySkill(true);
+    }
+
+    private IEnumerator IncreaseChargeLevel()
+    {
+        // Set charging effect to true
+        while (true)
+        {
+            yield return new WaitForSeconds(chargeTimePerLevel);
+            ++currentChargeLevel;
+            Debug.Log($"Current charge level is at {currentChargeLevel}");
+            if (currentChargeLevel == maxChargeLevel)
+            {
+                EventPublisher.TriggerStopChargeShot();
+            }
+
+            if (shouldReleaseChargeShot && currentChargeLevel == 1)
+            {
+                EventPublisher.TriggerStopChargeShot();
+            }
+        }
+    }
+
+    private IEnumerator ArrowRain(float damage, Vector2 forwardVector, float interval)
     {
         // Spawns 5x3 arrows
-        for (int i = 0; i < count; ++i)
+        for (int i = 0; i < totalFireRounds; ++i)
         {
-            for (int j = 0; j < 5; ++j)
+            for (int j = 0; j < arrowsEachShot; ++j)
             {
                 AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, forwardVector, -7.5f - j * 15.0f);
             }

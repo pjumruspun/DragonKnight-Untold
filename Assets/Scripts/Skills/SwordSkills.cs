@@ -328,7 +328,7 @@ public class SwordSkills : PlayerSkills
         AttackWithProjectile(
             ref ObjectManager.Instance.SwordWaves,
             damage, transform.position,
-            forwardVector, knockAmplitude:
+            forwardVector, knockUpAmplitude:
             2.0f,
             hitEffect: HitEffect.Slash
         );

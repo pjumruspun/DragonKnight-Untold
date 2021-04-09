@@ -106,13 +106,15 @@ public abstract class PlayerSkills : ScriptableObject
     /// <param name="spawnPosition">Position that the projectile should spawn at.</param>
     /// <param name="forwardVector">Player's forward vector ((-1,0) or (1,0))</param>
     /// <param name="rotationZ">Angle compared to forward vector.</param>
-    /// <param name="knockAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this projectile hits.</param>
+    /// <param name="knockUpAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this projectile hits.</param>
     protected void AttackWithProjectile(
         ref ObjectPool objectPool,
         float damage, Vector3 spawnPosition,
         Vector2 forwardVector,
         float rotationZ = 0.0f,
-        float knockAmplitude = 0.0f,
+        float superArmorDamage = 0.0f,
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
         HitEffect hitEffect = HitEffect.None
     )
     {
@@ -134,8 +136,18 @@ public abstract class PlayerSkills : ScriptableObject
             projectile.SetDirection(forwardVector);
             PlayerStats.Instance.CalculateDamage(damage, out float finalDamage, out bool crit);
             projectile.SetDamage(finalDamage, crit);
-            projectile.SetKnockValue(knockAmplitude);
+            projectile.SetKnockUpValue(knockUpAmplitude);
+            projectile.SetKnockBackValue(knockBackAmplitude);
             projectile.SetHitEffect(hitEffect);
+
+            ProjectileConfig projectileConfig = new ProjectileConfig(
+                finalDamage,
+                crit,
+                superArmorDamage,
+                knockUpAmplitude,
+                knockBackAmplitude,
+                hitEffect
+            );
         }
         else
         {

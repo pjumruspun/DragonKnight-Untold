@@ -8,6 +8,33 @@ public enum Target
     Player
 }
 
+struct ProjectileConfig
+{
+    public float damage;
+    public bool crit;
+    public float superArmorDamage;
+    public float knockUpAmplitude;
+    public float knockBackAmplitude;
+    public HitEffect hitEffect;
+
+    public ProjectileConfig(
+        float damage,
+        bool crit,
+        float superArmorDamage,
+        float knockUpAmplitude,
+        float knockBackAmplitude,
+        HitEffect hitEffect
+    )
+    {
+        this.damage = damage;
+        this.crit = crit;
+        this.superArmorDamage = superArmorDamage;
+        this.knockUpAmplitude = knockUpAmplitude;
+        this.knockBackAmplitude = knockBackAmplitude;
+        this.hitEffect = hitEffect;
+    }
+}
+
 [RequireComponent(typeof(Collider2D))]
 public class Projectile : MonoBehaviour
 {
@@ -25,7 +52,8 @@ public class Projectile : MonoBehaviour
     private float damage;
     private bool crit;
     private float superArmorDamage;
-    private float knockAmplitude;
+    private float knockUpAmplitude;
+    private float knockBackAmplitude;
     private HitEffect hitEffect;
 
     public void SetDirection(Vector2 direction)
@@ -45,9 +73,14 @@ public class Projectile : MonoBehaviour
         this.superArmorDamage = superArmorDamage;
     }
 
-    public void SetKnockValue(float knockAmplitude)
+    public void SetKnockUpValue(float knockUpAmplitude)
     {
-        this.knockAmplitude = knockAmplitude;
+        this.knockUpAmplitude = knockUpAmplitude;
+    }
+
+    public void SetKnockBackValue(float knockBackAmplitude)
+    {
+        this.knockBackAmplitude = knockBackAmplitude;
     }
 
     public void SetHitEffect(HitEffect hitEffect)
@@ -120,7 +153,7 @@ public class Projectile : MonoBehaviour
                 if (other.gameObject.layer == Layers.enemyLayerIndex && other.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
                     // Deals damage to enemy
-                    enemy.TakeDamage(damage, crit, superArmorDamage, knockAmplitude);
+                    enemy.TakeDamage(damage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
 
                     // Show hit effect if exist
                     HitEffectUtility.HitEffectFunction[hitEffect]?.Invoke(enemy.transform.position);

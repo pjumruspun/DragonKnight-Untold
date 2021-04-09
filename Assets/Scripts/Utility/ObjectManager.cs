@@ -8,6 +8,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool FloatingDamage;
     public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
+    public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool SlashEffect;
 
@@ -34,6 +35,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     private GameObject arrowPrefab;
     [SerializeField]
     private int arrowPoolSize = 30;
+
+    [Header("Charged Arrows")]
+    [SerializeField]
+    private GameObject chargedArrowsPrefab;
+    [SerializeField]
+    private int chargedArrowsPoolSize = 3;
 
     [Header("Item Pickups")]
     [SerializeField]
@@ -67,5 +74,6 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
+        ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);
     }
 }

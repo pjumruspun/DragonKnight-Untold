@@ -17,6 +17,7 @@ public class EventPublisher
     public delegate void OnPlayerDead();
     public delegate void OnPlayerChangeClass(PlayerClass pc);
     public delegate void OnPlayerStatsChange();
+    public delegate void OnStopChargeShot();
     public delegate void OnStopFireBreath();
     public delegate void OnInventoryChange();
     public delegate void OnPlayerSpawn(Transform player);
@@ -38,6 +39,7 @@ public class EventPublisher
     public static event OnPlayerDead PlayerDead;
     public static event OnPlayerChangeClass PlayerChangeClass;
     public static event OnPlayerStatsChange PlayerStatsChange;
+    public static event OnStopChargeShot StopChargeShot;
     public static event OnStopFireBreath StopFireBreath;
     public static event OnInventoryChange InventoryChange;
     public static event OnPlayerSpawn PlayerSpawn;
@@ -105,6 +107,11 @@ public class EventPublisher
     public static void TriggerPlayerStatsChange()
     {
         PlayerStatsChange?.Invoke();
+    }
+
+    public static void TriggerStopChargeShot()
+    {
+        StopChargeShot?.Invoke();
     }
 
     public static void TriggerStopFireBreath()

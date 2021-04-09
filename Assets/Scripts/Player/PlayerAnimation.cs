@@ -67,6 +67,16 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         throw new System.Exception($"Skill name: {name} activated by skillNumber: {skillNumber} cannot be found");
     }
 
+    public void StopChargingShot()
+    {
+        animator.SetTrigger("StopCharging");
+    }
+
+    public void ResetChargeShotTrigger()
+    {
+        animator.ResetTrigger("StopCharging");
+    }
+
     public void PlayDashAttackAnimation()
     {
         // Skill 2 animation is the same as dash attack animation
@@ -105,6 +115,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerShapeshift += PlayShapeshiftAnimation;
         EventPublisher.PlayerDead += PlayDeadAnimation;
         EventPublisher.PlayerChangeClass += ChangeHumanAnimator;
+        EventPublisher.StopChargeShot += StopChargingShot;
         EventPublisher.StopFireBreath += PlayStopFireBreathAnimation;
         EventPublisher.PlayerStatsChange += AdjustAttackSpeed;
 
@@ -127,6 +138,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerShapeshift -= PlayShapeshiftAnimation;
         EventPublisher.PlayerDead -= PlayDeadAnimation;
         EventPublisher.PlayerChangeClass -= ChangeHumanAnimator;
+        EventPublisher.StopChargeShot -= StopChargingShot;
         EventPublisher.StopFireBreath -= PlayStopFireBreathAnimation;
         EventPublisher.PlayerStatsChange -= AdjustAttackSpeed;
     }
