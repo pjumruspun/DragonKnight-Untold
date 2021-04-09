@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: 0
-  speed: 5
+  speed: 7
   maxTravelDistance: 15
   pierce: 1
 --- !u!1 &8584619568540237985

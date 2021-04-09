@@ -122,6 +122,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             // Release
             (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
+            Debug.Log("Gonna release...");
         }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {

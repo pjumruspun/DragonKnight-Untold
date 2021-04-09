@@ -115,7 +115,9 @@ public abstract class PlayerSkills : ScriptableObject
         float superArmorDamage = 0.0f,
         float knockUpAmplitude = 0.0f,
         float knockBackAmplitude = 0.0f,
-        HitEffect hitEffect = HitEffect.None
+        HitEffect hitEffect = HitEffect.None,
+        bool shouldHitContinuously = false,
+        float hitInterval = 1.0f
     )
     {
         GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
@@ -133,21 +135,20 @@ public abstract class PlayerSkills : ScriptableObject
 
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            projectile.SetDirection(forwardVector);
             PlayerStats.Instance.CalculateDamage(damage, out float finalDamage, out bool crit);
-            projectile.SetDamage(finalDamage, crit);
-            projectile.SetKnockUpValue(knockUpAmplitude);
-            projectile.SetKnockBackValue(knockBackAmplitude);
-            projectile.SetHitEffect(hitEffect);
-
             ProjectileConfig projectileConfig = new ProjectileConfig(
+                forwardVector,
                 finalDamage,
                 crit,
                 superArmorDamage,
                 knockUpAmplitude,
                 knockBackAmplitude,
-                hitEffect
+                hitEffect,
+                shouldHitContinuously,
+                hitInterval
             );
+
+            projectile.SetConfig(projectileConfig);
         }
         else
         {

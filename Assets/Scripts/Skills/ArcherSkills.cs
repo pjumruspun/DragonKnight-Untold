@@ -18,18 +18,18 @@ public class ArcherSkills : PlayerSkills
     private int currentChargeLevel = 0;
 
     // Charge shot params
-    private const int maxChargeLevel = 3;
-    private const float chargeTimePerLevel = 1.0f;
+    private const int maxChargeLevel = 5;
+    private const float chargeTimePerLevel = 0.5f;
     private const float skill2PlayerKnockBackAmplitude = 10.0f;
     private const float chargedShotKnockBackAmplitude = 5.0f;
     private const float chargedShotKnockUpAmplitude = 4.0f;
-    private bool shouldReleaseChargeShot = false;
+    private bool shouldReleaseChargeShot;
+    private const float chargedShotHitInterval = 0.15f;
 
     public override void Initialize(Transform transform)
     {
         base.Initialize(transform);
-
-        EventPublisher.StopChargeShot += NotifySkill2ToRelease;
+        shouldReleaseChargeShot = false;
     }
 
     public override void Skill1()
@@ -71,15 +71,19 @@ public class ArcherSkills : PlayerSkills
     public void Skill2Release()
     {
         // Spawn arrow
-        float damage = PlayerStats.Instance.BaseSkillDamage[0];
+        float damage = PlayerStats.Instance.BaseSkillDamage[0] * currentChargeLevel;
+        float knockBackAmplitude = chargedShotKnockBackAmplitude * currentChargeLevel / maxChargeLevel;
+
         AttackWithProjectile(
             ref ObjectManager.Instance.ChargedArrows,
             damage,
             transform.position,
             movement.ForwardVector,
-            knockBackAmplitude: chargedShotKnockBackAmplitude,
+            knockBackAmplitude: knockBackAmplitude,
             knockUpAmplitude: chargedShotKnockUpAmplitude,
-            hitEffect: HitEffect.Slash
+            hitEffect: HitEffect.Slash,
+            shouldHitContinuously: true,
+            hitInterval: chargedShotHitInterval
         );
 
         // Knock back
@@ -112,6 +116,9 @@ public class ArcherSkills : PlayerSkills
 
         // Reset charge level
         currentChargeLevel = 0;
+
+        // Reset variable
+        shouldReleaseChargeShot = false;
     }
 
     private void Skill2AirVariant()
@@ -143,6 +150,7 @@ public class ArcherSkills : PlayerSkills
 
     private void Skill2GroundVariant()
     {
+        shouldReleaseChargeShot = false;
         // Charge shot
         chargeShot = CoroutineUtility.Instance.CreateCoroutine(IncreaseChargeLevel());
 
@@ -162,7 +170,6 @@ public class ArcherSkills : PlayerSkills
         {
             yield return new WaitForSeconds(chargeTimePerLevel);
             ++currentChargeLevel;
-            Debug.Log($"Current charge level is at {currentChargeLevel}");
             if (currentChargeLevel == maxChargeLevel)
             {
                 EventPublisher.TriggerStopChargeShot();
