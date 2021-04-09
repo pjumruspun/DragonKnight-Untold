@@ -117,7 +117,8 @@ public abstract class PlayerSkills : ScriptableObject
         float knockBackAmplitude = 0.0f,
         HitEffect hitEffect = HitEffect.None,
         bool shouldHitContinuously = false,
-        float hitInterval = 1.0f
+        float hitInterval = 1.0f,
+        bool shouldFlinch = true
     )
     {
         GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
@@ -145,7 +146,8 @@ public abstract class PlayerSkills : ScriptableObject
                 knockBackAmplitude,
                 hitEffect,
                 shouldHitContinuously,
-                hitInterval
+                hitInterval,
+                shouldFlinch
             );
 
             projectile.SetConfig(projectileConfig);

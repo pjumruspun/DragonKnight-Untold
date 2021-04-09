@@ -125,7 +125,14 @@ public class Enemy : Health
     private MovementState turnDirection = MovementState.Right;
 
     // Adapter method
-    public virtual void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
+    public virtual void TakeDamage(
+        float damage,
+        bool crit,
+        float superArmorDamage = 0.0f,
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
+        bool shouldFlinch = true
+    )
     {
         if (!IsDead)
         {
@@ -146,7 +153,10 @@ public class Enemy : Health
             KnockedBack(knockBackAmplitude);
 
             // Flinch
-            Flinch();
+            if (shouldFlinch)
+            {
+                Flinch();
+            }
 
             // Show floating damage number
             FloatingTextSpawner.Spawn(damage, transform.position, crit);

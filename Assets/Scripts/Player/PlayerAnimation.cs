@@ -244,7 +244,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         {
             // Player just transformed into a human
             // animator.SetBool("DragonForm", false);
-            animator.runtimeAnimatorController = swordController as RuntimeAnimatorController;
+            ChangeHumanAnimator(PlayerClassStatic.currentClass);
         }
     }
 

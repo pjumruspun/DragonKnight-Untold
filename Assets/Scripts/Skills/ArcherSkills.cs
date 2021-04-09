@@ -5,10 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Archer Skills", menuName = "Roguelite/Skills/Archer")]
 public class ArcherSkills : PlayerSkills
 {
-    private const float archerSkill2LockMovementTime = 0.5f;
-    private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
+    private DashEffectSize chargedShotEffect;
+
+    // Auto attack params
+    private float timeSinceLastShot = 0.0f;
+    private const float flipLockParam = 1.1f;
+    private const float skill1LockMovementRatio = 0.4f;
 
     // Arrow Rain params
+    private const float archerSkill2LockMovementTime = 0.5f;
+    private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
     private const int arrowsEachShot = 5;
     private const int totalFireRounds = 3;
     private const float fireArrowsInterval = 0.3f;
@@ -26,10 +32,13 @@ public class ArcherSkills : PlayerSkills
     private bool shouldReleaseChargeShot;
     private const float chargedShotHitInterval = 0.15f;
 
-    public override void Initialize(Transform transform)
+    public void Initialize(Transform transform, DashEffectSize chargedShotEffect)
     {
         base.Initialize(transform);
         shouldReleaseChargeShot = false;
+
+        this.chargedShotEffect = chargedShotEffect;
+        this.chargedShotEffect.gameObject.SetActive(false);
     }
 
     public override void Skill1()
@@ -38,14 +47,40 @@ public class ArcherSkills : PlayerSkills
 
         // Primary attack = skillDamage[0]
         float damage = PlayerStats.Instance.BaseSkillDamage[0];
+
+        // Get cooldown
+        float cooldown = PlayerStats.Instance.SkillCooldown[0];
+
+        // Lock movement
+        movement.LockMovementBySkill(cooldown * skill1LockMovementRatio, false, false, false);
+
+        // Lock flip for a while
+        movement.LockFlipBySkill(true);
+        timeSinceLastShot = Time.time;
+
+        float gap = cooldown * flipLockParam;
+
+        CoroutineUtility.ExecDelay(() =>
+        {
+            if (Time.time > timeSinceLastShot + gap)
+            {
+                movement.LockFlipBySkill(false);
+            }
+        }, gap);
+
         // Spawn arrow
-        AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, movement.ForwardVector);
+        AttackWithProjectile(
+            ref ObjectManager.Instance.Arrows,
+            damage,
+            transform.position,
+            movement.ForwardVector,
+            hitEffect: HitEffect.Slash,
+            shouldFlinch: false
+        );
     }
 
     public override void Skill2()
     {
-        base.Skill2();
-
         if (movement.IsGrounded())
         {
             Skill2GroundVariant();
@@ -70,9 +105,12 @@ public class ArcherSkills : PlayerSkills
 
     public void Skill2Release()
     {
+        // Count cooldown
+        base.Skill2();
+
         // Spawn arrow
-        float damage = PlayerStats.Instance.BaseSkillDamage[0] * currentChargeLevel;
-        float knockBackAmplitude = chargedShotKnockBackAmplitude * currentChargeLevel / maxChargeLevel;
+        float damage = PlayerStats.Instance.BaseSkillDamage[0] * (2.0f + 0.5f * currentChargeLevel);
+        float knockBackAmplitude = chargedShotKnockBackAmplitude * (0.5f + 0.1f * currentChargeLevel / maxChargeLevel);
 
         AttackWithProjectile(
             ref ObjectManager.Instance.ChargedArrows,
@@ -107,6 +145,9 @@ public class ArcherSkills : PlayerSkills
 
         // Stop animation
         PlayerAnimation.Instance.StopChargingShot();
+
+        // Disable charge effect
+        chargedShotEffect.gameObject.SetActive(false);
 
         // Kill coroutine
         if (chargeShot != null)
@@ -154,6 +195,10 @@ public class ArcherSkills : PlayerSkills
         // Charge shot
         chargeShot = CoroutineUtility.Instance.CreateCoroutine(IncreaseChargeLevel());
 
+        // Show charging effect
+        chargedShotEffect.gameObject.SetActive(true);
+        chargedShotEffect.SetSize(0, maxChargeLevel);
+
         // Reset Trigger
         PlayerAnimation.Instance.ResetChargeShotTrigger();
 
@@ -170,6 +215,10 @@ public class ArcherSkills : PlayerSkills
         {
             yield return new WaitForSeconds(chargeTimePerLevel);
             ++currentChargeLevel;
+
+            // Increase size of charge effect
+            chargedShotEffect.SetSize(currentChargeLevel, maxChargeLevel);
+
             if (currentChargeLevel == maxChargeLevel)
             {
                 EventPublisher.TriggerStopChargeShot();

@@ -19,6 +19,7 @@ public struct ProjectileConfig
     public HitEffect hitEffect;
     public bool shouldHitContinuously;
     public float hitInterval;
+    public bool shouldFlinch;
 
     public ProjectileConfig(
         Vector2 direction,
@@ -29,7 +30,8 @@ public struct ProjectileConfig
         float knockBackAmplitude = 0.0f,
         HitEffect hitEffect = HitEffect.None,
         bool shouldHitContinuously = false,
-        float hitInterval = 1.0f
+        float hitInterval = 1.0f,
+        bool shouldFlinch = true
     )
     {
         this.direction = direction;
@@ -41,6 +43,7 @@ public struct ProjectileConfig
         this.hitEffect = hitEffect;
         this.shouldHitContinuously = shouldHitContinuously;
         this.hitInterval = hitInterval;
+        this.shouldFlinch = shouldFlinch;
     }
 }
 
@@ -150,10 +153,11 @@ public class Projectile : MonoBehaviour
                         // Deals damage to enemy
                         enemy.TakeDamage(
                             config.damage,
-                            config.crit,
-                            config.superArmorDamage,
-                            config.knockUpAmplitude,
-                            config.knockBackAmplitude
+                            crit: config.crit,
+                            superArmorDamage: config.superArmorDamage,
+                            knockUpAmplitude: config.knockUpAmplitude,
+                            knockBackAmplitude: config.knockBackAmplitude,
+                            shouldFlinch: config.shouldFlinch
                         );
 
                         // Show hit effect if exist

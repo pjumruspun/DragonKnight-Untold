@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7614169192351300021}
   - component: {fileID: 7395398687647483539}
   - component: {fileID: 3118532037744656639}
+  - component: {fileID: 5054770259225869332}
   m_Layer: 0
   m_Name: Dash Horizontal
   m_TagString: Untagged
@@ -102,3 +103,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5054770259225869332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422477885275663502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 541e19455fb634f578663e683e55ea8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

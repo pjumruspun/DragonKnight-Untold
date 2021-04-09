@@ -24,6 +24,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private GameObject clawSlash;
     [SerializeField]
     private GameObject dragonDashEffect;
+    [SerializeField]
+    private DashEffectSize chargedShotEffect;
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
@@ -122,7 +124,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             // Release
             (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
-            Debug.Log("Gonna release...");
         }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
@@ -254,7 +255,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void InitializeSkills()
     {
         SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
-        SkillsRepository.Archer.Initialize(transform);
+        SkillsRepository.Archer.Initialize(transform, chargedShotEffect);
         SkillsRepository.Dragon.Initialize(
             transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
         );

@@ -172,7 +172,12 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     // Release automatically lockers
     public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
 
-    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip);
+    public void LockMovementBySkill(
+        float duration,
+        bool stopAllMovement =
+        false, bool lockFlip = true,
+        bool disableGravity = true
+    ) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip, disableGravity);
 
     public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
 
@@ -183,7 +188,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         isFlipLockedBySkills = false;
     }
 
-    private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
+    private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip, bool disableGravity = true)
     {
         // This function is a bit messy
         // It's coupled heavily with LockState function and ProcessLockState function
@@ -199,8 +204,11 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         rigidbody2D.velocity = Vector2.zero;
         // Stop all movement?
         this.stopAllMovement = stopAllMovement;
-        // Disable gravity too
-        rigidbody2D.gravityScale = 0.0f;
+        // Disable gravity
+        if (disableGravity)
+        {
+            rigidbody2D.gravityScale = 0.0f;
+        }
         // Lock movement
         isMovementLockedBySkills = true;
     }
