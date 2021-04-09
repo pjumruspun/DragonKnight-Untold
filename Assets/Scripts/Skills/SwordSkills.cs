@@ -43,17 +43,25 @@ public class SwordSkills : PlayerSkills
     private const float counterScreenShakePower = 0.15f;
     private const float counterSuperArmorAttack = 100.0f;
 
+    // Hitboxes
     private AttackHitbox swordPrimaryHitbox;
+
+    // Effects
+    private GameObject dashEffect;
 
     // Combo stuff
     private const float resetComboRatio = 1.5f; // 1.5 times of attack anim length
     private int currentCombo = 0;
     private float lastAttackTime = 0.0f;
 
-    public void Initialize(Transform transform, AttackHitbox swordPrimaryHitbox)
+    public void Initialize(Transform transform, AttackHitbox swordPrimaryHitbox, GameObject dashEffect)
     {
         base.Initialize(transform);
+
         this.swordPrimaryHitbox = swordPrimaryHitbox;
+
+        this.dashEffect = dashEffect;
+        this.dashEffect.SetActive(false);
     }
 
     // Sword auto attack combo
@@ -143,6 +151,11 @@ public class SwordSkills : PlayerSkills
                 groundOnly: false,
                 forceMode: ForceMode2D.Impulse
             );
+
+            // Dash effect on
+            this.dashEffect.SetActive(true);
+            // Dash effect off
+            CoroutineUtility.ExecDelay(() => this.dashEffect.SetActive(false), animLength);
 
             DashAttack();
         }, skill3DashAnticipationRatio * animLength);

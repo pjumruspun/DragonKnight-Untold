@@ -17,6 +17,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     [Header("Skill Effects")]
     [SerializeField]
+    private GameObject dashEffect;
+    [SerializeField]
     private GameObject fireBreath;
     [SerializeField]
     private GameObject clawSlash;
@@ -227,7 +229,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private void InitializeSkills()
     {
-        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox);
+        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
         SkillsRepository.Archer.Initialize(transform);
         SkillsRepository.Dragon.Initialize(
             transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
