@@ -23,8 +23,12 @@ public class SwordSkills : PlayerSkills
     private const float skill3DashAnticipationRatio = 1.0f;
     private const float skill3AttackAnticipationRatio = 0.35f;
     private const float skill3SpeedMultiplier = 3.5f;
-    private const float skill3KnockAmplitude = 2.0f;
+    private const float skill3SlashKnockUpAmplitude = 2.0f;
     private const float skill3CooldownResetRatio = 0.6f;
+    private const float skill3DashKnockUpAmplitude = 2.5f;
+    private const float skill3DashKnockBackAmplitude = 4.5f;
+    private const float dashDamageRatio = 0.5f;
+    private const float slashDamageRatio = 0.5f;
 
     // Ultimate skill variables
     private bool hasCounterAttacked = false;
@@ -131,7 +135,7 @@ public class SwordSkills : PlayerSkills
         CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, movement.ForwardVector, animLength * skill2AnticipationRatio));
     }
 
-    // Dash -> Dash attack
+    // Dash dealing damage -> Dash slash
     public override void Skill3()
     {
         base.Skill3();
@@ -152,16 +156,37 @@ public class SwordSkills : PlayerSkills
                 forceMode: ForceMode2D.Impulse
             );
 
+            // Skill 3 = skillDamage[2]
+            float damage = PlayerStats.Instance.BaseSkillDamage[2] * dashDamageRatio;
+
             // Dash effect on
             this.dashEffect.SetActive(true);
             // Dash effect off
             CoroutineUtility.ExecDelay(() => this.dashEffect.SetActive(false), animLength);
 
-            DashAttack();
+            // Attack
+            int totalHits = 3;
+            for (int i = 0; i < totalHits; ++i)
+            {
+                CoroutineUtility.ExecDelay(() =>
+                {
+                    // Dash Attack
+                    // First time knock up
+                    float totalDamage = AttackWithHitbox(
+                            swordPrimaryHitbox,
+                            damage / totalHits,
+                            knockUpAmplitude: skill3DashKnockUpAmplitude,
+                            knockBackAmplitude: skill3DashKnockBackAmplitude,
+                            hitEffect: HitEffect.Slash
+                    );
+                }, i * (animLength / totalHits));
+            }
+
+            // DashSlash();
         }, skill3DashAnticipationRatio * animLength);
     }
 
-    private void DashAttack()
+    private void DashSlash()
     {
         PlayerAnimation.Instance.PlayDashAttackAnimation();
 
@@ -171,13 +196,13 @@ public class SwordSkills : PlayerSkills
         movement.LockJumpBySkill(animLength);
 
         // Skill 3 = skillDamage[2]
-        float damage = PlayerStats.Instance.BaseSkillDamage[2];
+        float damage = PlayerStats.Instance.BaseSkillDamage[2] * slashDamageRatio;
 
         // Attack
         float anticipationPeriod = animLength * skill3AttackAnticipationRatio;
         CoroutineUtility.ExecDelay(() =>
         {
-            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude, hitEffect: HitEffect.Slash);
+            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3SlashKnockUpAmplitude, hitEffect: HitEffect.Slash);
             if (damageDealt > 0.0f) // If manage to hit something
             {
                 // Reduce cooldown
