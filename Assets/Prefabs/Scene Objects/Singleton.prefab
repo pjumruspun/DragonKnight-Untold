@@ -93,6 +93,8 @@ MonoBehaviour:
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20
   slashEffectDestroyDuration: 0.5
+  curveRoutePrefab: {fileID: 8222993445341329185, guid: 58191bc7ec7fc4a28bdd534385fda292, type: 3}
+  curveRoutePoolSize: 20
 --- !u!114 &1738964386786973728
 MonoBehaviour:
   m_ObjectHideFlags: 0

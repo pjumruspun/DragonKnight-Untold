@@ -11,6 +11,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool SlashEffect;
+    public ObjectPool CurveRoute;
 
     [Header("Floating Damage")]
     [SerializeField]
@@ -58,6 +59,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private float slashEffectDestroyDuration = 0.5f;
 
+    [Header("Curve Route")]
+    [SerializeField]
+    private GameObject curveRoutePrefab;
+    [SerializeField]
+    private int curveRoutePoolSize = 10;
+
     public void SpawnSlashingEffect(Vector3 spawnPosition)
     {
         float rotationZ = Random.Range(-slashEffectRandomAngle, slashEffectRandomAngle);
@@ -75,5 +82,6 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
         ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);
+        CurveRoute = new ObjectPool(curveRoutePrefab, curveRoutePoolSize);
     }
 }

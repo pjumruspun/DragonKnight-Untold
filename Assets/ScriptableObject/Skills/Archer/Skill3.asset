@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: New Skill
   skillIcon: {fileID: 0}
-  baseDamage: 0
-  baseCooldown: 1
+  baseDamage: 5
+  baseCooldown: 0.15

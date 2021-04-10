@@ -32,6 +32,10 @@ public class ArcherSkills : PlayerSkills
     private bool shouldReleaseChargeShot;
     private const float chargedShotHitInterval = 0.15f;
 
+    // Air shot params
+    private const float airShotLockMovementRatio = 0.6f;
+    private const float airShotProjectileSpeed = 3.0f;
+
     public void Initialize(Transform transform, DashEffectSize chargedShotEffect)
     {
         base.Initialize(transform);
@@ -80,6 +84,64 @@ public class ArcherSkills : PlayerSkills
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
         movement.LockMovementBySkill(true, false);
+    }
+
+    // Air Shot
+    public override void Skill3()
+    {
+        base.Skill3();
+
+        // Unlock casting with cooldown
+        float cooldown = PlayerStats.Instance.SkillCooldown[2];
+        UnlockCastingIn(cooldown * 0.9f);
+
+        // Damage
+        float damage = PlayerStats.Instance.BaseSkillDamage[2];
+
+        // Lock movement
+        movement.LockMovementBySkill(cooldown * airShotLockMovementRatio, true, false, false);
+
+        // Lock flip for a while
+        movement.LockFlipBySkill(true);
+        timeSinceLastShot = Time.time;
+
+        // Lock skill casting by cooldown time
+        UnlockCastingIn(cooldown * 0.9f);
+        float gap = cooldown * flipLockParam;
+
+        CoroutineUtility.ExecDelay(() =>
+        {
+            if (Time.time > timeSinceLastShot + gap)
+            {
+                movement.LockFlipBySkill(false);
+            }
+        }, gap);
+
+        // Spawn arrow
+        Projectile arrow = AttackWithProjectile(
+            ref ObjectManager.Instance.Arrows,
+            damage,
+            transform.position,
+            movement.ForwardVector,
+            knockUpAmplitude: 0.75f,
+            hitEffect: HitEffect.Slash,
+            shouldFlinch: false,
+            overrideSpeed: 0.0f
+        );
+
+        // Spawn projectile into bezier curve
+        GameObject curveRouteObject = ObjectManager.Instance.CurveRoute.SpawnObject();
+        if (curveRouteObject.TryGetComponent<CurveRoute>(out CurveRoute curveRoute))
+        {
+            Vector3 x = movement.ForwardVector * 3.0f;
+            curveRoute.Configure(transform.position, transform.position + Vector3.up * 2.0f + x, 0.5f);
+            BezierConfig bezierConfig = new BezierConfig(airShotProjectileSpeed, true);
+            curveRoute.AssignBezierPath(arrow.gameObject, bezierConfig);
+        }
+        else
+        {
+            throw new System.NullReferenceException("curveRouteObject spawned from ObjectManager CurveRoute doesn't have CurveRoute script attached to.");
+        }
     }
 
     public void NotifySkill2ToRelease()
@@ -284,7 +346,14 @@ public class ArcherSkills : PlayerSkills
         {
             for (int j = 0; j < arrowsEachShot; ++j)
             {
-                AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, movement.ForwardVector, -7.5f - j * 15.0f);
+                AttackWithProjectile(
+                    ref ObjectManager.Instance.Arrows,
+                    damage,
+                    transform.position,
+                    movement.ForwardVector,
+                    -7.5f - j * 15.0f,
+                    knockUpAmplitude: 2.5f
+                );
             }
 
             yield return new WaitForSeconds(interval);

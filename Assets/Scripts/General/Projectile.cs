@@ -20,6 +20,7 @@ public struct ProjectileConfig
     public bool shouldHitContinuously;
     public float hitInterval;
     public bool shouldFlinch;
+    public float speedOverride;
 
     public ProjectileConfig(
         Vector2 direction,
@@ -31,7 +32,8 @@ public struct ProjectileConfig
         HitEffect hitEffect = HitEffect.None,
         bool shouldHitContinuously = false,
         float hitInterval = 1.0f,
-        bool shouldFlinch = true
+        bool shouldFlinch = true,
+        float speedOverride = -1.0f
     )
     {
         this.direction = direction;
@@ -44,6 +46,7 @@ public struct ProjectileConfig
         this.shouldHitContinuously = shouldHitContinuously;
         this.hitInterval = hitInterval;
         this.shouldFlinch = shouldFlinch;
+        this.speedOverride = speedOverride;
     }
 }
 
@@ -116,13 +119,14 @@ public class Projectile : MonoBehaviour
     {
         if (totalTraveledDistance < maxTravelDistance)
         {
+            float actualSpeed = config.speedOverride >= -0.01f ? config.speedOverride : speed;
             // Cast Vector2 to Vector3
             Vector3 direction3 = config.direction;
             // Travel
-            transform.position += direction3 * speed * Time.fixedDeltaTime;
+            transform.position += direction3 * actualSpeed * Time.fixedDeltaTime;
 
             // Log traveled distance
-            float distanceToTravel = direction3.magnitude * speed * Time.fixedDeltaTime;
+            float distanceToTravel = direction3.magnitude * actualSpeed * Time.fixedDeltaTime;
             totalTraveledDistance += distanceToTravel;
         }
         else

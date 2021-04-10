@@ -127,7 +127,8 @@ public abstract class PlayerSkills : ScriptableObject
         HitEffect hitEffect = HitEffect.None,
         bool shouldHitContinuously = false,
         float hitInterval = 1.0f,
-        bool shouldFlinch = true
+        bool shouldFlinch = true,
+        float overrideSpeed = -1.0f
     )
     {
         GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
@@ -156,7 +157,8 @@ public abstract class PlayerSkills : ScriptableObject
                 hitEffect,
                 shouldHitContinuously,
                 hitInterval,
-                shouldFlinch
+                shouldFlinch,
+                overrideSpeed
             );
 
             projectile.SetConfig(projectileConfig);
