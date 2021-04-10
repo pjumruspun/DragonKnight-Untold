@@ -178,7 +178,7 @@ public class ArcherSkills : PlayerSkills
         timeSinceLastShot = Time.time;
 
         // Lock skill casting by cooldown time
-        CoroutineUtility.ExecDelay(() => isCastingSkill = false, cooldown);
+        UnlockCastingIn(cooldown);
 
         float gap = cooldown * flipLockParam;
 
@@ -214,7 +214,7 @@ public class ArcherSkills : PlayerSkills
         CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, 0.3f, 1, 3));
 
         // Unlock casting skill
-        CoroutineUtility.ExecDelay(() => isCastingSkill = false, animLength);
+        UnlockCastingIn(animLength);
     }
 
     private void ResetSpreadShot()

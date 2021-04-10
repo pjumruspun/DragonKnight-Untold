@@ -6,6 +6,8 @@ using UnityEngine;
 public class SwordSkills : PlayerSkills
 {
     public int CurrentCombo => currentCombo;
+    // Skill canceling params
+    private readonly float[] skillCastingRatio = new float[4] { 0.7f, 0.8f, 0.8f, 0.9f };
 
     // Skill 1 params
     private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 50.0f, 150.0f };
@@ -116,6 +118,9 @@ public class SwordSkills : PlayerSkills
                 knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo],
                 hitEffect: HitEffect.Slash
         ), anticipationPeriod);
+
+        // Unlock casting skills
+        UnlockCastingIn(animLength * skillCastingRatio[0]);
     }
 
     // Sword wave
@@ -133,6 +138,9 @@ public class SwordSkills : PlayerSkills
 
         // Spawn sword wave with delay
         CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, movement.ForwardVector, animLength * skill2AnticipationRatio));
+
+        // Unlock casting skill
+        UnlockCastingIn(animLength * skillCastingRatio[1]);
     }
 
     // Dash dealing damage -> Dash slash
@@ -184,6 +192,9 @@ public class SwordSkills : PlayerSkills
 
             // DashSlash();
         }, skill3DashAnticipationRatio * animLength);
+
+        // Unlock casting
+        UnlockCastingIn(animLength * skillCastingRatio[2]);
     }
 
     private void DashSlash()
@@ -229,6 +240,9 @@ public class SwordSkills : PlayerSkills
         invulBuff.Callback += ResetCounterAtttackVar;
         currentInvulBuff = invulBuff;
         BuffManager.AddBuff(invulBuff);
+
+        // Unlock casting
+        UnlockCastingIn(parryInvulDuration);
     }
 
     private void TryCounterAttack()
@@ -241,6 +255,9 @@ public class SwordSkills : PlayerSkills
 
     private void CounterAttack()
     {
+        // Lock casting again
+        isCastingSkill = true;
+
         // Notify that player has already counter attacked
         hasCounterAttacked = true;
 
@@ -263,6 +280,9 @@ public class SwordSkills : PlayerSkills
 
         // Upon successful counter, extends invul window by anim length
         currentInvulBuff.SetDuration(currentInvulBuff.DurationLeft + animLength * 1.0f);
+
+        // Unlock casting
+        UnlockCastingIn(animLength * skillCastingRatio[3]);
     }
 
     private void ThreeFoldAttack(float animLength)

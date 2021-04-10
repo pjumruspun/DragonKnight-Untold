@@ -46,6 +46,9 @@ public abstract class PlayerSkills : ScriptableObject
         movement = PlayerMovement.Instance;
         this.transform = transform;
         currentCooldown = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
+
+        // Reset casting when changing to dragon or change class
+        EventPublisher.PlayerChangeClass += ResetCasting;
     }
 
     /// <summary>
@@ -220,5 +223,15 @@ public abstract class PlayerSkills : ScriptableObject
         }
 
         return totalDamageDealt;
+    }
+
+    protected void UnlockCastingIn(float inDuration)
+    {
+        CoroutineUtility.ExecDelay(() => isCastingSkill = false, inDuration);
+    }
+
+    private void ResetCasting(PlayerClass c)
+    {
+        isCastingSkill = false;
     }
 }
