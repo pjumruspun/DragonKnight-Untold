@@ -150,6 +150,11 @@ public class Projectile : MonoBehaviour
                 case Target.Enemy:
                     if (other.gameObject.layer == Layers.enemyLayerIndex && other.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                     {
+                        if (enemy.IsDead)
+                        {
+                            return;
+                        }
+
                         // Deals damage to enemy
                         enemy.TakeDamage(
                             config.damage,
@@ -167,6 +172,11 @@ public class Projectile : MonoBehaviour
                 case Target.Player:
                     if (other.gameObject.layer == Layers.playerLayerIndex && other.gameObject.TryGetComponent<PlayerHealth>(out PlayerHealth playerHealth))
                     {
+                        if (playerHealth.IsDead)
+                        {
+                            return;
+                        }
+
                         playerHealth.TakeDamage(config.damage);
                     }
                     break;
