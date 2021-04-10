@@ -138,6 +138,9 @@ public class ArcherSkills : PlayerSkills
             movement.LockJumpBySkill(false);
             movement.LockFlipBySkill(false);
             movement.LockMovementBySkill(false);
+
+            // Also mark stop casting skill
+            isCastingSkill = false;
         }, animLength);
 
         // Stop animation
@@ -174,6 +177,9 @@ public class ArcherSkills : PlayerSkills
         movement.LockFlipBySkill(true);
         timeSinceLastShot = Time.time;
 
+        // Lock skill casting by cooldown time
+        CoroutineUtility.ExecDelay(() => isCastingSkill = false, cooldown);
+
         float gap = cooldown * flipLockParam;
 
         CoroutineUtility.ExecDelay(() =>
@@ -206,6 +212,9 @@ public class ArcherSkills : PlayerSkills
 
         // Spawn spread shot
         CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, 0.3f, 1, 3));
+
+        // Unlock casting skill
+        CoroutineUtility.ExecDelay(() => isCastingSkill = false, animLength);
     }
 
     private void ResetSpreadShot()

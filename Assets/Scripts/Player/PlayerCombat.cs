@@ -153,7 +153,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private bool IsSkillReady(int skillNumber)
     {
         float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
-        bool readyToAttack = currentCooldown <= 0.01f;
+        bool readyToAttack = currentCooldown <= 0.01f && !CurrentSkills().IsCastingSkill;
         // Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }

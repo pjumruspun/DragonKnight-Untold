@@ -8,6 +8,7 @@ public abstract class PlayerSkills : ScriptableObject
     public IEnumerable<Sprite> GetIcons => from skill in skills select skill.skillIcon;
     public IEnumerable<float> GetBaseSkillCooldowns => from skill in skills select skill.baseCooldown;
     public IEnumerable<float> GetBaseSkillDamage => from skill in skills select skill.baseDamage;
+    public bool IsCastingSkill => isCastingSkill;
 
     [SerializeField]
     protected Skill[] skills = new Skill[4];
@@ -16,6 +17,7 @@ public abstract class PlayerSkills : ScriptableObject
     protected Transform transform;
     protected PlayerMovement movement;
     protected float[] currentCooldown;
+    protected bool isCastingSkill = false;
 
     /// <summary>
     /// Returns current cooldown of every skill.
@@ -71,6 +73,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill1()
     {
         currentCooldown[0] = PlayerStats.Instance.SkillCooldown[0];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -79,6 +82,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill2()
     {
         currentCooldown[1] = PlayerStats.Instance.SkillCooldown[1];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -87,6 +91,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill3()
     {
         currentCooldown[2] = PlayerStats.Instance.SkillCooldown[2];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -95,6 +100,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void UltimateSkill()
     {
         currentCooldown[3] = PlayerStats.Instance.SkillCooldown[3];
+        isCastingSkill = true;
     }
 
     /// <summary>
