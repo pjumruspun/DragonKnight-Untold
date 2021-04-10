@@ -27,6 +27,7 @@ public class LevelChanger : MonoSingleton<LevelChanger>
         { Scenes.Camp, "Camp" },
         { Scenes.Tutorial, "Gameplay" },
         { Scenes.MainMenu, "MainMenu" },
+        { Scenes.TestScene, "Test Level" },
     };
 
     public static void LoadNextLevel()
@@ -98,7 +99,7 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         if (Input.GetKeyDown(KeyCode.P)) // Debugging
         {
-            LoadNextLevel();
+            // LoadNextLevel();
         }
     }
 
