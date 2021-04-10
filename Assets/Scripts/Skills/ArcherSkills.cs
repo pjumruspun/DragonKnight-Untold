@@ -7,17 +7,17 @@ public class ArcherSkills : PlayerSkills
 {
     private DashEffectSize chargedShotEffect;
 
+    // Spread shot vars
+    private bool hasFiredSpreadShot = false;
+
     // Auto attack params
     private float timeSinceLastShot = 0.0f;
     private const float flipLockParam = 1.1f;
     private const float skill1LockMovementRatio = 0.4f;
 
     // Arrow Rain params
-    private const float archerSkill2LockMovementTime = 0.5f;
-    private Vector2 archerSkill2ForceVector = new Vector2(3.0f, 3.0f);
-    private const int arrowsEachShot = 5;
-    private const int totalFireRounds = 3;
-    private const float fireArrowsInterval = 0.3f;
+    private const float arrowRainLockMovementTime = 0.5f;
+    private Vector2 arrowRainForceVector = new Vector2(3.0f, 3.0f);
 
     // Charge shot variables
     private Coroutine chargeShot;
@@ -39,50 +39,47 @@ public class ArcherSkills : PlayerSkills
 
         this.chargedShotEffect = chargedShotEffect;
         this.chargedShotEffect.gameObject.SetActive(false);
+
+        EventPublisher.PlayerLand += ResetSpreadShot;
     }
 
     public override void Skill1()
     {
-        base.Skill1();
-
-        // Primary attack = skillDamage[0]
-        float damage = PlayerStats.Instance.BaseSkillDamage[0];
-
-        // Get cooldown
-        float cooldown = PlayerStats.Instance.SkillCooldown[0];
-
-        // Lock movement
-        movement.LockMovementBySkill(cooldown * skill1LockMovementRatio, true, false, false);
-
-        // Lock flip for a while
-        movement.LockFlipBySkill(true);
-        timeSinceLastShot = Time.time;
-
-        float gap = cooldown * flipLockParam;
-
-        CoroutineUtility.ExecDelay(() =>
+        if (movement.IsGrounded())
         {
-            if (Time.time > timeSinceLastShot + gap)
+            base.Skill1();
+            NormalShot();
+        }
+        else
+        {
+            if (!hasFiredSpreadShot)
             {
-                movement.LockFlipBySkill(false);
+                SpreadShot();
+                hasFiredSpreadShot = true;
             }
-        }, gap);
-
-        // Spawn arrow
-        AttackWithProjectile(
-            ref ObjectManager.Instance.Arrows,
-            damage,
-            transform.position,
-            movement.ForwardVector,
-            hitEffect: HitEffect.Slash,
-            shouldFlinch: false
-        );
+        }
     }
 
+    // Charged Shot
     public override void Skill2()
     {
         base.Skill2();
-        Skill2GroundVariant();
+
+        shouldReleaseChargeShot = false;
+        // Charge shot
+        chargeShot = CoroutineUtility.Instance.CreateCoroutine(IncreaseChargeLevel());
+
+        // Show charging effect
+        chargedShotEffect.gameObject.SetActive(true);
+        chargedShotEffect.SetSize(0, maxChargeLevel);
+
+        // Reset Trigger
+        PlayerAnimation.Instance.ResetChargeShotTrigger();
+
+        // Lock movement
+        movement.LockJumpBySkill(true);
+        movement.LockFlipBySkill(true);
+        movement.LockMovementBySkill(true, false);
     }
 
     public void NotifySkill2ToRelease()
@@ -162,17 +159,76 @@ public class ArcherSkills : PlayerSkills
         shouldReleaseChargeShot = false;
     }
 
-    private void Skill2AirVariant()
+    private void NormalShot()
     {
-        // Skill 2 = skillDamage[1]
-        float damage = PlayerStats.Instance.BaseSkillDamage[1];
+        // Primary attack = skillDamage[0]
+        float damage = PlayerStats.Instance.BaseSkillDamage[0];
+
+        // Get cooldown
+        float cooldown = PlayerStats.Instance.SkillCooldown[0];
+
+        // Lock movement
+        movement.LockMovementBySkill(cooldown * skill1LockMovementRatio, true, false, false);
+
+        // Lock flip for a while
+        movement.LockFlipBySkill(true);
+        timeSinceLastShot = Time.time;
+
+        float gap = cooldown * flipLockParam;
+
+        CoroutineUtility.ExecDelay(() =>
+        {
+            if (Time.time > timeSinceLastShot + gap)
+            {
+                movement.LockFlipBySkill(false);
+            }
+        }, gap);
+
+        // Spawn arrow
+        AttackWithProjectile(
+            ref ObjectManager.Instance.Arrows,
+            damage,
+            transform.position,
+            movement.ForwardVector,
+            hitEffect: HitEffect.Slash,
+            shouldFlinch: false
+        );
+    }
+
+    private void SpreadShot()
+    {
+        // This is just like arrow rain but only fire one time
+        float animLength = PlayerAnimation.Instance.GetAnimLength("Archer_ShootDown");
+        movement.LockMovementBySkill(animLength * 0.5f, false, true);
+
+        // Damage
+        float damage = PlayerStats.Instance.BaseSkillDamage[0];
+
+        // Spawn spread shot
+        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, 0.3f, 1, 3));
+    }
+
+    private void ResetSpreadShot()
+    {
+        hasFiredSpreadShot = false;
+    }
+
+    private void OnDestroy()
+    {
+        EventPublisher.PlayerLand -= ResetSpreadShot;
+    }
+
+    private void ArrowRain()
+    {
+        // Skill 3 = skillDamage[2]
+        float damage = PlayerStats.Instance.BaseSkillDamage[2];
 
         // Arrow rain
         // Lock player's movement and flip
-        movement.LockMovementBySkill(archerSkill2LockMovementTime, false, true);
+        movement.LockMovementBySkill(arrowRainLockMovementTime, false, true);
 
         // Add force by skills first
-        Vector2 forceVector = archerSkill2ForceVector;
+        Vector2 forceVector = arrowRainForceVector;
         switch (movement.TurnDirection)
         {
             case MovementState.Right:
@@ -186,26 +242,7 @@ public class ArcherSkills : PlayerSkills
         }
 
         // Then spawn arrow rains
-        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, movement.ForwardVector, fireArrowsInterval));
-    }
-
-    private void Skill2GroundVariant()
-    {
-        shouldReleaseChargeShot = false;
-        // Charge shot
-        chargeShot = CoroutineUtility.Instance.CreateCoroutine(IncreaseChargeLevel());
-
-        // Show charging effect
-        chargedShotEffect.gameObject.SetActive(true);
-        chargedShotEffect.SetSize(0, maxChargeLevel);
-
-        // Reset Trigger
-        PlayerAnimation.Instance.ResetChargeShotTrigger();
-
-        // Lock movement
-        movement.LockJumpBySkill(true);
-        movement.LockFlipBySkill(true);
-        movement.LockMovementBySkill(true, false);
+        CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, 0.3f, 5, 3));
     }
 
     private IEnumerator IncreaseChargeLevel()
@@ -231,14 +268,14 @@ public class ArcherSkills : PlayerSkills
         }
     }
 
-    private IEnumerator ArrowRain(float damage, Vector2 forwardVector, float interval)
+    private IEnumerator ArrowRain(float damage, float interval, int totalFireCount, int arrowsEachShot)
     {
         // Spawns 5x3 arrows
-        for (int i = 0; i < totalFireRounds; ++i)
+        for (int i = 0; i < totalFireCount; ++i)
         {
             for (int j = 0; j < arrowsEachShot; ++j)
             {
-                AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, forwardVector, -7.5f - j * 15.0f);
+                AttackWithProjectile(ref ObjectManager.Instance.Arrows, damage, transform.position, movement.ForwardVector, -7.5f - j * 15.0f);
             }
 
             yield return new WaitForSeconds(interval);
