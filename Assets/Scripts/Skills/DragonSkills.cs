@@ -16,7 +16,7 @@ public class DragonSkills : PlayerSkills
     private const float skill1ScreenShakePower = 0.15f;
 
     // Skill 3 params
-    private const float skill3LockMovementRatio = 1.0f;
+    private const float skill3LockMovementRatio = 0.9f;
     private const float skill3SpeedMultiplier = 2.0f;
     private const float skill3KnockUpAmplitude = 3.5f;
     private const float skill3KnockBackAmplitude = 0.5f;
@@ -26,6 +26,7 @@ public class DragonSkills : PlayerSkills
     private const float ultKnockUpAmplitude = 0.5f;
     private const float ultDelay = 0.05f;
     private const float ultInterval = 0.20f;
+    private bool isUsingUltimate = false;
 
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox dragonVortexHitbox;
@@ -167,7 +168,7 @@ public class DragonSkills : PlayerSkills
 
     public void UltimateRelease()
     {
-        if (fireBreathCoroutine == null)
+        if (!isUsingUltimate)
         {
             return;
         }
@@ -176,6 +177,7 @@ public class DragonSkills : PlayerSkills
         CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
 
         isCastingSkill = false;
+        isUsingUltimate = false;
 
         // Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
@@ -271,6 +273,7 @@ public class DragonSkills : PlayerSkills
         fireBreath.SetActive(true);
         while (true)
         {
+            isUsingUltimate = true;
             yield return new WaitForSeconds(interval);
             AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude);
         }
