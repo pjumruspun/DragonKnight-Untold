@@ -33,7 +33,7 @@ public class ArcherSkills : PlayerSkills
     private const float chargedShotHitInterval = 0.15f;
 
     // Air shot params
-    private const float airShotLockMovementRatio = 0.6f;
+    private const float airShotLockMovementRatio = 1.0f;
     private const float airShotProjectileSpeed = 3.0f;
 
     public void Initialize(Transform transform, DashEffectSize chargedShotEffect)

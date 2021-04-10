@@ -126,7 +126,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
-            EventPublisher.TriggerPlayerUseSkill(2);
+            if (PlayerClassStatic.currentClass == PlayerClass.Archer)
+            {
+                if (PlayerMovement.Instance.IsGrounded())
+                {
+                    // For archer, skill 2 (Air shot) can be activated only when on ground
+                    EventPublisher.TriggerPlayerUseSkill(2);
+                }
+            }
+            else
+            {
+                EventPublisher.TriggerPlayerUseSkill(2);
+            }
         }
         else if (InputManager.UltimateSkill && IsSkillReady(3))
         {
