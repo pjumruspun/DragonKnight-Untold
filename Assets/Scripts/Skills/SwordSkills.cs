@@ -34,6 +34,7 @@ public class SwordSkills : PlayerSkills
 
     // Ultimate skill variables
     private bool hasCounterAttacked = false;
+    private bool counterSuccessful = false;
     private InvulBuff currentInvulBuff = null;
 
     // Parry skill params
@@ -237,12 +238,9 @@ public class SwordSkills : PlayerSkills
 
         // When the buff ends, try to counter attack
         invulBuff.OnUpdate += TryCounterAttack;
-        invulBuff.Callback += ResetCounterAttackVar;
+        invulBuff.Callback += ResetCounterAttackVar; // Unlock casting in here
         currentInvulBuff = invulBuff;
         BuffManager.AddBuff(invulBuff);
-
-        // Unlock casting
-        UnlockCastingIn(parryInvulDuration);
     }
 
     private void TryCounterAttack()
@@ -260,6 +258,8 @@ public class SwordSkills : PlayerSkills
 
         // Notify that player has already counter attacked
         hasCounterAttacked = true;
+        counterSuccessful = true;
+        Debug.Log("counter successful");
 
         // Play animation
         PlayerAnimation.Instance.PlayCounterAnimation();
@@ -283,6 +283,7 @@ public class SwordSkills : PlayerSkills
 
         // Unlock casting
         UnlockCastingIn(animLength * skillCastingRatio[3]);
+        CoroutineUtility.ExecDelay(() => counterSuccessful = false, animLength * skillCastingRatio[3]);
     }
 
     private void ThreeFoldAttack(float animLength)
@@ -335,6 +336,13 @@ public class SwordSkills : PlayerSkills
 
     private void ResetCounterAttackVar()
     {
+        if (!counterSuccessful)
+        {
+            isCastingSkill = false;
+        }
+
+        Debug.Log("Uncast");
+
         hasCounterAttacked = false;
         PlayerHealth.Instance.SetHasBlocked(false);
         PlayerAnimation.Instance.StopParrying();
