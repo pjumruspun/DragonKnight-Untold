@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
+    public bool IsCastingSkill => CurrentSkills().IsCastingSkill;
     public int SwordCombo =>
         PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
 
@@ -149,11 +150,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
                 // For sword, ultimate can be activated only when on ground
                 if (PlayerMovement.Instance.IsGrounded())
                 {
+                    Debug.Log("Should be parrying");
                     EventPublisher.TriggerPlayerUseSkill(3);
                 }
             }
             else
             {
+                Debug.Log("Cast ultimate");
                 EventPublisher.TriggerPlayerUseSkill(3);
             }
         }
@@ -168,6 +171,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
         bool readyToAttack = currentCooldown <= 0.01f && !CurrentSkills().IsCastingSkill;
+        Debug.Log($"ready = {readyToAttack}");
         // Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }

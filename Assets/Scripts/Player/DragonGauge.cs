@@ -95,11 +95,11 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     {
         if (!isDragonForm)
         {
-            return DragonGaugeStatic.dragonEnergy > 0.0f && currentShapeshiftCooldown < 0.01f;
+            return DragonGaugeStatic.dragonEnergy > 0.0f && currentShapeshiftCooldown < 0.01f && !PlayerCombat.Instance.IsCastingSkill;
         }
         else
         {
-            return true;
+            return !PlayerCombat.Instance.IsCastingSkill;
         }
     }
 

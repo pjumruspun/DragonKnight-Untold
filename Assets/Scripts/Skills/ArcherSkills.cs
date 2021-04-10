@@ -107,7 +107,7 @@ public class ArcherSkills : PlayerSkills
         float damage = PlayerStats.Instance.BaseSkillDamage[2];
 
         // Lock movement
-        movement.LockMovementBySkill(cooldown * airShotLockMovementRatio, true, false, false);
+        movement.LockMovementBySkill(cooldown * airShotLockMovementRatio, true, false);
 
         // Lock flip for a while
         movement.LockFlipBySkill(true);

@@ -101,6 +101,7 @@ public class DragonSkills : PlayerSkills
     public override void Skill1()
     {
         currentCooldown[0] = dragonAttackCooldown[0];
+        isCastingSkill = true;
 
         // Primary attack = dragonAttackDamage[0]
         float damage = dragonAttackDamage[0];
@@ -108,6 +109,8 @@ public class DragonSkills : PlayerSkills
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+
+        UnlockCastingIn(animLength * 0.8f);
 
         // Lock movement
         movement.LockMovementBySkill(skill1LockMovementRatio * animLength, true, true);
@@ -164,11 +167,15 @@ public class DragonSkills : PlayerSkills
 
     public void UltimateRelease()
     {
-        fireBreath.SetActive(false);
-        if (fireBreathCoroutine != null)
+        if (fireBreathCoroutine == null)
         {
-            CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+            return;
         }
+
+        fireBreath.SetActive(false);
+        CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+
+        isCastingSkill = false;
 
         // Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
@@ -180,9 +187,13 @@ public class DragonSkills : PlayerSkills
     {
         currentCooldown[2] = dragonAttackCooldown[2];
 
+        isCastingSkill = true;
+
         float damage = dragonAttackDamage[2];
         float animLength = PlayerAnimation.Instance.GetAnimLength(2);
         float lockMovementDuration = animLength * skill3LockMovementRatio;
+
+        UnlockCastingIn(animLength * 1.0f);
 
         movement.LockMovementBySkill(lockMovementDuration, true, true);
         movement.LockJumpBySkill(lockMovementDuration);
@@ -240,7 +251,10 @@ public class DragonSkills : PlayerSkills
 
     public override void UltimateSkill()
     {
+        Debug.Log("Dragon ult");
         currentCooldown[3] = dragonAttackCooldown[3];
+
+        isCastingSkill = true;
 
         // Ult = dragonAttackDamage[3]
         float damage = dragonAttackDamage[3];
