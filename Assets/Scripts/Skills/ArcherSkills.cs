@@ -181,6 +181,12 @@ public class ArcherSkills : PlayerSkills
         }
     }
 
+    public override void UltimateSkill()
+    {
+        base.UltimateSkill();
+        UnlockCastingIn(0.0f);
+    }
+
     public void NotifySkill2ToRelease()
     {
         if (currentChargeLevel >= 1)

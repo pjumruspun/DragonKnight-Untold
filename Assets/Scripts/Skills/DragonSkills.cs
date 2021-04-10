@@ -157,6 +157,11 @@ public class DragonSkills : PlayerSkills
         }, attackDelay + slashAnimLength);
     }
 
+    public override void Skill2()
+    {
+        currentCooldown[1] = dragonAttackCooldown[1];
+    }
+
     public void UltimateRelease()
     {
         fireBreath.SetActive(false);

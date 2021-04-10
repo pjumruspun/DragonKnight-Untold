@@ -121,6 +121,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         else if ( // If player releases charge shot
             InputManager.Skill2Release &&
             PlayerClassStatic.currentClass == PlayerClass.Archer
+            && !DragonGauge.Instance.IsDragonForm
         )
         {
             // Release
@@ -128,7 +129,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
-            if (PlayerClassStatic.currentClass == PlayerClass.Archer)
+            if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
             {
                 if (PlayerMovement.Instance.IsGrounded())
                 {
@@ -143,7 +144,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
         else if (InputManager.UltimateSkill && IsSkillReady(3))
         {
-            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword && !DragonGauge.Instance.IsDragonForm)
             {
                 // For sword, ultimate can be activated only when on ground
                 if (PlayerMovement.Instance.IsGrounded())

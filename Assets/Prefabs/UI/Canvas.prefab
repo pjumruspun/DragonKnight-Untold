@@ -95,6 +95,41 @@ MonoBehaviour:
   m_EffectColor: {r: 0.23584908, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
+--- !u!1 &371856513224202653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 756059299053049472}
+  m_Layer: 5
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &756059299053049472
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371856513224202653}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5097646329903057362}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &416294800644527846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,6 +1495,7 @@ RectTransform:
   - {fileID: 4279007892656503084}
   - {fileID: 1971006235201799084}
   - {fileID: 1513563652349306260}
+  - {fileID: 756059299053049472}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2461,14 +2497,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
---- !u!1 &5097646330652239717 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 16435958326552003, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
-  m_PrefabInstance: {fileID: 5081219533507740326}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5097646330652239716 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 16435958326552002, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
+  m_PrefabInstance: {fileID: 5081219533507740326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5097646330652239717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 16435958326552003, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
   m_PrefabInstance: {fileID: 5081219533507740326}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5097646329535233885

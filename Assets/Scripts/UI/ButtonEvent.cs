@@ -21,6 +21,7 @@ public class ButtonEvent : MonoBehaviour
 
     public void MainMenu()
     {
+        GameEvents.TriggerResetGame();
         LevelChanger.LoadSceneInstant(Scenes.MainMenu);
     }
 

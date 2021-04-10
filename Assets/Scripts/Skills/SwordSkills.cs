@@ -237,7 +237,7 @@ public class SwordSkills : PlayerSkills
 
         // When the buff ends, try to counter attack
         invulBuff.OnUpdate += TryCounterAttack;
-        invulBuff.Callback += ResetCounterAtttackVar;
+        invulBuff.Callback += ResetCounterAttackVar;
         currentInvulBuff = invulBuff;
         BuffManager.AddBuff(invulBuff);
 
@@ -333,9 +333,8 @@ public class SwordSkills : PlayerSkills
         }, counterAttackTimeRatio[2] * animLength);
     }
 
-    private void ResetCounterAtttackVar()
+    private void ResetCounterAttackVar()
     {
-        Debug.Log("Reset");
         hasCounterAttacked = false;
         PlayerHealth.Instance.SetHasBlocked(false);
         PlayerAnimation.Instance.StopParrying();
