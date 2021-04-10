@@ -35,7 +35,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private bool isFlipLockedBySkills = false;
     private bool isMovementLockedBySkills = false;
     private bool isJumpLockedBySkills = false;
-    private bool stopAllMovement = false;
+    private bool stopMovement = false;
+    private bool stopY = false;
     private float originalGravityScale;
 
     // Lock function utility
@@ -150,15 +151,32 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     // Set reset lockers
     public void LockFlipBySkill(bool lockFlip) => isFlipLockedBySkills = lockFlip;
 
-    public void LockMovementBySkill(bool lockMovement)
+    public void LockMovementBySkill(bool lockMovement, bool disableGravity = true)
     {
         if (lockMovement)
         {
             rigidbody2D.velocity = Vector2.zero;
         }
 
-        this.stopAllMovement = lockMovement;
-        rigidbody2D.gravityScale = lockMovement ? 0.0f : originalGravityScale;
+        this.stopMovement = lockMovement;
+
+        // Should we disable gravity
+        if (disableGravity)
+        {
+            rigidbody2D.gravityScale = 0.0f;
+            stopY = true;
+        }
+        else
+        {
+            rigidbody2D.gravityScale = originalGravityScale;
+        }
+
+        // Unlock gravity
+        if (!lockMovement)
+        {
+            rigidbody2D.gravityScale = originalGravityScale;
+        }
+
         isMovementLockedBySkills = lockMovement;
     }
 
@@ -174,8 +192,8 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     public void LockMovementBySkill(
         float duration,
-        bool stopAllMovement =
-        false, bool lockFlip = true,
+        bool stopAllMovement = false,
+        bool lockFlip = true,
         bool disableGravity = true
     ) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip, disableGravity);
 
@@ -203,11 +221,12 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Disable old movement
         rigidbody2D.velocity = Vector2.zero;
         // Stop all movement?
-        this.stopAllMovement = stopAllMovement;
+        this.stopMovement = stopAllMovement;
         // Disable gravity
         if (disableGravity)
         {
             rigidbody2D.gravityScale = 0.0f;
+            stopY = true;
         }
         // Lock movement
         isMovementLockedBySkills = true;
@@ -423,9 +442,22 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void ProcessStopAllMovement()
     {
-        if (stopAllMovement)
+        if (stopMovement)
         {
-            rigidbody2D.velocity = Vector2.zero;
+            if (stopY)
+            {
+                // Stop both X and Y movement
+                rigidbody2D.velocity = Vector2.zero;
+            }
+            else
+            {
+                // Stop only X movement
+                rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);
+            }
+        }
+        else
+        {
+            stopY = false;
         }
     }
 
@@ -449,7 +481,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
         // Unlock
         isMovementLockedBySkills = false;
-        this.stopAllMovement = false;
+        this.stopMovement = false;
         // Reenable gravity
         rigidbody2D.gravityScale = originalGravityScale;
     }

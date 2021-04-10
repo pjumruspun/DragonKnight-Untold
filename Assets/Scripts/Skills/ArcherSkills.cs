@@ -52,7 +52,7 @@ public class ArcherSkills : PlayerSkills
         float cooldown = PlayerStats.Instance.SkillCooldown[0];
 
         // Lock movement
-        movement.LockMovementBySkill(cooldown * skill1LockMovementRatio, false, false, false);
+        movement.LockMovementBySkill(cooldown * skill1LockMovementRatio, true, false, false);
 
         // Lock flip for a while
         movement.LockFlipBySkill(true);
@@ -81,14 +81,8 @@ public class ArcherSkills : PlayerSkills
 
     public override void Skill2()
     {
-        if (movement.IsGrounded())
-        {
-            Skill2GroundVariant();
-        }
-        else
-        {
-            Skill2AirVariant();
-        }
+        base.Skill2();
+        Skill2GroundVariant();
     }
 
     public void NotifySkill2ToRelease()
@@ -105,14 +99,11 @@ public class ArcherSkills : PlayerSkills
 
     public void Skill2Release()
     {
-        // Count cooldown
-        base.Skill2();
-
         // Spawn arrow
-        float damage = PlayerStats.Instance.BaseSkillDamage[0] * (2.0f + 0.5f * currentChargeLevel);
+        float damage = PlayerStats.Instance.BaseSkillDamage[0] * (1.5f + 0.75f * currentChargeLevel);
         float knockBackAmplitude = chargedShotKnockBackAmplitude * (0.5f + 0.1f * currentChargeLevel / maxChargeLevel);
 
-        AttackWithProjectile(
+        Projectile chargedShot = AttackWithProjectile(
             ref ObjectManager.Instance.ChargedArrows,
             damage,
             transform.position,
@@ -123,6 +114,15 @@ public class ArcherSkills : PlayerSkills
             shouldHitContinuously: true,
             hitInterval: chargedShotHitInterval
         );
+
+        // Set projectile visual size
+        DashEffectSize chargedShotArrowEffect = chargedShot.GetComponentInChildren<DashEffectSize>();
+        if (chargedShotArrowEffect == null)
+        {
+            throw new System.NullReferenceException("Cannot find DashEffectSize under Projectile chargedShot's children");
+        }
+
+        chargedShotArrowEffect.SetSize(currentChargeLevel, maxChargeLevel);
 
         // Knock back
         float animLength = PlayerAnimation.Instance.GetAnimLength("Archer_Charge_End");
@@ -205,7 +205,7 @@ public class ArcherSkills : PlayerSkills
         // Lock movement
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
-        movement.LockMovementBySkill(true);
+        movement.LockMovementBySkill(true, false);
     }
 
     private IEnumerator IncreaseChargeLevel()

@@ -107,7 +107,7 @@ public abstract class PlayerSkills : ScriptableObject
     /// <param name="forwardVector">Player's forward vector ((-1,0) or (1,0))</param>
     /// <param name="rotationZ">Angle compared to forward vector.</param>
     /// <param name="knockUpAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this projectile hits.</param>
-    protected void AttackWithProjectile(
+    protected Projectile AttackWithProjectile(
         ref ObjectPool objectPool,
         float damage, Vector3 spawnPosition,
         Vector2 forwardVector,
@@ -151,6 +151,7 @@ public abstract class PlayerSkills : ScriptableObject
             );
 
             projectile.SetConfig(projectileConfig);
+            return projectile;
         }
         else
         {

@@ -119,7 +119,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         else if ( // If player releases charge shot
             InputManager.Skill2Release &&
             PlayerClassStatic.currentClass == PlayerClass.Archer
-            && PlayerMovement.Instance.IsGrounded()
         )
         {
             // Release
