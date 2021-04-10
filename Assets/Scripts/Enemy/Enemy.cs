@@ -42,6 +42,7 @@ public class Enemy : Health
     public bool CanSeeThroughWalls => canSeeThroughWalls;
     public Transform GroundDetector => groundDetector;
     public bool ShouldChase { get; set; }
+    public bool IsKnockedAirborne { get; set; }
 
 
     [Header("Enemy Spawning")]
@@ -288,6 +289,9 @@ public class Enemy : Health
 
         // So enemy won't instantly attacks when it spawns
         CurrentCooldown = AttackCooldown;
+
+        // Set so that we know enemy is not currently knocked when starting
+        IsKnockedAirborne = false;
     }
 
     protected override void HandleHealthChange()

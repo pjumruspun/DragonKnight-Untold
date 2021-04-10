@@ -6,6 +6,7 @@ using UnityEngine;
 public class ArcherSkills : PlayerSkills
 {
     private DashEffectSize chargedShotEffect;
+    private AttackHitbox airShotHitZone;
 
     // Spread shot vars
     private bool hasFiredSpreadShot = false;
@@ -34,15 +35,22 @@ public class ArcherSkills : PlayerSkills
 
     // Air shot params
     private const float airShotLockMovementRatio = 1.0f;
-    private const float airShotProjectileSpeed = 3.0f;
+    private const float airShotProjectileSpeed = 7.0f;
+    private const float airShotKnockUpAmplitude = 0.4f;
+    private const float defaultAirShotX = 3.0f;
+    private const float defaultAirShotY = 2.0f;
+    private const float defaultAirShotCurve = 0.0f;
+    private const float foundTargetAirShotCurve = 0.5f;
 
-    public void Initialize(Transform transform, DashEffectSize chargedShotEffect)
+    public void Initialize(Transform transform, DashEffectSize chargedShotEffect, AttackHitbox airShotHitZone)
     {
         base.Initialize(transform);
         shouldReleaseChargeShot = false;
 
         this.chargedShotEffect = chargedShotEffect;
         this.chargedShotEffect.gameObject.SetActive(false);
+
+        this.airShotHitZone = airShotHitZone;
 
         EventPublisher.PlayerLand += ResetSpreadShot;
     }
@@ -123,18 +131,47 @@ public class ArcherSkills : PlayerSkills
             damage,
             transform.position,
             movement.ForwardVector,
-            knockUpAmplitude: 0.75f,
+            knockUpAmplitude: airShotKnockUpAmplitude,
             hitEffect: HitEffect.Slash,
             shouldFlinch: false,
             overrideSpeed: 0.0f
         );
 
+        // Select air shot target
+        float closestDistanceX = 99999.0f;
+        Enemy currentClosestEnemy = null;
+        foreach (Collider2D collider in airShotHitZone.HitColliders)
+        {
+            if (collider.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+            {
+                if (enemy.IsKnockedAirborne && !enemy.IsDead)
+                {
+                    float distanceX = Mathf.Abs(transform.position.x - enemy.transform.position.x);
+                    if (distanceX < closestDistanceX)
+                    {
+                        closestDistanceX = distanceX;
+                        currentClosestEnemy = enemy;
+                    }
+                }
+            }
+        }
+
         // Spawn projectile into bezier curve
         GameObject curveRouteObject = ObjectManager.Instance.CurveRoute.SpawnObject();
         if (curveRouteObject.TryGetComponent<CurveRoute>(out CurveRoute curveRoute))
         {
-            Vector3 x = movement.ForwardVector * 3.0f;
-            curveRoute.Configure(transform.position, transform.position + Vector3.up * 2.0f + x, 0.5f);
+            if (currentClosestEnemy == null)
+            {
+                // Default target settings
+                Vector3 x = movement.ForwardVector * defaultAirShotX;
+                curveRoute.Configure(transform.position, transform.position + Vector3.up * defaultAirShotY + x, defaultAirShotCurve);
+            }
+            else
+            {
+                // Target exists
+                curveRoute.Configure(transform.position, currentClosestEnemy.transform.position, foundTargetAirShotCurve);
+            }
+
             BezierConfig bezierConfig = new BezierConfig(airShotProjectileSpeed, true);
             curveRoute.AssignBezierPath(arrow.gameObject, bezierConfig);
         }
