@@ -104,7 +104,7 @@ public class SwordSkills : PlayerSkills
 
         // Lock player's movement and flip
         // Lock equals to animation clip length
-        movement.LockMovementBySkill(animLength * skill1LockMovementRatio, false, true);
+        movement.LockMovementBySkill(animLength * skill1LockMovementRatio, true, true);
         movement.LockJumpBySkill(animLength * skill1LockMovementRatio);
 
         movement.MoveForwardBySkill(skill1PushSpeed[currentCombo], animLength * skill1PushDurationRatio, groundOnly: false);
