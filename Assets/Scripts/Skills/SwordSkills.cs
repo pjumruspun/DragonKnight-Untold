@@ -6,6 +6,8 @@ using UnityEngine;
 public class SwordSkills : PlayerSkills
 {
     public int CurrentCombo => currentCombo;
+    // Skill canceling params
+    private readonly float[] skillCastingRatio = new float[4] { 0.7f, 0.8f, 0.8f, 0.9f };
 
     // Skill 1 params
     private readonly float[] skill1PushSpeed = new float[3] { 50.0f, 50.0f, 150.0f };
@@ -23,11 +25,16 @@ public class SwordSkills : PlayerSkills
     private const float skill3DashAnticipationRatio = 1.0f;
     private const float skill3AttackAnticipationRatio = 0.35f;
     private const float skill3SpeedMultiplier = 3.5f;
-    private const float skill3KnockAmplitude = 2.0f;
+    private const float skill3SlashKnockUpAmplitude = 2.0f;
     private const float skill3CooldownResetRatio = 0.6f;
+    private const float skill3DashKnockUpAmplitude = 2.5f;
+    private const float skill3DashKnockBackAmplitude = 4.5f;
+    private const float dashDamageRatio = 0.5f;
+    private const float slashDamageRatio = 0.5f;
 
     // Ultimate skill variables
     private bool hasCounterAttacked = false;
+    private bool counterSuccessful = false;
     private InvulBuff currentInvulBuff = null;
 
     // Parry skill params
@@ -43,17 +50,25 @@ public class SwordSkills : PlayerSkills
     private const float counterScreenShakePower = 0.15f;
     private const float counterSuperArmorAttack = 100.0f;
 
+    // Hitboxes
     private AttackHitbox swordPrimaryHitbox;
+
+    // Effects
+    private GameObject dashEffect;
 
     // Combo stuff
     private const float resetComboRatio = 1.5f; // 1.5 times of attack anim length
     private int currentCombo = 0;
     private float lastAttackTime = 0.0f;
 
-    public void Initialize(Transform transform, AttackHitbox swordPrimaryHitbox)
+    public void Initialize(Transform transform, AttackHitbox swordPrimaryHitbox, GameObject dashEffect)
     {
         base.Initialize(transform);
+
         this.swordPrimaryHitbox = swordPrimaryHitbox;
+
+        this.dashEffect = dashEffect;
+        this.dashEffect.SetActive(false);
     }
 
     // Sword auto attack combo
@@ -89,7 +104,7 @@ public class SwordSkills : PlayerSkills
 
         // Lock player's movement and flip
         // Lock equals to animation clip length
-        movement.LockMovementBySkill(animLength * skill1LockMovementRatio, false, true);
+        movement.LockMovementBySkill(animLength * skill1LockMovementRatio, true, true);
         movement.LockJumpBySkill(animLength * skill1LockMovementRatio);
 
         movement.MoveForwardBySkill(skill1PushSpeed[currentCombo], animLength * skill1PushDurationRatio, groundOnly: false);
@@ -104,6 +119,9 @@ public class SwordSkills : PlayerSkills
                 knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo],
                 hitEffect: HitEffect.Slash
         ), anticipationPeriod);
+
+        // Unlock casting skills
+        UnlockCastingIn(animLength * skillCastingRatio[0]);
     }
 
     // Sword wave
@@ -121,9 +139,12 @@ public class SwordSkills : PlayerSkills
 
         // Spawn sword wave with delay
         CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, movement.ForwardVector, animLength * skill2AnticipationRatio));
+
+        // Unlock casting skill
+        UnlockCastingIn(animLength * skillCastingRatio[1]);
     }
 
-    // Dash -> Dash attack
+    // Dash dealing damage -> Dash slash
     public override void Skill3()
     {
         base.Skill3();
@@ -144,11 +165,40 @@ public class SwordSkills : PlayerSkills
                 forceMode: ForceMode2D.Impulse
             );
 
-            DashAttack();
+            // Skill 3 = skillDamage[2]
+            float damage = PlayerStats.Instance.BaseSkillDamage[2] * dashDamageRatio;
+
+            // Dash effect on
+            this.dashEffect.SetActive(true);
+            // Dash effect off
+            CoroutineUtility.ExecDelay(() => this.dashEffect.SetActive(false), animLength);
+
+            // Attack
+            int totalHits = 3;
+            for (int i = 0; i < totalHits; ++i)
+            {
+                CoroutineUtility.ExecDelay(() =>
+                {
+                    // Dash Attack
+                    // First time knock up
+                    float totalDamage = AttackWithHitbox(
+                            swordPrimaryHitbox,
+                            damage / totalHits,
+                            knockUpAmplitude: skill3DashKnockUpAmplitude,
+                            knockBackAmplitude: skill3DashKnockBackAmplitude,
+                            hitEffect: HitEffect.Slash
+                    );
+                }, i * (animLength / totalHits));
+            }
+
+            // DashSlash();
         }, skill3DashAnticipationRatio * animLength);
+
+        // Unlock casting
+        UnlockCastingIn(animLength * skillCastingRatio[2]);
     }
 
-    private void DashAttack()
+    private void DashSlash()
     {
         PlayerAnimation.Instance.PlayDashAttackAnimation();
 
@@ -158,13 +208,13 @@ public class SwordSkills : PlayerSkills
         movement.LockJumpBySkill(animLength);
 
         // Skill 3 = skillDamage[2]
-        float damage = PlayerStats.Instance.BaseSkillDamage[2];
+        float damage = PlayerStats.Instance.BaseSkillDamage[2] * slashDamageRatio;
 
         // Attack
         float anticipationPeriod = animLength * skill3AttackAnticipationRatio;
         CoroutineUtility.ExecDelay(() =>
         {
-            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3KnockAmplitude, hitEffect: HitEffect.Slash);
+            float damageDealt = AttackWithHitbox(swordPrimaryHitbox, damage, knockUpAmplitude: skill3SlashKnockUpAmplitude, hitEffect: HitEffect.Slash);
             if (damageDealt > 0.0f) // If manage to hit something
             {
                 // Reduce cooldown
@@ -188,7 +238,7 @@ public class SwordSkills : PlayerSkills
 
         // When the buff ends, try to counter attack
         invulBuff.OnUpdate += TryCounterAttack;
-        invulBuff.Callback += ResetCounterAtttackVar;
+        invulBuff.Callback += ResetCounterAttackVar; // Unlock casting in here
         currentInvulBuff = invulBuff;
         BuffManager.AddBuff(invulBuff);
     }
@@ -203,8 +253,13 @@ public class SwordSkills : PlayerSkills
 
     private void CounterAttack()
     {
+        // Lock casting again
+        isCastingSkill = true;
+
         // Notify that player has already counter attacked
         hasCounterAttacked = true;
+        counterSuccessful = true;
+        Debug.Log("counter successful");
 
         // Play animation
         PlayerAnimation.Instance.PlayCounterAnimation();
@@ -225,6 +280,10 @@ public class SwordSkills : PlayerSkills
 
         // Upon successful counter, extends invul window by anim length
         currentInvulBuff.SetDuration(currentInvulBuff.DurationLeft + animLength * 1.0f);
+
+        // Unlock casting
+        UnlockCastingIn(animLength * skillCastingRatio[3]);
+        CoroutineUtility.ExecDelay(() => counterSuccessful = false, animLength * skillCastingRatio[3]);
     }
 
     private void ThreeFoldAttack(float animLength)
@@ -275,9 +334,15 @@ public class SwordSkills : PlayerSkills
         }, counterAttackTimeRatio[2] * animLength);
     }
 
-    private void ResetCounterAtttackVar()
+    private void ResetCounterAttackVar()
     {
-        Debug.Log("Reset");
+        if (!counterSuccessful)
+        {
+            isCastingSkill = false;
+        }
+
+        Debug.Log("Uncast");
+
         hasCounterAttacked = false;
         PlayerHealth.Instance.SetHasBlocked(false);
         PlayerAnimation.Instance.StopParrying();
@@ -290,7 +355,7 @@ public class SwordSkills : PlayerSkills
         AttackWithProjectile(
             ref ObjectManager.Instance.SwordWaves,
             damage, transform.position,
-            forwardVector, knockAmplitude:
+            forwardVector, knockUpAmplitude:
             2.0f,
             hitEffect: HitEffect.Slash
         );

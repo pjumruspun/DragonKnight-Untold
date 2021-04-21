@@ -46,17 +46,16 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         // Debugging
         if (Input.GetKeyDown(KeyCode.E))
         {
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < 1; ++i)
             {
                 int spawnCost = 0;
                 int currentSpawnAttempt = 0;
                 while (spawnCost <= 0 && currentSpawnAttempt <= maxSpawnAttempts)
                 {
-                    spawnCost = TrySpawnEnemy();
+                    spawnCost = TrySpawnEnemy(1.0f);
                     ++currentSpawnAttempt;
                 }
             }
-
         }
     }
 
@@ -65,13 +64,13 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         int spawnAmountThisInterval = 0;
         while (spawnAmountThisInterval < spawnAmountPerInterval)
         {
-            spawnAmountThisInterval += TrySpawnEnemy();
+            spawnAmountThisInterval += TrySpawnEnemy(spawnRange);
         }
 
         currentSpawnAmount += spawnAmountThisInterval;
     }
 
-    private int TrySpawnEnemy()
+    private int TrySpawnEnemy(float spawnRange)
     {
         // Check first if player is referenced
         if (player == null)

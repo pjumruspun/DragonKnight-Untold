@@ -4,4 +4,5 @@ public enum Scenes
     Camp,
     Tutorial,
     Levels,
+    TestScene
 }

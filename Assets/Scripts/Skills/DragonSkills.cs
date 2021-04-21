@@ -16,7 +16,7 @@ public class DragonSkills : PlayerSkills
     private const float skill1ScreenShakePower = 0.15f;
 
     // Skill 3 params
-    private const float skill3LockMovementRatio = 1.0f;
+    private const float skill3LockMovementRatio = 0.9f;
     private const float skill3SpeedMultiplier = 2.0f;
     private const float skill3KnockUpAmplitude = 3.5f;
     private const float skill3KnockBackAmplitude = 0.5f;
@@ -26,6 +26,7 @@ public class DragonSkills : PlayerSkills
     private const float ultKnockUpAmplitude = 0.5f;
     private const float ultDelay = 0.05f;
     private const float ultInterval = 0.20f;
+    private bool isUsingUltimate = false;
 
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox dragonVortexHitbox;
@@ -101,6 +102,7 @@ public class DragonSkills : PlayerSkills
     public override void Skill1()
     {
         currentCooldown[0] = dragonAttackCooldown[0];
+        isCastingSkill = true;
 
         // Primary attack = dragonAttackDamage[0]
         float damage = dragonAttackDamage[0];
@@ -108,6 +110,8 @@ public class DragonSkills : PlayerSkills
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+
+        UnlockCastingIn(animLength * 0.8f);
 
         // Lock movement
         movement.LockMovementBySkill(skill1LockMovementRatio * animLength, true, true);
@@ -157,13 +161,23 @@ public class DragonSkills : PlayerSkills
         }, attackDelay + slashAnimLength);
     }
 
+    public override void Skill2()
+    {
+        currentCooldown[1] = dragonAttackCooldown[1];
+    }
+
     public void UltimateRelease()
     {
-        fireBreath.SetActive(false);
-        if (fireBreathCoroutine != null)
+        if (!isUsingUltimate)
         {
-            CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+            return;
         }
+
+        fireBreath.SetActive(false);
+        CoroutineUtility.Instance.KillCoroutine(fireBreathCoroutine);
+
+        isCastingSkill = false;
+        isUsingUltimate = false;
 
         // Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
@@ -175,9 +189,13 @@ public class DragonSkills : PlayerSkills
     {
         currentCooldown[2] = dragonAttackCooldown[2];
 
+        isCastingSkill = true;
+
         float damage = dragonAttackDamage[2];
         float animLength = PlayerAnimation.Instance.GetAnimLength(2);
         float lockMovementDuration = animLength * skill3LockMovementRatio;
+
+        UnlockCastingIn(animLength * 1.0f);
 
         movement.LockMovementBySkill(lockMovementDuration, true, true);
         movement.LockJumpBySkill(lockMovementDuration);
@@ -235,7 +253,10 @@ public class DragonSkills : PlayerSkills
 
     public override void UltimateSkill()
     {
+        Debug.Log("Dragon ult");
         currentCooldown[3] = dragonAttackCooldown[3];
+
+        isCastingSkill = true;
 
         // Ult = dragonAttackDamage[3]
         float damage = dragonAttackDamage[3];
@@ -252,6 +273,7 @@ public class DragonSkills : PlayerSkills
         fireBreath.SetActive(true);
         while (true)
         {
+            isUsingUltimate = true;
             yield return new WaitForSeconds(interval);
             AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude);
         }

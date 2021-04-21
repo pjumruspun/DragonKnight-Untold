@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
+    public bool IsCastingSkill => CurrentSkills().IsCastingSkill;
     public int SwordCombo =>
         PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
 
@@ -14,14 +15,20 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private AttackHitbox dragonPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonVortexHitbox;
+    [SerializeField]
+    private AttackHitbox airShotHitZone;
 
     [Header("Skill Effects")]
+    [SerializeField]
+    private GameObject dashEffect;
     [SerializeField]
     private GameObject fireBreath;
     [SerializeField]
     private GameObject clawSlash;
     [SerializeField]
     private GameObject dragonDashEffect;
+    [SerializeField]
+    private DashEffectSize chargedShotEffect;
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
@@ -51,6 +58,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
+        EventPublisher.StopChargeShot += StopChargeShot;
 
         // Initialize player starting class, player will get to choose this later
         InitializeSkills();
@@ -63,6 +71,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
+        EventPublisher.StopChargeShot -= StopChargeShot;
     }
 
     private void Update()
@@ -110,13 +119,33 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
         }
+        else if ( // If player releases charge shot
+            InputManager.Skill2Release &&
+            PlayerClassStatic.currentClass == PlayerClass.Archer
+            && !DragonGauge.Instance.IsDragonForm
+        )
+        {
+            // Release
+            (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
+        }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
-            EventPublisher.TriggerPlayerUseSkill(2);
+            if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
+            {
+                if (PlayerMovement.Instance.IsGrounded())
+                {
+                    // For archer, skill 2 (Air shot) can be activated only when on ground
+                    EventPublisher.TriggerPlayerUseSkill(2);
+                }
+            }
+            else
+            {
+                EventPublisher.TriggerPlayerUseSkill(2);
+            }
         }
         else if (InputManager.UltimateSkill && IsSkillReady(3))
         {
-            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword && !DragonGauge.Instance.IsDragonForm)
             {
                 // For sword, ultimate can be activated only when on ground
                 if (PlayerMovement.Instance.IsGrounded())
@@ -139,7 +168,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private bool IsSkillReady(int skillNumber)
     {
         float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
-        bool readyToAttack = currentCooldown <= 0.01f;
+        bool readyToAttack = currentCooldown <= 0.01f && !CurrentSkills().IsCastingSkill;
         // Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }
@@ -178,6 +207,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void StopFireBreath()
     {
         dragonSkills.UltimateRelease();
+    }
+
+    private void StopChargeShot()
+    {
+        if (PlayerClassStatic.currentClass == PlayerClass.Archer)
+        {
+            (CurrentSkills() as ArcherSkills).Skill2Release();
+        }
+        else
+        {
+            throw new System.InvalidOperationException("Attempt to call StopChargeShot when player is not an archer.");
+        }
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -227,8 +268,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private void InitializeSkills()
     {
-        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox);
-        SkillsRepository.Archer.Initialize(transform);
+        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
+        SkillsRepository.Archer.Initialize(transform, chargedShotEffect, airShotHitZone);
         SkillsRepository.Dragon.Initialize(
             transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
         );

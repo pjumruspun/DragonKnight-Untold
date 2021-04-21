@@ -44,6 +44,7 @@ public class Inventory : MonoSingleton<Inventory>
     {
         EventPublisher.InventoryChange += CalculateItemStats;
         GameEvents.RestartGame += RemoveAllItems;
+        GameEvents.ResetGame += RemoveAllItems;
         CalculateItemStats();
     }
 
@@ -51,6 +52,7 @@ public class Inventory : MonoSingleton<Inventory>
     {
         EventPublisher.InventoryChange -= CalculateItemStats;
         GameEvents.RestartGame -= RemoveAllItems;
+        GameEvents.ResetGame -= RemoveAllItems;
     }
 
     private void CalculateItemStats()

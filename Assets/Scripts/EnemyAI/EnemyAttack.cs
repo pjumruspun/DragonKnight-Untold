@@ -76,8 +76,7 @@ public class EnemyAttack : EnemyBehavior
 
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            projectile.SetDirection(enemy.GetForwardVector());
-            projectile.SetDamage(enemy.AttackDamage, crit: false);
+            projectile.SetConfig(new ProjectileConfig(enemy.GetForwardVector(), enemy.AttackDamage));
         }
         else
         {

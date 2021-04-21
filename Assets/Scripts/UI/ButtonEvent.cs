@@ -19,13 +19,25 @@ public class ButtonEvent : MonoBehaviour
         GameEvents.TriggerRestartGame();
     }
 
+    public void ResetTestScene()
+    {
+        DragonGaugeStatic.dragonEnergy = 100.0f;
+        LevelChanger.LoadSceneInstant(Scenes.TestScene);
+    }
+
     public void MainMenu()
     {
+        GameEvents.TriggerResetGame();
         LevelChanger.LoadSceneInstant(Scenes.MainMenu);
     }
 
     public void ShowOptions()
     {
         Debug.Log("Showing options!");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

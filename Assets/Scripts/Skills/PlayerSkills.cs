@@ -8,6 +8,7 @@ public abstract class PlayerSkills : ScriptableObject
     public IEnumerable<Sprite> GetIcons => from skill in skills select skill.skillIcon;
     public IEnumerable<float> GetBaseSkillCooldowns => from skill in skills select skill.baseCooldown;
     public IEnumerable<float> GetBaseSkillDamage => from skill in skills select skill.baseDamage;
+    public bool IsCastingSkill => isCastingSkill;
 
     [SerializeField]
     protected Skill[] skills = new Skill[4];
@@ -16,6 +17,7 @@ public abstract class PlayerSkills : ScriptableObject
     protected Transform transform;
     protected PlayerMovement movement;
     protected float[] currentCooldown;
+    protected bool isCastingSkill = false;
 
     /// <summary>
     /// Returns current cooldown of every skill.
@@ -44,6 +46,9 @@ public abstract class PlayerSkills : ScriptableObject
         movement = PlayerMovement.Instance;
         this.transform = transform;
         currentCooldown = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
+
+        // Reset casting when changing to dragon or change class
+        EventPublisher.PlayerChangeClass += ResetCasting;
     }
 
     /// <summary>
@@ -71,6 +76,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill1()
     {
         currentCooldown[0] = PlayerStats.Instance.SkillCooldown[0];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -79,6 +85,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill2()
     {
         currentCooldown[1] = PlayerStats.Instance.SkillCooldown[1];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -87,6 +94,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill3()
     {
         currentCooldown[2] = PlayerStats.Instance.SkillCooldown[2];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -95,6 +103,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void UltimateSkill()
     {
         currentCooldown[3] = PlayerStats.Instance.SkillCooldown[3];
+        isCastingSkill = true;
     }
 
     /// <summary>
@@ -106,14 +115,20 @@ public abstract class PlayerSkills : ScriptableObject
     /// <param name="spawnPosition">Position that the projectile should spawn at.</param>
     /// <param name="forwardVector">Player's forward vector ((-1,0) or (1,0))</param>
     /// <param name="rotationZ">Angle compared to forward vector.</param>
-    /// <param name="knockAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this projectile hits.</param>
-    protected void AttackWithProjectile(
+    /// <param name="knockUpAmplitude">If the enemy is knocked, how much force in y-axis will the enemy gets hit by when this projectile hits.</param>
+    protected Projectile AttackWithProjectile(
         ref ObjectPool objectPool,
         float damage, Vector3 spawnPosition,
         Vector2 forwardVector,
         float rotationZ = 0.0f,
-        float knockAmplitude = 0.0f,
-        HitEffect hitEffect = HitEffect.None
+        float superArmorDamage = 0.0f,
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
+        HitEffect hitEffect = HitEffect.None,
+        bool shouldHitContinuously = false,
+        float hitInterval = 1.0f,
+        bool shouldFlinch = true,
+        float overrideSpeed = -1.0f
     )
     {
         GameObject spawnedObject = objectPool.SpawnObject(spawnPosition, Quaternion.identity);
@@ -131,11 +146,23 @@ public abstract class PlayerSkills : ScriptableObject
 
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            projectile.SetDirection(forwardVector);
             PlayerStats.Instance.CalculateDamage(damage, out float finalDamage, out bool crit);
-            projectile.SetDamage(finalDamage, crit);
-            projectile.SetKnockValue(knockAmplitude);
-            projectile.SetHitEffect(hitEffect);
+            ProjectileConfig projectileConfig = new ProjectileConfig(
+                forwardVector,
+                finalDamage,
+                crit,
+                superArmorDamage,
+                knockUpAmplitude,
+                knockBackAmplitude,
+                hitEffect,
+                shouldHitContinuously,
+                hitInterval,
+                shouldFlinch,
+                overrideSpeed
+            );
+
+            projectile.SetConfig(projectileConfig);
+            return projectile;
         }
         else
         {
@@ -198,5 +225,15 @@ public abstract class PlayerSkills : ScriptableObject
         }
 
         return totalDamageDealt;
+    }
+
+    protected void UnlockCastingIn(float inDuration)
+    {
+        CoroutineUtility.ExecDelay(() => isCastingSkill = false, inDuration);
+    }
+
+    private void ResetCasting(PlayerClass c)
+    {
+        isCastingSkill = false;
     }
 }

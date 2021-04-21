@@ -8,8 +8,10 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool FloatingDamage;
     public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
+    public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool SlashEffect;
+    public ObjectPool CurveRoute;
 
     [Header("Floating Damage")]
     [SerializeField]
@@ -35,6 +37,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private int arrowPoolSize = 30;
 
+    [Header("Charged Arrows")]
+    [SerializeField]
+    private GameObject chargedArrowsPrefab;
+    [SerializeField]
+    private int chargedArrowsPoolSize = 3;
+
     [Header("Item Pickups")]
     [SerializeField]
     private GameObject itemPickupPrefab;
@@ -50,6 +58,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     private float slashEffectRandomAngle = 20.0f;
     [SerializeField]
     private float slashEffectDestroyDuration = 0.5f;
+
+    [Header("Curve Route")]
+    [SerializeField]
+    private GameObject curveRoutePrefab;
+    [SerializeField]
+    private int curveRoutePoolSize = 10;
 
     public void SpawnSlashingEffect(Vector3 spawnPosition)
     {
@@ -67,5 +81,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
+        ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);
+        CurveRoute = new ObjectPool(curveRoutePrefab, curveRoutePoolSize);
     }
 }
