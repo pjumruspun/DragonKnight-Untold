@@ -12,7 +12,7 @@ public class PlayerSkillsUI : MonoBehaviour
     private Image[] cooldownMasks;
     [SerializeField]
     private Text[] cooldownlabels;
-
+    [SerializeField]
     private Sprite originalSkillSprite;
 
     private void Start()
@@ -67,7 +67,14 @@ public class PlayerSkillsUI : MonoBehaviour
             {
                 if (skillIcons[i] != null)
                 {
-                    skillIcons[i].sprite = icons[i];
+                    if (icons[i] != null)
+                    {
+                        skillIcons[i].sprite = icons[i];
+                    }
+                    else
+                    {
+                        skillIcons[i].sprite = originalSkillSprite;
+                    }
                 }
             }
         }
@@ -85,7 +92,14 @@ public class PlayerSkillsUI : MonoBehaviour
         {
             if (skillIcons[i] != null)
             {
-                skillIcons[i].sprite = icons[i];
+                if (icons[i] != null)
+                {
+                    skillIcons[i].sprite = icons[i];
+                }
+                else
+                {
+                    skillIcons[i].sprite = originalSkillSprite;
+                }
             }
         }
     }

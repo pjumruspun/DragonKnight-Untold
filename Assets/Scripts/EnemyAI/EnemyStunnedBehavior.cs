@@ -34,6 +34,9 @@ public class EnemyStunnedBehavior : EnemyBehavior
 
         // To check if the enemy is stunned
         isStunned = true;
+
+        // Tell that enemy is currently in the air
+        enemy.IsKnockedAirborne = true;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -72,13 +75,19 @@ public class EnemyStunnedBehavior : EnemyBehavior
             animator.SetTrigger("Dead");
         }
 
-        if (Mathf.Abs(velocityY) < 0.01f)
+        if (Mathf.Abs(velocityY) < 0.001f)
         {
             currentNotMoveYDuration += Time.deltaTime;
         }
         else
         {
             currentNotMoveYDuration = 0.0f;
+        }
+
+        if (currentNotMoveYDuration > 0.1f)
+        {
+            // On ground for sure
+            enemy.IsKnockedAirborne = false;
         }
 
         if (currentNotMoveYDuration > enemy.SecondsBeforeGetUp)

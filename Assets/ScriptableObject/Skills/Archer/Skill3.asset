@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
   m_Name: Skill3
   m_EditorClassIdentifier: 
-  skillName: New Skill
-  skillIcon: {fileID: 0}
-  baseDamage: 0
-  baseCooldown: 1
+  skillName: Air Shot
+  skillIcon: {fileID: 21300000, guid: 38b3cc8d75e8644848ba168c7d7b4411, type: 3}
+  baseDamage: 5
+  baseCooldown: 0.15

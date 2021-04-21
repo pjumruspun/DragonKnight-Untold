@@ -4,36 +4,28 @@ using UnityEngine;
 
 public class BuffManager
 {
-    private List<Buff> buffs;
+    public static IEnumerable<Buff> Buffs => buffs;
+    private static List<Buff> buffs = new List<Buff>();
 
-    public BuffManager()
+    public static void UpdateBuffManager()
     {
-        buffs = new List<Buff>();
-    }
-
-    public void UpdateBuffManager()
-    {
-        for(int i = buffs.Count - 1; i >= 0; --i)
+        for (int i = buffs.Count - 1; i >= 0; --i)
         {
             buffs[i].Update();
             if (buffs[i].IsExpired)
             {
                 // Safely remove while iterating
                 buffs.RemoveAt(i);
-                
+
             }
         }
 
         // Debug.Log(buffs.Count);
     }
 
-    public void AddSwordUltBuff()
-    {
-        AddBuff(new SwordUltBuff(3.0f));
-    }
-
-    private void AddBuff(Buff buff)
+    public static void AddBuff(Buff buff)
     {
         buffs.Add(buff);
+        EventPublisher.TriggerPlayerReceiveBuff(buff);
     }
 }

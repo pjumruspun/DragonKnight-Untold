@@ -8,7 +8,13 @@ public abstract class Boss : Enemy
     private static readonly float screenShakeDurOnDead = 0.4f;
     private static readonly float screenShakePowOnDead = 0.2f;
 
-    public override void TakeDamage(float damage, bool crit, float superArmorDamage = 0, float knockUpAmplitude = 0, float knockBackAmplitude = 0)
+    public override void TakeDamage(
+        float damage, bool crit,
+        float superArmorDamage = 0.0f,
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
+        bool shouldFlinch = false
+    )
     {
         base.TakeDamage(damage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
 
@@ -44,6 +50,9 @@ public abstract class Boss : Enemy
         BossEvents.TriggerBossDead(this);
 
         ShowEffectsAfterDead();
+
+        // Complete level in boss level
+        GameEvents.TriggerCompleteLevel();
     }
 
     protected override void Flinch()

@@ -45,19 +45,20 @@ public class EnemyAttack : EnemyBehavior
         {
             if (collider.TryGetComponent<PlayerHealth>(out PlayerHealth player))
             {
+                float damageDealt;
                 if (overrideDamage > 0.0f)
                 {
-                    player.TakeDamage(overrideDamage);
-                    totalDamage += overrideDamage;
+                    damageDealt = player.TakeDamage(overrideDamage);
                 }
                 else
                 {
-                    player.TakeDamage(enemy.AttackDamage);
-                    totalDamage += enemy.AttackDamage;
+                    damageDealt = player.TakeDamage(enemy.AttackDamage);
                 }
+
+                totalDamage += damageDealt;
             }
 
-            bool shouldKnock = knockBackAmplitude > 0.0f || knockUpAmplitude > 0.0f;
+            bool shouldKnock = (knockBackAmplitude > 0.0f || knockUpAmplitude > 0.0f) && totalDamage > 0.01f;
             if (shouldKnock && collider.TryGetComponent<PlayerMovement>(out PlayerMovement movement))
             {
                 Vector2 fx = enemy.ForwardVector * knockBackAmplitude;
@@ -75,8 +76,7 @@ public class EnemyAttack : EnemyBehavior
 
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            projectile.SetDirection(enemy.GetForwardVector());
-            projectile.SetDamage(enemy.AttackDamage, crit: false);
+            projectile.SetConfig(new ProjectileConfig(enemy.GetForwardVector(), enemy.AttackDamage));
         }
         else
         {

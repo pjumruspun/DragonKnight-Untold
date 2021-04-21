@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Inventory : MonoSingleton<Inventory>
 {
-
-
     public void Add(Item item)
     {
         InventoryStatic.items.Add(item);
@@ -35,15 +33,26 @@ public class Inventory : MonoSingleton<Inventory>
         EventPublisher.TriggerInventoryChange();
     }
 
+    public void RemoveAllItems()
+    {
+        InventoryStatic.items = new List<Item>();
+        InventoryStatic.itemCount = new Dictionary<Item, int>();
+        CalculateItemStats();
+    }
+
     private void Start()
     {
         EventPublisher.InventoryChange += CalculateItemStats;
+        GameEvents.RestartGame += RemoveAllItems;
+        GameEvents.ResetGame += RemoveAllItems;
         CalculateItemStats();
     }
 
     private void OnDestroy()
     {
         EventPublisher.InventoryChange -= CalculateItemStats;
+        GameEvents.RestartGame -= RemoveAllItems;
+        GameEvents.ResetGame -= RemoveAllItems;
     }
 
     private void CalculateItemStats()

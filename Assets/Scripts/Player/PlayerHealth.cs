@@ -6,8 +6,40 @@ public class PlayerHealth : Health
 {
     // Can't multiple inherit so we need to handmade a singleton here
     public static PlayerHealth Instance { get; private set; }
+    public bool HasSuccessfullyBlocked => hasSuccessfullyBlocked;
     [SerializeField]
     private BoxCollider2D playerCollider;
+
+    // Buff stuff
+    private bool isInvulnerable = false;
+    private bool hasSuccessfullyBlocked = false;
+
+    public void SetInvul(bool invul)
+    {
+        isInvulnerable = invul;
+    }
+
+    public void SetHasBlocked(bool hasBlocked)
+    {
+        hasSuccessfullyBlocked = hasBlocked;
+    }
+
+    public override float TakeDamage(float damage)
+    {
+        if (isInvulnerable)
+        {
+            hasSuccessfullyBlocked = true;
+            // Spawn block effect
+            FloatingTextSpawner.Spawn("Blocked!", transform.position);
+            return 0.0f;
+        }
+        else
+        {
+            base.TakeDamage(damage);
+            EventPublisher.TriggerPlayerTakeDamage();
+            return damage;
+        }
+    }
 
     override protected void Start()
     {
@@ -68,25 +100,6 @@ public class PlayerHealth : Health
         EventPublisher.TriggerPlayerHealthChange();
     }
 
-    // private void AdjustMaxHealth(Stats stats)
-    // {
-    //     float finalMaxHealth = PlayerStats.CalculateMaxHealth(ConfigContainer.Instance.GetPlayerConfig.MaxHealth, stats.vit);
-    //     if (finalMaxHealth > maxHealth)
-    //     {
-    //         // Increase current health with the same amount of max health increased
-    //         float maxHealthIncreased = finalMaxHealth - maxHealth;
-    //         currentHealth += maxHealthIncreased;
-    //     }
-
-    //     maxHealth = finalMaxHealth;
-    //     if (currentHealth > maxHealth)
-    //     {
-    //         currentHealth = maxHealth;
-    //     }
-
-    //     EventPublisher.TriggerPlayerHealthChange();
-    // }
-
     private void Awake()
     {
         if (Instance == null)
@@ -97,5 +110,11 @@ public class PlayerHealth : Health
         {
             DestroyImmediate(gameObject);
         }
+    }
+
+    private void OnRestartGame()
+    {
+        // Set to -1.0f so that PlayerHealth doesn't import health from PlayerHealthStatic
+        PlayerHealthStatic.currentHealth = -1.0f;
     }
 }

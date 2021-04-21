@@ -12,8 +12,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     [SerializeField]
     private float spawnRange = 10.0f;
     [SerializeField]
-    private float castRadius = 2.0f;
-    [SerializeField]
     private float spawnInterval = 15.0f;
     [SerializeField]
     private int spawnAmountPerInterval = 15;
@@ -21,9 +19,9 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private int maxSpawnAmountAtTime = 30;
     private float lastTimeSpawned = 0.0f;
     private float currentSpawnAmount = 0;
-    private float enemyCostKilledThisStage = 0;
     private Transform player;
     private const int maxSpawnAttempts = 500;
+    private const float correctionOffsetY = 0.15f;
 
     private void Start()
     {
@@ -48,17 +46,16 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         // Debugging
         if (Input.GetKeyDown(KeyCode.E))
         {
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < 1; ++i)
             {
                 int spawnCost = 0;
                 int currentSpawnAttempt = 0;
                 while (spawnCost <= 0 && currentSpawnAttempt <= maxSpawnAttempts)
                 {
-                    spawnCost = TrySpawnEnemy();
+                    spawnCost = TrySpawnEnemy(1.0f);
                     ++currentSpawnAttempt;
                 }
             }
-
         }
     }
 
@@ -67,13 +64,13 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         int spawnAmountThisInterval = 0;
         while (spawnAmountThisInterval < spawnAmountPerInterval)
         {
-            spawnAmountThisInterval += TrySpawnEnemy();
+            spawnAmountThisInterval += TrySpawnEnemy(spawnRange);
         }
 
         currentSpawnAmount += spawnAmountThisInterval;
     }
 
-    private int TrySpawnEnemy()
+    private int TrySpawnEnemy(float spawnRange)
     {
         // Check first if player is referenced
         if (player == null)
@@ -91,9 +88,6 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
         float randomX = Random.Range(leftMost, rightMost);
         float randomY = Random.Range(bottomMost, topMost);
-
-        Vector2 randomPosition = new Vector2(randomX, randomY);
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(randomPosition, castRadius, Vector2.zero);
 
         // Check 6 tiles around the random tile
         for (int x = (int)randomX - 1; x <= (int)randomX + 1; ++x)
@@ -115,11 +109,14 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             return 0;
         }
 
+        // Offset correction preventing enemy from spawning underground
+        randomY += correctionOffsetY;
+        Vector2 randomPosition = new Vector2(randomX, randomY);
+
         randomY = Mathf.Ceil(randomY);
         Debug.DrawLine(player.position, randomPosition, Color.green, 2.0f);
 
         Enemy spawnedEnemy = EnemyRepository.Instance.SpawnRandomEnemy(randomPosition);
-        Debug.Log(spawnedEnemy.name);
         return spawnedEnemy.SpawnCost;
     }
 
@@ -154,10 +151,5 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private void ProcessSpawnAmount(Enemy enemy)
     {
         currentSpawnAmount -= enemy.SpawnCost;
-        enemyCostKilledThisStage += enemy.SpawnCost;
-        if (enemyCostKilledThisStage >= StageManager.CostToPassLevel)
-        {
-            GameEvents.TriggerCompleteLevel();
-        }
     }
 }
