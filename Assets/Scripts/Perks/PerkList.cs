@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PerkList : MonoSingleton<PerkList>
 {
-
     public void Add(Perk perk)
     {
         PerkListStatic.perks.Add(perk);
@@ -15,12 +14,25 @@ public class PerkList : MonoSingleton<PerkList>
     {
         foreach (var perk in PerkListStatic.perks)
         {
-            if(perk == targetPerk) 
+            if(perk.name == targetPerk.name) 
             {
-                perk.upgrade();
+                perk.Upgrade();
                 break;
             }
         }
+        //EventPublisher.TriggerInventoryChange();
+    }
+
+    public int GetPerkLevel(Perk targetPerk)
+    {
+        foreach (var perk in PerkListStatic.perks)
+        {
+            if(perk.name == targetPerk.name) 
+            {
+                return perk.PerkLevel;
+            }
+        }
+        return 0;
         //EventPublisher.TriggerInventoryChange();
     }
 
@@ -28,6 +40,12 @@ public class PerkList : MonoSingleton<PerkList>
     {
         //EventPublisher.InventoryChange += CalculateItemStats;
         CalculatePerkStats();
+        List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
+        for(int i = 0; i < initPerk.Count; i++)
+        {
+            this.Add(initPerk[i]);
+        }
+        Debug.Log(PerkListStatic.perks);
     }
 
     private void OnDestroy()

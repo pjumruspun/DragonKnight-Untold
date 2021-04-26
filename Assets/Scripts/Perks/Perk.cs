@@ -11,7 +11,7 @@ public class Perk : ScriptableObject
     public PerkType type;
     private const int maxPerkLevel = 5;
 
-    public void upgrade()
+    public void Upgrade()
     {
         if (PerkLevel < maxPerkLevel) 
         {

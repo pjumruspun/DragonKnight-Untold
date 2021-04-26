@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cheat Death
   m_EditorClassIdentifier: 
   name: Cheat Death
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 2966adb1df90b4914a3ae779fad9b553, type: 3}
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0
