@@ -173,10 +173,10 @@ public class Enemy : Health
             string lifesteal = "Lifesteal";
             bool hasLifeStealPerk = PerkListStatic.HasPerk(lifesteal);
             int lifeStealLevel = PerkListStatic.GetPerkLevel(lifesteal);
-            float lifeStealFactor = 0.05f;
+            float lifestealRatio = 0.025f + 0.015f * lifeStealLevel;
             if (hasLifeStealPerk)
             {
-                PlayerHealth.Instance.Heal(damage * lifeStealLevel * lifeStealFactor);
+                PlayerHealth.Instance.Heal(damage * lifestealRatio);
             }
         }
     }
