@@ -18,7 +18,6 @@ public class PerkUpgradeButton : MonoBehaviour
         {
             perkIcon.sprite = perkDisplayPrefab.icon;
         }
-
     }
 
     void Update()

@@ -10,7 +10,6 @@ public class PerkList : MonoSingleton<PerkList>
         newPerk.PerkLevel = 1;
         newPerk.type = PerkType.Gifted;
         PerkListStatic.perks.Add(newPerk);
-        //EventPublisher.TriggerInventoryChange();
     }
 
     public void AddDevelopedPerk(Perk perk)
@@ -19,7 +18,6 @@ public class PerkList : MonoSingleton<PerkList>
         newPerk.PerkLevel = 1;
         newPerk.type = PerkType.Developed;
         PerkListStatic.perks.Add(newPerk);
-        //EventPublisher.TriggerInventoryChange();
     }
 
     public void Upgrade(Perk targetPerk)
@@ -33,7 +31,6 @@ public class PerkList : MonoSingleton<PerkList>
                 break;
             }
         }
-        //EventPublisher.TriggerInventoryChange();
     }
 
     public void ResetPerk()
@@ -43,7 +40,6 @@ public class PerkList : MonoSingleton<PerkList>
 
     private void Start()
     {
-        //EventPublisher.InventoryChange += CalculateItemStats;
         CalculatePerkStats();
         List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
         for (int i = 0; i < initPerk.Count; i++)
@@ -55,7 +51,6 @@ public class PerkList : MonoSingleton<PerkList>
 
     private void OnDestroy()
     {
-        //EventPublisher.InventoryChange -= CalculateItemStats;
         this.ResetPerk();
     }
 
@@ -64,11 +59,7 @@ public class PerkList : MonoSingleton<PerkList>
         ItemStats accumulatedStats = new ItemStats();
         foreach (var perk in PerkListStatic.perks)
         {
-            // Debug.Log(perk.stats);
             accumulatedStats = accumulatedStats + perk.stats;
-            // Debug.Log(accumulatedStats + perk.stats);
         }
-
-        //PlayerStats.Instance.AssignStatsFromItems(accumulatedStats);
     }
 }
