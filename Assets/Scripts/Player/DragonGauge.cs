@@ -21,6 +21,8 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     private void Start()
     {
         EventPublisher.PlayerChangeClass += StripDragonForm;
+        GameEvents.RestartGame += ResetDragonEnergy;
+
         if (DragonGaugeStatic.dragonEnergy < 0.0f)
         {
             // Because dragonEnergy is set to -1.0f by default
@@ -29,9 +31,15 @@ public class DragonGauge : MonoSingleton<DragonGauge>
         }
     }
 
+    private void ResetDragonEnergy()
+    {
+        DragonGaugeStatic.dragonEnergy = startingDragonEnergy;
+    }
+
     private void OnDestroy()
     {
         EventPublisher.PlayerChangeClass -= StripDragonForm;
+        GameEvents.RestartGame -= ResetDragonEnergy;
     }
 
     private void Update()

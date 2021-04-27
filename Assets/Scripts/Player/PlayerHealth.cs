@@ -67,6 +67,7 @@ public class PlayerHealth : Health
         if (PlayerHealthStatic.currentHealth > 0.0f)
         {
             currentHealth = PlayerHealthStatic.currentHealth;
+            Debug.Log(currentHealth);
         }
 
         Invoke("UpdateMaxHealth", Time.deltaTime);

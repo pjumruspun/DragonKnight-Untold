@@ -47,11 +47,12 @@ public class PerkList : MonoSingleton<PerkList>
             this.AddGiftedPerk(initPerk[i]);
         }
 
+        GameEvents.RestartGame += ResetPerk;
     }
 
     private void OnDestroy()
     {
-        this.ResetPerk();
+        GameEvents.RestartGame -= ResetPerk;
     }
 
     private void CalculatePerkStats()
