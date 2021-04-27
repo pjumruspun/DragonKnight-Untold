@@ -18,6 +18,11 @@ public class PerkUpgradeButton : MonoBehaviour
         {
             perkIcon.sprite = perkDisplayPrefab.icon;
         }
+        
+    }
+
+    void Update()
+    {
         perkLevelText.text = PerkList.Instance.GetPerkLevel(perkDisplayPrefab).ToString();
     }
 
@@ -25,6 +30,9 @@ public class PerkUpgradeButton : MonoBehaviour
     {
         Debug.Log("upgrade perk" + perkDisplayPrefab.name);
         PerkList.Instance.Upgrade(perkDisplayPrefab);
-        perkLevelText.text = PerkList.Instance.GetPerkLevel(perkDisplayPrefab).ToString();
+        if(PerkList.Instance.GetPerkLevel(perkDisplayPrefab) == 0)
+        {
+            PerkList.Instance.AddDevelopedPerk(perkDisplayPrefab);
+        }
     }
 }

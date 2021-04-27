@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21116a3f43b36d447bc1525bd2c22245, type: 3}
   m_Name: Ultimate Offering
   m_EditorClassIdentifier: 
-  name: Ultimate Offeringk
-  icon: {fileID: 0}
+  name: Ultimate Offering
+  icon: {fileID: 21300000, guid: 9f0deb977efe549e9823b8c08dd39594, type: 3}
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0

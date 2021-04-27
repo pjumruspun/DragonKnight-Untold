@@ -4,9 +4,21 @@ using UnityEngine;
 
 public class PerkList : MonoSingleton<PerkList>
 {
-    public void Add(Perk perk)
+    public void AddGiftedPerk(Perk perk)
     {
-        PerkListStatic.perks.Add(perk);
+        Perk newPerk = new Perk(perk);
+        newPerk.PerkLevel = 1;
+        newPerk.type = PerkType.Gifted;
+        PerkListStatic.perks.Add(newPerk);
+        //EventPublisher.TriggerInventoryChange();
+    }
+
+    public void AddDevelopedPerk(Perk perk)
+    {
+        Perk newPerk = new Perk(perk);
+        newPerk.PerkLevel = 1;
+        newPerk.type = PerkType.Developed;
+        PerkListStatic.perks.Add(newPerk);
         //EventPublisher.TriggerInventoryChange();
     }
 
@@ -21,6 +33,11 @@ public class PerkList : MonoSingleton<PerkList>
             }
         }
         //EventPublisher.TriggerInventoryChange();
+    }
+
+    public void ResetPerk()
+    {
+        PerkListStatic.perks = new List<Perk>();
     }
 
     public int GetPerkLevel(Perk targetPerk)
@@ -43,14 +60,15 @@ public class PerkList : MonoSingleton<PerkList>
         List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
         for(int i = 0; i < initPerk.Count; i++)
         {
-            this.Add(initPerk[i]);
+            this.AddGiftedPerk(initPerk[i]);
         }
-        Debug.Log(PerkListStatic.perks);
+        
     }
 
     private void OnDestroy()
     {
         //EventPublisher.InventoryChange -= CalculateItemStats;
+        this.ResetPerk();
     }
 
     private void CalculatePerkStats()
