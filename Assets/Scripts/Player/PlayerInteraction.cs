@@ -5,10 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    [SerializeField]
-    private Text actionText;
-    [SerializeField]
-    private Text detailText;
     private Interactable focus;
 
     private void Start()
@@ -54,8 +50,8 @@ public class PlayerInteraction : MonoBehaviour
     private void SetFocus(Interactable interactable)
     {
         focus = interactable;
-        this.actionText.text = interactable.ActionText;
-        this.detailText.text = interactable.DetailText;
+        InteractionText.Instance.SetActionText(interactable.ActionText);
+        InteractionText.Instance.SetDetailText(interactable.DetailText);
     }
 
     private void ResetFocus(Interactable interactable)
@@ -70,7 +66,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void ClearText()
     {
-        this.actionText.text = "";
-        this.detailText.text = "";
+        InteractionText.Instance.SetActionText("");
+        InteractionText.Instance.SetDetailText("");
     }
 }

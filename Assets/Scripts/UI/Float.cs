@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-// This script does nothing but float the object upward
+[RequireComponent(typeof(TextMesh))]
 public class Float : MonoBehaviour
 {
     [SerializeField]

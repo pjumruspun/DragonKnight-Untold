@@ -7,32 +7,49 @@ using UnityEngine.UI;
 // This class will handle both HP bar update and health update
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Enemy : Health
 {
+    public float ActionSpeed
+    {
+        get
+        {
+            return actionSpeed;
+        }
+        set
+        {
+            actionSpeed = value;
+            animator.speed = value;
+        }
+    }
+
+    public SpawnEffect GetSpawnEffect => spawnEffect;
     public int SpawnCost => spawnCost;
+    public float SuperArmorPercentage => superArmor / maxSuperArmor;
+    public Vector2 ForwardVector => turnDirection == MovementState.Right ? Vector2.right : Vector2.left;
     public MovementState TurnDirection => turnDirection;
-    public ObjectPool Projectile => projectilePool;
-    public bool IsRanged => isRanged;
-    public float AttackDamage => attackDamage;
-    public AttackHitbox EnemyAttackHitbox => attackHitbox;
+    public float AttackDamage => attackDamage * Difficulty.EnemyAttackScalingFactor;
+
     public float AttackRange => attackRange;
-    public float AttackCooldown => attackCooldown;
-    public float AttackDelay => attackDelay;
+    public float AttackCooldown => attackCooldown / actionSpeed;
+    public float AttackDelay => attackDelay / actionSpeed;
     public float CurrentCooldown { get; set; }
     public float SecondsBeforeGetUp => secondsBeforeGetUp;
-    public float EnemyBaseSpeed => enemyBaseSpeed;
-    public float RandomSpeedFactor => randomSpeedFactor;
+    public float EnemyBaseSpeed => enemyBaseSpeed * actionSpeed;
+    public float RandomSpeedFactor => randomSpeedFactor * actionSpeed;
     public float ChasingRange => chasingRange;
     public float ChasingInterval => chasingInterval;
     public bool CanSeeThroughWalls => canSeeThroughWalls;
     public Transform GroundDetector => groundDetector;
-    [HideInInspector]
     public bool ShouldChase { get; set; }
+    public bool IsKnockedAirborne { get; set; }
 
-    // How rare is this monster? The higher, the rarer
+
+    [Header("Enemy Spawning")]
     [SerializeField]
-    [Header("Enemy Spawn Cost")]
-    private int spawnCost = 5;
+    private SpawnEffect spawnEffect;
+    [SerializeField]
+    private int spawnCost = 5; // How rare is this monster? The higher, the rarer
 
     // Enemy AI parameters
     [Header("Enemy Movement Parameters")]
@@ -59,9 +76,9 @@ public class Enemy : Health
     [Header("Health Parameters")]
     // Health system
     [SerializeField]
-    private float enemyMaxHealth = 150.0f;
+    private float startMaxHealth = 150.0f;
     [SerializeField]
-    private Slider hpBar;
+    protected Slider hpBar;
     [SerializeField]
     private float secondsToDespawn = 2.0f;
 
@@ -72,7 +89,7 @@ public class Enemy : Health
     [SerializeField]
     private float maxSuperArmor = 100;
     [SerializeField]
-    private Slider superArmorBar;
+    protected Slider superArmorBar;
     [SerializeField]
     private float secondsBeforeGetUp = 1.5f;
     [SerializeField]
@@ -83,10 +100,6 @@ public class Enemy : Health
     private EnemyAnimation enemyAnimation;
 
     [Header("Attack Parameters")]
-    // Attack
-    [Tooltip("Is this enemy ranged or melee?")]
-    [SerializeField]
-    private bool isRanged = false;
     [SerializeField]
     private float attackDamage = 15.0f;
     [SerializeField]
@@ -97,14 +110,15 @@ public class Enemy : Health
     [SerializeField]
     private float attackDelay = 0.3f;
 
-    [Header("Hitbox and projectile")]
-    [Tooltip("Can leave this blank if ranged")]
+    // Hurt effects
     [SerializeField]
-    private AttackHitbox attackHitbox;
-    [Tooltip("Can leave this blank if melee")]
-    [SerializeField]
-    private GameObject projectilePrefab;
-    private ObjectPool projectilePool;
+    private Color hurtColor = new Color(0.75f, 0.0f, 0.0f);
+    private Color originalColor;
+    private SpriteRenderer spriteRenderer;
+    private float flashEffectDuration = 0.15f;
+
+    // Action speed
+    private float actionSpeed = 1.0f;
 
     // Other stuff
     private Rigidbody2D rigidbody2D;
@@ -112,7 +126,14 @@ public class Enemy : Health
     private MovementState turnDirection = MovementState.Right;
 
     // Adapter method
-    public void TakeDamage(float damage, bool crit, float superArmorDamage = 0.0f, float knockUpAmplitude = 0.0f, float knockBackAmplitude = 0.0f)
+    public virtual void TakeDamage(
+        float damage,
+        bool crit,
+        float superArmorDamage = 0.0f,
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
+        bool shouldFlinch = true
+    )
     {
         if (!IsDead)
         {
@@ -129,18 +150,35 @@ public class Enemy : Health
                 TakeSuperArmorDamage(superArmorDamage);
             }
 
+            // Knock back
             KnockedBack(knockBackAmplitude);
-            enemyAnimation.PlayFlinchAnimation();
+
+            // Flinch
+            if (shouldFlinch)
+            {
+                Flinch();
+            }
 
             // Show floating damage number
-            FloatingDamageManager.Instance.Spawn(damage, transform.position, crit);
-            HandleHealthChange();
-        }
-    }
+            FloatingTextSpawner.Spawn(damage, transform.position, crit);
 
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
+            // Update UI
+            HandleHealthChange();
+
+            // Flash hurt color
+            spriteRenderer.color = hurtColor;
+            CoroutineUtility.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
+
+            // Player lifesteal
+            string lifesteal = "Lifesteal";
+            bool hasLifeStealPerk = PerkListStatic.HasPerk(lifesteal);
+            int lifeStealLevel = PerkListStatic.GetPerkLevel(lifesteal);
+            float lifestealRatio = 0.025f + 0.015f * lifeStealLevel;
+            if (hasLifeStealPerk)
+            {
+                PlayerHealth.Instance.Heal(damage * lifestealRatio);
+            }
+        }
     }
 
     public void AdjustFlipping()
@@ -214,6 +252,11 @@ public class Enemy : Health
         HandleSuperArmorUIChange();
     }
 
+    public void SetRendererActive(bool active)
+    {
+        spriteRenderer.enabled = active;
+    }
+
     protected override void Start()
     {
         // GetComponents
@@ -224,13 +267,22 @@ public class Enemy : Health
         EnableEnemy();
     }
 
+    protected virtual void Flinch()
+    {
+        enemyAnimation.PlayFlinchAnimation();
+    }
+
     private void OnEnable()
     {
         EnableEnemy();
     }
 
-    private void EnableEnemy()
+    protected virtual void EnableEnemy()
     {
+        // GetComponent
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+
         // Enemy shouldn't be stunned at first, set it to inactive
         stunStars.SetActive(false);
 
@@ -238,35 +290,44 @@ public class Enemy : Health
         superArmorBar.gameObject.SetActive(showSuperArmorBar);
 
         // Set health and super armor
-        maxHealth = enemyMaxHealth;
+        base.maxHealth = startMaxHealth * Difficulty.EnemyHealthScalingFactor;
         superArmor = maxSuperArmor;
-
-        // Set projectile if ranged
-        if (isRanged && projectilePrefab != null)
-        {
-            projectilePool = new ObjectPool(projectilePrefab, 10);
-        }
 
         base.Start();
 
         HandleHealthChange();
         HandleSuperArmorUIChange();
         hpBar.gameObject.SetActive(true);
+
+        // So enemy won't instantly attacks when it spawns
+        CurrentCooldown = AttackCooldown;
+
+        // Set so that we know enemy is not currently knocked when starting
+        IsKnockedAirborne = false;
     }
 
     protected override void HandleHealthChange()
     {
         // Update HP Bar
-        hpBar.value = currentHealth / maxHealth;
+        hpBar.value = HealthPercentage;
     }
 
     protected override void HandleDeath()
     {
+        // Reset action speed in case if changed
+        actionSpeed = 1.0f;
+        animator.speed = 1.0f;
+
         // Spawn item
         TrySpawnItem();
 
-        // Disable health bar
+        // Reset color
+        spriteRenderer.color = originalColor;
+
+        // Disable health bar, super armor bar, and stun stars
         hpBar.gameObject.SetActive(false);
+        superArmorBar.gameObject.SetActive(false);
+        stunStars.SetActive(false);
 
         // Play Dead animation
         enemyAnimation.PlayDeadAnimation();
@@ -278,7 +339,7 @@ public class Enemy : Health
         EventPublisher.TriggerEnemyDead(this);
     }
 
-    private void TakeSuperArmorDamage(float superArmorDamage)
+    protected void TakeSuperArmorDamage(float superArmorDamage)
     {
         superArmor -= superArmorDamage;
         if (superArmor < 0.01f)
@@ -288,7 +349,6 @@ public class Enemy : Health
             superArmor = 0.0f;
         }
 
-        // Debug.Log($"Super armor = {superArmor}");
         HandleSuperArmorUIChange();
     }
 
@@ -302,23 +362,24 @@ public class Enemy : Health
     {
         Transform player = PlayerMovement.Instance.transform;
         rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);
-        if (player.position.x > transform.position.x)
+
+        Vector2 direction;
+        switch (PlayerMovement.Instance.TurnDirection)
         {
-            // Player is on the right
-            // Knock left
-            Vector2 direction = Vector2.left;
-            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
+            case MovementState.Left:
+                direction = Vector2.left;
+                break;
+            case MovementState.Right:
+                direction = Vector2.right;
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException("MovementState enum not recognized");
         }
-        else if (player.position.x < transform.position.x)
-        {
-            // Player is on the left
-            // Knock right
-            Vector2 direction = Vector2.right;
-            rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
-        }
+
+        rigidbody2D.AddForce(amplitude * direction, ForceMode2D.Impulse);
     }
 
-    private void HandleSuperArmorUIChange()
+    protected virtual void HandleSuperArmorUIChange()
     {
         // Update super armor bar
         superArmorBar.value = superArmor / maxSuperArmor;

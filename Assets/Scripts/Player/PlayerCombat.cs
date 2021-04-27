@@ -4,21 +4,34 @@ using UnityEngine;
 
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
+    public bool IsCastingSkill => CurrentSkills().IsCastingSkill;
     public int SwordCombo =>
-        currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
-    public PlayerClass CurrentClass => currentClass;
+        PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
 
+    [Header("Hitboxes")]
     [SerializeField]
     private AttackHitbox swordPrimaryHitbox;
     [SerializeField]
     private AttackHitbox dragonPrimaryHitbox;
+    [SerializeField]
+    private AttackHitbox dragonVortexHitbox;
+    [SerializeField]
+    private AttackHitbox airShotHitZone;
 
+    [Header("Skill Effects")]
+    [SerializeField]
+    private GameObject dashEffect;
     [SerializeField]
     private GameObject fireBreath;
-    private DragonSkills dragonSkills;
+    [SerializeField]
+    private GameObject clawSlash;
+    [SerializeField]
+    private GameObject dragonDashEffect;
+    [SerializeField]
+    private DashEffectSize chargedShotEffect;
+
+    private DragonSkills dragonSkills => SkillsRepository.Dragon;
     private PlayerSkills humanSkills;
-    private PlayerClass currentClass;
-    private BuffManager buffManager;
 
     public void ChangeClass(PlayerClass playerClass)
     {
@@ -34,7 +47,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     public float CurrentCooldownPercentage(int skillNumber)
     {
-        return CurrentSkills().CurrentCooldownPercentage(skillNumber);
+        float currentCooldownPercentage = CurrentSkills() == null ? 0.0f : CurrentSkills().CurrentCooldownPercentage(skillNumber);
+        return currentCooldownPercentage;
     }
 
     private void Start()
@@ -44,12 +58,11 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
+        EventPublisher.StopChargeShot += StopChargeShot;
 
         // Initialize player starting class, player will get to choose this later
-        ChangeClass(PlayerClass.Sword);
-
-        // Initialize buff manager
-        buffManager = new BuffManager();
+        InitializeSkills();
+        ChangeClass(PlayerClassStatic.currentClass);
     }
 
     private void OnDestroy()
@@ -58,17 +71,18 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
+        EventPublisher.StopChargeShot -= StopChargeShot;
     }
 
     private void Update()
     {
         ProcessSkillCooldown();
-        buffManager.UpdateBuffManager();
+        BuffManager.UpdateBuffManager();
 
         // Debugging only
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (currentClass == PlayerClass.Sword)
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword)
             {
                 ChangeClass(PlayerClass.Archer);
             }
@@ -76,12 +90,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             {
                 ChangeClass(PlayerClass.Sword);
             }
-        }
-
-        // Debugging only
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            buffManager.AddSwordUltBuff();
         }
 
         // If the player is still alive
@@ -111,7 +119,46 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             // Player skill 2
             EventPublisher.TriggerPlayerUseSkill(1);
         }
-        else if (InputManager.Skill2Release && DragonGauge.Instance.IsDragonForm)
+        else if ( // If player releases charge shot
+            InputManager.Skill2Release &&
+            PlayerClassStatic.currentClass == PlayerClass.Archer
+            && !DragonGauge.Instance.IsDragonForm
+        )
+        {
+            // Release
+            (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
+        }
+        else if (InputManager.Skill3 && IsSkillReady(2))
+        {
+            if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
+            {
+                if (PlayerMovement.Instance.IsGrounded())
+                {
+                    // For archer, skill 2 (Air shot) can be activated only when on ground
+                    EventPublisher.TriggerPlayerUseSkill(2);
+                }
+            }
+            else
+            {
+                EventPublisher.TriggerPlayerUseSkill(2);
+            }
+        }
+        else if (InputManager.UltimateSkill && IsSkillReady(3))
+        {
+            if (PlayerClassStatic.currentClass == PlayerClass.Sword && !DragonGauge.Instance.IsDragonForm)
+            {
+                // For sword, ultimate can be activated only when on ground
+                if (PlayerMovement.Instance.IsGrounded())
+                {
+                    EventPublisher.TriggerPlayerUseSkill(3);
+                }
+            }
+            else
+            {
+                EventPublisher.TriggerPlayerUseSkill(3);
+            }
+        }
+        else if (InputManager.UltimateRelease && DragonGauge.Instance.IsDragonForm)
         {
             // Stop fire breath
             EventPublisher.TriggerStopFireBreath();
@@ -121,7 +168,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private bool IsSkillReady(int skillNumber)
     {
         float currentCooldown = CurrentSkills().GetCurrentCooldown()[skillNumber];
-        bool readyToAttack = currentCooldown <= 0.01f;
+        bool readyToAttack = currentCooldown <= 0.01f && !CurrentSkills().IsCastingSkill;
         // Debug.Log($"{skillNumber}, {currentCooldown}");
         return readyToAttack;
     }
@@ -132,15 +179,17 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             case 0:
                 // Debug.Log("test");
-                CurrentSkills().Skill1(transform.position, GetForwardVector());
+                CurrentSkills().Skill1();
                 break;
             case 1:
-                CurrentSkills().Skill2(transform.position, GetForwardVector());
+                CurrentSkills().Skill2();
                 break;
             case 2:
-                throw new System.NotImplementedException();
+                CurrentSkills().Skill3();
+                break;
             case 3:
-                throw new System.NotImplementedException();
+                CurrentSkills().UltimateSkill();
+                break;
             default:
                 throw new System.InvalidOperationException();
         }
@@ -151,13 +200,25 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         if (!isDragon)
         {
             // Stop fire breath if dragon down
-            dragonSkills.Skill2Release();
+            dragonSkills.UltimateRelease();
         }
     }
 
     private void StopFireBreath()
     {
-        dragonSkills.Skill2Release();
+        dragonSkills.UltimateRelease();
+    }
+
+    private void StopChargeShot()
+    {
+        if (PlayerClassStatic.currentClass == PlayerClass.Archer)
+        {
+            (CurrentSkills() as ArcherSkills).Skill2Release();
+        }
+        else
+        {
+            throw new System.InvalidOperationException("Attempt to call StopChargeShot when player is not an archer.");
+        }
     }
 
     private void ProcessChangingClass(PlayerClass playerClass)
@@ -165,13 +226,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         // Don't forget to transfer items and perks here once it's done
 
         // Change class label
-        currentClass = playerClass;
+        PlayerClassStatic.currentClass = playerClass;
 
         // Change current skill sets
-        humanSkills = CreatePlayerSkill(playerClass);
+        humanSkills = GetPlayerSkill(playerClass);
 
         // Assign dragon skills
-        dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath);
+        // dragonSkills = new DragonSkills(transform, dragonPrimaryHitbox, fireBreath, clawSlash);
     }
 
     private Vector2 GetForwardVector()
@@ -189,20 +250,29 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         }
     }
 
-    private PlayerSkills CreatePlayerSkill(PlayerClass playerClass)
+    private PlayerSkills GetPlayerSkill(PlayerClass playerClass)
     {
         // Create a new instance of PlayerSkill depends on the given class
         switch (playerClass)
         {
             case PlayerClass.Sword:
                 // Send this.stats pointer in
-                return new SwordSkills(transform, swordPrimaryHitbox);
+                return SkillsRepository.Sword;
             case PlayerClass.Archer:
                 // Send this.stats pointer in
-                return new ArcherSkills(transform);
+                return SkillsRepository.Archer;
             default:
                 throw new System.ArgumentOutOfRangeException();
         }
+    }
+
+    private void InitializeSkills()
+    {
+        SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
+        SkillsRepository.Archer.Initialize(transform, chargedShotEffect, airShotHitZone);
+        SkillsRepository.Dragon.Initialize(
+            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
+        );
     }
 
     private PlayerSkills CurrentSkills()

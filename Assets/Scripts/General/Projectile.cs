@@ -8,6 +8,48 @@ public enum Target
     Player
 }
 
+public struct ProjectileConfig
+{
+    public Vector2 direction;
+    public float damage;
+    public bool crit;
+    public float superArmorDamage;
+    public float knockUpAmplitude;
+    public float knockBackAmplitude;
+    public HitEffect hitEffect;
+    public bool shouldHitContinuously;
+    public float hitInterval;
+    public bool shouldFlinch;
+    public float speedOverride;
+
+    public ProjectileConfig(
+        Vector2 direction,
+        float damage,
+        bool crit = false,
+        float superArmorDamage = 0.0f,
+        float knockUpAmplitude = 0.0f,
+        float knockBackAmplitude = 0.0f,
+        HitEffect hitEffect = HitEffect.None,
+        bool shouldHitContinuously = false,
+        float hitInterval = 1.0f,
+        bool shouldFlinch = true,
+        float speedOverride = -1.0f
+    )
+    {
+        this.direction = direction;
+        this.damage = damage;
+        this.crit = crit;
+        this.superArmorDamage = superArmorDamage;
+        this.knockUpAmplitude = knockUpAmplitude;
+        this.knockBackAmplitude = knockBackAmplitude;
+        this.hitEffect = hitEffect;
+        this.shouldHitContinuously = shouldHitContinuously;
+        this.hitInterval = hitInterval;
+        this.shouldFlinch = shouldFlinch;
+        this.speedOverride = speedOverride;
+    }
+}
+
 [RequireComponent(typeof(Collider2D))]
 public class Projectile : MonoBehaviour
 {
@@ -21,32 +63,21 @@ public class Projectile : MonoBehaviour
     private bool pierce = false;
 
     private float totalTraveledDistance = 0.0f;
-    private Vector2 direction;
-    private float damage;
-    private bool crit;
-    private float superArmorDamage;
-    private float knockAmplitude;
+    private ProjectileConfig config;
 
-    public void SetDirection(Vector2 direction)
+    // Continuous hit variables
+    private HashSet<Collider2D> hitColliders = new HashSet<Collider2D>();
+    private Coroutine hitContinuousCoroutine;
+
+    public void SetConfig(ProjectileConfig config)
     {
-        this.direction = direction;
+        this.config = config;
         HandleRotation();
-    }
 
-    public void SetDamage(float damage, bool crit)
-    {
-        this.damage = damage;
-        this.crit = crit;
-    }
-
-    public void SetSuperArmorDamage(float superArmorDamage)
-    {
-        this.superArmorDamage = superArmorDamage;
-    }
-
-    public void SetKnockValue(float knockAmplitude)
-    {
-        this.knockAmplitude = knockAmplitude;
+        if (config.shouldHitContinuously)
+        {
+            hitContinuousCoroutine = StartCoroutine(CreateHitCoroutine());
+        }
     }
 
     private void HandleFlip()
@@ -54,12 +85,12 @@ public class Projectile : MonoBehaviour
         // Hard coded projectile flip
         // Currently can only handle (-1, 0) and (1, 0) vectors
         float x = Mathf.Abs(transform.localScale.x);
-        if (direction.x < -0.01f)
+        if (config.direction.x < -0.01f)
         {
             // If left, then flip left
             transform.localScale = new Vector3(-Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
         }
-        else if (direction.x > 0.01f)
+        else if (config.direction.x > 0.01f)
         {
             // If right, then flip right
             transform.localScale = new Vector3(Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
@@ -69,7 +100,7 @@ public class Projectile : MonoBehaviour
     private void HandleRotation()
     {
         // Improved version of HandleFlip()
-        float degree = Vector2.Angle(Vector2.right, direction);
+        float degree = Vector2.Angle(Vector2.right, config.direction);
         degree = -degree;
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, degree);
     }
@@ -88,13 +119,14 @@ public class Projectile : MonoBehaviour
     {
         if (totalTraveledDistance < maxTravelDistance)
         {
+            float actualSpeed = config.speedOverride >= -0.01f ? config.speedOverride : speed;
             // Cast Vector2 to Vector3
-            Vector3 direction3 = direction;
+            Vector3 direction3 = config.direction;
             // Travel
-            transform.position += direction3 * speed * Time.fixedDeltaTime;
+            transform.position += direction3 * actualSpeed * Time.fixedDeltaTime;
 
             // Log traveled distance
-            float distanceToTravel = direction3.magnitude * speed * Time.fixedDeltaTime;
+            float distanceToTravel = direction3.magnitude * actualSpeed * Time.fixedDeltaTime;
             totalTraveledDistance += distanceToTravel;
         }
         else
@@ -107,39 +139,153 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Deals damage here
-        switch (target)
+        if (config.shouldHitContinuously)
         {
-            case Target.Enemy:
-                if (other.gameObject.layer == Layers.enemyLayerIndex && other.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+            // Continuous
+            // Add col to HashSet instead
+            hitColliders.Add(other);
+        }
+        else
+        {
+            // Non continuous
+            // Deals damage here
+            switch (target)
+            {
+                case Target.Enemy:
+                    if (other.gameObject.layer == Layers.enemyLayerIndex && other.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+                    {
+                        if (enemy.IsDead)
+                        {
+                            return;
+                        }
+
+                        // Deals damage to enemy
+                        enemy.TakeDamage(
+                            config.damage,
+                            crit: config.crit,
+                            superArmorDamage: config.superArmorDamage,
+                            knockUpAmplitude: config.knockUpAmplitude,
+                            knockBackAmplitude: config.knockBackAmplitude,
+                            shouldFlinch: config.shouldFlinch
+                        );
+
+                        // Show hit effect if exist
+                        HitEffectUtility.HitEffectFunction[config.hitEffect]?.Invoke(enemy.transform.position);
+                    }
+                    break;
+                case Target.Player:
+                    if (other.gameObject.layer == Layers.playerLayerIndex && other.gameObject.TryGetComponent<PlayerHealth>(out PlayerHealth playerHealth))
+                    {
+                        if (playerHealth.IsDead)
+                        {
+                            return;
+                        }
+
+                        playerHealth.TakeDamage(config.damage);
+                    }
+                    break;
+                default:
+                    throw new System.NotImplementedException();
+            }
+
+            if (!pierce)
+            {
+                // This projectile cannot pierce
+                // So destroy or set inactive after it hits
+                Destruct();
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (config.shouldHitContinuously)
+        {
+            hitColliders.Remove(other);
+        }
+    }
+
+    private IEnumerator CreateHitCoroutine()
+    {
+        if (config.shouldHitContinuously)
+        {
+            while (true)
+            {
+                HitAllTargetsInHitbox();
+                yield return new WaitForSeconds(config.hitInterval);
+            }
+        }
+        else
+        {
+            throw new System.InvalidOperationException("Tried to call CreateHitCoroutine without having projectile being continuous.");
+        }
+    }
+
+    private void HitAllTargetsInHitbox()
+    {
+        HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
+        foreach (Collider2D collider2D in hitColliders)
+        {
+            bool objectIsActive = collider2D.gameObject.activeInHierarchy;
+            bool shouldHit;
+            if (target == Target.Player)
+            {
+                shouldHit = collider2D.gameObject.layer == Layers.playerLayerIndex;
+            }
+            else
+            {
+                shouldHit = collider2D.gameObject.layer == Layers.enemyLayerIndex;
+            }
+
+            if (objectIsActive && shouldHit)
+            {
+                GameObject enemyObject = collider2D.gameObject;
+                if (enemyObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
-                    // Deals damage to enemy
-                    enemy.TakeDamage(damage, crit, superArmorDamage, knockAmplitude);
+                    // Damage the enemy here
+                    enemy.TakeDamage(
+                        config.damage,
+                        config.crit,
+                        config.superArmorDamage,
+                        config.knockUpAmplitude,
+                        config.knockBackAmplitude
+                    );
+
+                    // Spawn hit effect if exist
+                    HitEffectUtility.HitEffectFunction[config.hitEffect]?.Invoke(enemy.transform.position);
                 }
-                break;
-            case Target.Player:
-                if (other.gameObject.layer == Layers.playerLayerIndex && other.gameObject.TryGetComponent<PlayerHealth>(out PlayerHealth playerHealth))
+                else
                 {
-                    playerHealth.TakeDamage(damage);
+                    // The enemy is dead, clear it from set
+                    Debug.LogAssertion($"gameObject {collider2D.gameObject.name} does not have EnemyHealth attached to.");
                 }
-                break;
-            default:
-                throw new System.NotImplementedException();
+            }
+            else
+            {
+                // Keep track of colliders to remove
+                collidersToRemove.Add(collider2D);
+            }
         }
 
-
-        if (!pierce)
+        // Remove the unrelated colliders
+        foreach (Collider2D unrelatedCollider in collidersToRemove)
         {
-            // This projectile cannot pierce
-            // So destroy or set inactive after it hits
-            Destruct();
+            hitColliders.Remove(unrelatedCollider);
         }
     }
 
     private void Destruct()
     {
-        direction = Vector2.zero;
+        config.direction = Vector2.zero;
         gameObject.SetActive(false);
+
+        if (config.shouldHitContinuously)
+        {
+            // Clear colliders
+            hitColliders = new HashSet<Collider2D>();
+            StopCoroutine(hitContinuousCoroutine);
+            hitContinuousCoroutine = null;
+        }
     }
 
     private void Setup()

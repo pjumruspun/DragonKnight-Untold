@@ -15,7 +15,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private int maxDragonJumpCount = 3;
     private int dragonJumpCount = 0;
     [SerializeField]
-    private float dragonGlidingSpeed = 8.0f;
+    private float dragonGlidingSpeedMultiplier = 2.0f;
     [SerializeField]
     private float jumpingForce = 7.0f;
     [SerializeField]
@@ -35,18 +35,23 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
     private bool isFlipLockedBySkills = false;
     private bool isMovementLockedBySkills = false;
     private bool isJumpLockedBySkills = false;
-    private bool stopAllMovement = false;
+    private bool stopMovement = false;
+    private bool stopY = false;
     private float originalGravityScale;
 
     // Lock function utility
     private bool stateLock = false;
     private float lockDuration = 0.0f;
 
-    // Moving by skills
-    private bool isMovingBySkill = false;
-    private float movingDuration = 0.0f;
+    // Forced movement
+    private bool isForcedToMove = false;
+    private Vector2 forceMoveDirection;
+    private float forceMoveDuration = 0.0f;
     private float movingSpeed = 0.0f;
     private ForceMode2D forceMode = ForceMode2D.Force;
+
+    // Knocked back
+    private bool isKnockedBack = false;
 
     // This could be cached and put private
     // Letting other classes access through property instead
@@ -96,12 +101,28 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         }
     }
 
-    public void AddForceBySkill(Vector2 force)
+    public void KnockBack(Vector2 force)
     {
-        rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+        isKnockedBack = true;
+        AddForceBySkill(force, true);
     }
 
-    public void MoveForwardBySkill(
+    public void AddForceBySkill(Vector2 force, bool disableOldVy = false)
+    {
+        if (disableOldVy)
+        {
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0.0f);
+        }
+
+        rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+
+        // Experimental X movement
+        // Need to find a way to properly move x
+        // ForceMove(new Vector2(force.x, 0.0f), force.x * 10.0f, 1.5f, ForceMode2D.Force, groundOnly: false);
+    }
+
+    public void ForceMove(
+        Vector2 direction,
         float speed,
         float duration,
         ForceMode2D forceMode = ForceMode2D.Force,
@@ -113,33 +134,68 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             return;
         }
 
-        isMovingBySkill = true;
-        movingDuration = duration;
+        forceMoveDirection = direction;
+        isForcedToMove = true;
+        forceMoveDuration = duration;
         movingSpeed = speed;
         this.forceMode = forceMode;
     }
 
+    public void MoveForwardBySkill(
+        float speed,
+        float duration,
+        ForceMode2D forceMode = ForceMode2D.Force,
+        bool groundOnly = true
+    ) => ForceMove(ForwardVector, speed, duration, forceMode, groundOnly);
+
     // Set reset lockers
     public void LockFlipBySkill(bool lockFlip) => isFlipLockedBySkills = lockFlip;
 
-    public void LockMovementBySkill(bool lockMovement)
+    public void LockMovementBySkill(bool lockMovement, bool disableGravity = true)
     {
         if (lockMovement)
         {
             rigidbody2D.velocity = Vector2.zero;
         }
 
-        this.stopAllMovement = lockMovement;
-        rigidbody2D.gravityScale = lockMovement ? 0.0f : originalGravityScale;
+        this.stopMovement = lockMovement;
+
+        // Should we disable gravity
+        if (disableGravity)
+        {
+            rigidbody2D.gravityScale = 0.0f;
+            stopY = true;
+        }
+        else
+        {
+            rigidbody2D.gravityScale = originalGravityScale;
+        }
+
+        // Unlock gravity
+        if (!lockMovement)
+        {
+            rigidbody2D.gravityScale = originalGravityScale;
+        }
+
         isMovementLockedBySkills = lockMovement;
     }
+
+
+    public void ForceUnlockMovement() => UnlockState();
+
+    public void ForceUnlockJump() => isJumpLockedBySkills = false;
 
     public void LockJumpBySkill(bool lockJump) => isJumpLockedBySkills = lockJump;
 
     // Release automatically lockers
     public void LockFlipBySkill(float duration) => StartCoroutine(LockFlipBySkillPrivate(duration));
 
-    public void LockMovementBySkill(float duration, bool stopAllMovement = false, bool lockFlip = true) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip);
+    public void LockMovementBySkill(
+        float duration,
+        bool stopAllMovement = false,
+        bool lockFlip = true,
+        bool disableGravity = true
+    ) => LockMovementBySkillPrivate(duration, stopAllMovement, lockFlip, disableGravity);
 
     public void LockJumpBySkill(float duration) => StartCoroutine(LockJumpBySkillPrivate(duration));
 
@@ -150,7 +206,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         isFlipLockedBySkills = false;
     }
 
-    private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip)
+    private void LockMovementBySkillPrivate(float duration, bool stopAllMovement, bool lockFlip, bool disableGravity = true)
     {
         // This function is a bit messy
         // It's coupled heavily with LockState function and ProcessLockState function
@@ -165,9 +221,13 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Disable old movement
         rigidbody2D.velocity = Vector2.zero;
         // Stop all movement?
-        this.stopAllMovement = stopAllMovement;
-        // Disable gravity too
-        rigidbody2D.gravityScale = 0.0f;
+        this.stopMovement = stopAllMovement;
+        // Disable gravity
+        if (disableGravity)
+        {
+            rigidbody2D.gravityScale = 0.0f;
+            stopY = true;
+        }
         // Lock movement
         isMovementLockedBySkills = true;
     }
@@ -193,8 +253,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Subscribe
         EventPublisher.PlayerJump += Jump;
         EventPublisher.PlayerLand += ResetDragonJumpCount;
-        // EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
-        // EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
+        EventPublisher.PlayerLand += ResetKnockbackState;
     }
 
     private void OnDestroy()
@@ -202,8 +261,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         // Unsubscribe
         EventPublisher.PlayerJump -= Jump;
         EventPublisher.PlayerLand -= ResetDragonJumpCount;
-        // EventPublisher.PlayerChangeClass += UpdateMoveSpeedOnChangeClass;
-        // EventPublisher.PlayerStatsChange += UpdateMoveSpeedOnStatsChange;
+        EventPublisher.PlayerLand -= ResetKnockbackState;
     }
 
     // Update for listening to input
@@ -224,7 +282,7 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             ProcessPlayerLanding();
             ProcessGlide();
             ProcessStopAllMovement();
-            ProcessMoveBySkill();
+            ProcessForceMove();
         }
 
         ProcessLockState();
@@ -309,18 +367,28 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
                     break;
             }
 
-            float velocityX = 0.0f;
+            float velocityX = isKnockedBack ? rigidbody2D.velocity.x : 0.0f;
             if (DragonGauge.Instance.IsDragonForm && !isGrounded)
             {
                 // The dragon is gliding
-                velocityX = horizontalMovement * dragonGlidingSpeed;
+                velocityX = horizontalMovement * PlayerStats.Instance.MovementSpeed * dragonGlidingSpeedMultiplier;
             }
             else
             {
                 velocityX = horizontalMovement * PlayerStats.Instance.MovementSpeed;
             }
 
-            rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+            if (isKnockedBack)
+            {
+                if (Mathf.Abs(rigidbody2D.velocity.x) < Mathf.Abs(velocityX))
+                {
+                    rigidbody2D.AddForce(new Vector2(velocityX * 3.0f, 0.0f), ForceMode2D.Force);
+                }
+            }
+            else
+            {
+                rigidbody2D.velocity = new Vector2(velocityX, rigidbody2D.velocity.y);
+            }
         }
     }
 
@@ -374,9 +442,22 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
 
     private void ProcessStopAllMovement()
     {
-        if (stopAllMovement)
+        if (stopMovement)
         {
-            rigidbody2D.velocity = Vector2.zero;
+            if (stopY)
+            {
+                // Stop both X and Y movement
+                rigidbody2D.velocity = Vector2.zero;
+            }
+            else
+            {
+                // Stop only X movement
+                rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);
+            }
+        }
+        else
+        {
+            stopY = false;
         }
     }
 
@@ -388,17 +469,21 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
             if (lockDuration <= 0.0f)
             {
                 // Unlock
-                stateLock = false;
-                // Debug.Log("Unlock");
-
-                // Unlock
-                isMovementLockedBySkills = false;
-                this.stopAllMovement = false;
-                // Reenable gravity
-                rigidbody2D.gravityScale = originalGravityScale;
-                // Debug.Log("Unlock successfully");
+                UnlockState();
             }
         }
+    }
+
+    private void UnlockState()
+    {
+        stateLock = false;
+        // Debug.Log("Unlock");
+
+        // Unlock
+        isMovementLockedBySkills = false;
+        this.stopMovement = false;
+        // Reenable gravity
+        rigidbody2D.gravityScale = originalGravityScale;
     }
 
     private void LockState(float duration)
@@ -407,16 +492,16 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         lockDuration = duration;
     }
 
-    private void ProcessMoveBySkill()
+    private void ProcessForceMove()
     {
-        if (isMovingBySkill)
+        if (isForcedToMove)
         {
-            movingDuration -= Time.deltaTime;
-            rigidbody2D.AddForce(ForwardVector.normalized * movingSpeed, forceMode);
-            if (movingDuration <= 0.0f)
+            forceMoveDuration -= Time.fixedDeltaTime;
+            rigidbody2D.AddForce(forceMoveDirection.normalized * movingSpeed, forceMode);
+            if (forceMoveDuration <= 0.0f)
             {
-                isMovingBySkill = false;
-                movingDuration = 0.0f;
+                isForcedToMove = false;
+                forceMoveDuration = 0.0f;
                 rigidbody2D.velocity = Vector2.zero;
             }
         }
@@ -448,6 +533,11 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         lastFrameWasGrounded = isGrounded;
     }
 
+    private void ResetKnockbackState()
+    {
+        isKnockedBack = false;
+    }
+
     private void Turn(MovementState side)
     {
         float x = 0.0f;
@@ -468,23 +558,4 @@ public class PlayerMovement : MonoSingleton<PlayerMovement>
         turn = side;
         transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z);
     }
-
-    // private void UpdateMoveSpeedOnChangeClass(PlayerClass playerClass)
-    // {
-    //     PlayerConfig playerConfig = ConfigContainer.Instance.GetPlayerConfig;
-    //     ClassConfig config;
-    //     switch (playerClass)
-    //     {
-    //         case PlayerClass.Sword:
-    //             config = playerConfig.SwordConfig;
-    //             break;
-    //         case PlayerClass.Archer:
-    //             config = playerConfig.ArcherConfig;
-    //             break;
-    //         default:
-    //             throw new System.InvalidOperationException();
-    //     }
-
-    //     baseMovementSpeed = PlayerStats.CalculateMovementSpeed(config.baseMoveSpeed, config.agi);
-    // }
 }

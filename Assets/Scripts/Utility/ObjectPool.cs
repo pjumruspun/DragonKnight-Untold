@@ -21,9 +21,10 @@ public class ObjectPool
         this.objectToPool = objectToPool;
         this.poolSize = initialPoolSize;
         pooledObjects = new List<GameObject>();
-        for (int _ = 0; _ < poolSize; ++_)
+        for (int i = 0; i < poolSize; ++i)
         {
             GameObject instantiatedObj = GameObject.Instantiate(objectToPool);
+            instantiatedObj.name += $"_{i}";
             instantiatedObj.SetActive(false);
             pooledObjects.Add(instantiatedObj);
         }
