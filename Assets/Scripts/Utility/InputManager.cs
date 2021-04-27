@@ -15,4 +15,5 @@ public class InputManager
     public static bool Shapeshift => Input.GetKeyDown(KeyCode.LeftShift);
     public static bool Interact => Input.GetKeyDown(KeyCode.F);
     public static bool Pause => Input.GetKeyDown(KeyCode.Escape);
+    public static bool PerkMenu => Input.GetKeyDown(KeyCode.Tab);
 }

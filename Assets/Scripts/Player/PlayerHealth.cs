@@ -41,6 +41,23 @@ public class PlayerHealth : Health
         }
     }
 
+    public float Heal(float healAmount)
+    {
+        if (!IsDead)
+        {
+            FloatingTextSpawner.Spawn($"+{healAmount}", transform.position);
+            currentHealth += healAmount;
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+
+            EventPublisher.TriggerPlayerHealthChange();
+        }
+
+        return healAmount;
+    }
+
     override protected void Start()
     {
         maxHealth = PlayerStats.Instance.MaxHealth;

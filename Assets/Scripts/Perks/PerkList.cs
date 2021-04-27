@@ -26,9 +26,10 @@ public class PerkList : MonoSingleton<PerkList>
     {
         foreach (var perk in PerkListStatic.perks)
         {
-            if(perk.name == targetPerk.name) 
+            if (perk.name == targetPerk.name)
             {
                 perk.Upgrade();
+                Debug.Log($"{perk.name} is at level {perk.PerkLevel}");
                 break;
             }
         }
@@ -40,29 +41,16 @@ public class PerkList : MonoSingleton<PerkList>
         PerkListStatic.perks = new List<Perk>();
     }
 
-    public int GetPerkLevel(Perk targetPerk)
-    {
-        foreach (var perk in PerkListStatic.perks)
-        {
-            if(perk.name == targetPerk.name) 
-            {
-                return perk.PerkLevel;
-            }
-        }
-        return 0;
-        //EventPublisher.TriggerInventoryChange();
-    }
-
     private void Start()
     {
         //EventPublisher.InventoryChange += CalculateItemStats;
         CalculatePerkStats();
         List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
-        for(int i = 0; i < initPerk.Count; i++)
+        for (int i = 0; i < initPerk.Count; i++)
         {
             this.AddGiftedPerk(initPerk[i]);
         }
-        
+
     }
 
     private void OnDestroy()
