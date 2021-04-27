@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Critical Guarantee
   m_EditorClassIdentifier: 
   name: Critical Guarantee
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 09995e814a88c4468b6bc36a3f9d8ff4, type: 3}
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0

@@ -53,7 +53,9 @@ public class PerkRepository : MonoSingleton<PerkRepository>
             {
                 if(perkProb < probGiftedPerk[i] && !playerPerk.Contains(Instance.giftedPerk[i])) 
                 {
-                    playerPerk.Add(Instance.giftedPerk[i]);
+                    Perk newPerk = new Perk(Instance.giftedPerk[i]);
+                    newPerk.PerkLevel = 1;
+                    playerPerk.Add(newPerk);
                     numberOfPerk -= 1;
                     break;
                 }

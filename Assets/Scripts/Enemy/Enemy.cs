@@ -161,11 +161,23 @@ public class Enemy : Health
 
             // Show floating damage number
             FloatingTextSpawner.Spawn(damage, transform.position, crit);
+
+            // Update UI
             HandleHealthChange();
 
             // Flash hurt color
             spriteRenderer.color = hurtColor;
             CoroutineUtility.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
+
+            // Player lifesteal
+            string lifesteal = "Lifesteal";
+            bool hasLifeStealPerk = PerkListStatic.HasPerk(lifesteal);
+            int lifeStealLevel = PerkListStatic.GetPerkLevel(lifesteal);
+            float lifeStealFactor = 0.05f;
+            if (hasLifeStealPerk)
+            {
+                PlayerHealth.Instance.Heal(damage * lifeStealLevel * lifeStealFactor);
+            }
         }
     }
 

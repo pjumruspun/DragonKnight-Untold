@@ -4,35 +4,54 @@ using UnityEngine;
 
 public class PerkList : MonoSingleton<PerkList>
 {
-
-    public void Add(Perk perk)
+    public void AddGiftedPerk(Perk perk)
     {
-        PerkListStatic.perks.Add(perk);
-        //EventPublisher.TriggerInventoryChange();
+        Perk newPerk = new Perk(perk);
+        newPerk.PerkLevel = 1;
+        newPerk.type = PerkType.Gifted;
+        PerkListStatic.perks.Add(newPerk);
+    }
+
+    public void AddDevelopedPerk(Perk perk)
+    {
+        Perk newPerk = new Perk(perk);
+        newPerk.PerkLevel = 1;
+        newPerk.type = PerkType.Developed;
+        PerkListStatic.perks.Add(newPerk);
     }
 
     public void Upgrade(Perk targetPerk)
     {
         foreach (var perk in PerkListStatic.perks)
         {
-            if(perk == targetPerk) 
+            if (perk.name == targetPerk.name)
             {
-                perk.upgrade();
+                perk.Upgrade();
+                Debug.Log($"{perk.name} is at level {perk.PerkLevel}");
                 break;
             }
         }
-        //EventPublisher.TriggerInventoryChange();
+    }
+
+    public void ResetPerk()
+    {
+        PerkListStatic.perks = new List<Perk>();
     }
 
     private void Start()
     {
-        //EventPublisher.InventoryChange += CalculateItemStats;
         CalculatePerkStats();
+        List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
+        for (int i = 0; i < initPerk.Count; i++)
+        {
+            this.AddGiftedPerk(initPerk[i]);
+        }
+
     }
 
     private void OnDestroy()
     {
-        //EventPublisher.InventoryChange -= CalculateItemStats;
+        this.ResetPerk();
     }
 
     private void CalculatePerkStats()
@@ -40,11 +59,7 @@ public class PerkList : MonoSingleton<PerkList>
         ItemStats accumulatedStats = new ItemStats();
         foreach (var perk in PerkListStatic.perks)
         {
-            // Debug.Log(perk.stats);
             accumulatedStats = accumulatedStats + perk.stats;
-            // Debug.Log(accumulatedStats + perk.stats);
         }
-
-        //PlayerStats.Instance.AssignStatsFromItems(accumulatedStats);
     }
 }
