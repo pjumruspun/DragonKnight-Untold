@@ -122,12 +122,25 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     {
         base.Awake();
 
-        // Set stats, should random
-        atk = new Stats<int>(10);
-        agi = new Stats<int>(10);
-        vit = new Stats<int>(10);
-        tal = new Stats<int>(10);
-        luk = new Stats<int>(10);
+        System.Random rnd = new System.Random();
+        float sumStatFactor = (float)rnd.NextDouble();
+        float sumStat = 50f * Mathf.Min(0.75f + sumStatFactor,1.5f);
+
+        float atkFactor = (float)rnd.NextDouble();
+        float agiFactor = (float)rnd.NextDouble();
+        float vitFactor = (float)rnd.NextDouble();
+        float talFactor = (float)rnd.NextDouble();
+        float lukFactor = (float)rnd.NextDouble();
+
+        atkFactor += 0.1f;
+
+        float sumFactor = atkFactor + agiFactor + vitFactor + talFactor + lukFactor;
+
+        atk = new Stats<int>(Mathf.CeilToInt(atkFactor/sumFactor * sumStat));
+        agi = new Stats<int>(Mathf.CeilToInt(agiFactor/sumFactor * sumStat));
+        vit = new Stats<int>(Mathf.CeilToInt(vitFactor/sumFactor * sumStat));
+        tal = new Stats<int>(Mathf.CeilToInt(talFactor/sumFactor * sumStat));
+        luk = new Stats<int>(Mathf.CeilToInt(lukFactor/sumFactor * sumStat));
 
         // Events
         EventPublisher.PlayerChangeClass += AdjustSkillParams;
