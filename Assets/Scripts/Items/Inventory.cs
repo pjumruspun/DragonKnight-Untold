@@ -57,7 +57,7 @@ public class Inventory : MonoSingleton<Inventory>
 
     private void CalculateItemStats()
     {
-        ItemStats accumulatedStats = new ItemStats();
+        StatsDto accumulatedStats = new StatsDto();
         foreach (var item in InventoryStatic.items)
         {
             // Debug.Log(item.stats);

@@ -57,7 +57,7 @@ public class PerkList : MonoSingleton<PerkList>
 
     private void CalculatePerkStats()
     {
-        ItemStats accumulatedStats = new ItemStats();
+        StatsDto accumulatedStats = new StatsDto();
         foreach (var perk in PerkListStatic.perks)
         {
             accumulatedStats = accumulatedStats + perk.stats;

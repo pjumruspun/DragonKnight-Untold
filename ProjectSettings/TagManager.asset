@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Bottom Left Corner
   - Top Right Corner
+  - Item Chest Spawn
   layers:
   - Default
   - TransparentFX

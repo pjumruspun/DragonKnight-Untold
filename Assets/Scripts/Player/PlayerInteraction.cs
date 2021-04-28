@@ -32,7 +32,10 @@ public class PlayerInteraction : MonoBehaviour
             && other.TryGetComponent<Interactable>(out Interactable interactable)
         )
         {
-            SetFocus(interactable);
+            if (interactable.IsActive)
+            {
+                SetFocus(interactable);
+            }
         }
     }
 
