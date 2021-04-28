@@ -15,7 +15,6 @@ public abstract class Chest : Interactable
 
     protected virtual void OpenChest()
     {
-        Debug.Log("Opening chest!");
         animator.SetTrigger("Open");
     }
 }
