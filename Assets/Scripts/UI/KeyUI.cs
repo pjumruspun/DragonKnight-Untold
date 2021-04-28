@@ -11,12 +11,12 @@ public class KeyUI : MonoSingleton<KeyUI>
     private void Start()
     {
         SetText(KeyStatic.numberOfKeys, KeyStatic.maxKeyCount);
-        GameEvents.KeyCollected += UpdateUI;
+        GameEvents.KeyAmountChange += UpdateUI;
     }
 
     private void OnDestroy()
     {
-        GameEvents.KeyCollected -= UpdateUI;
+        GameEvents.KeyAmountChange -= UpdateUI;
     }
 
     private void UpdateUI()

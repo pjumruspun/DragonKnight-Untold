@@ -13,10 +13,26 @@ public class ItemChest : Chest
     {
         if (!hasBeenOpened)
         {
-            base.OpenChest();
-            isActive = false;
-            // Spawn item
-            CoroutineUtility.ExecDelay(() => itemSpawner.SpawnItem(), spawnItemDelayTime);
+            if (KeyStatic.numberOfKeys > 0)
+            {
+                base.OpenChest();
+                isActive = false;
+                hasBeenOpened = true;
+
+                // Spawn item
+                CoroutineUtility.ExecDelay(() => itemSpawner.SpawnItem(), spawnItemDelayTime);
+
+                // Reduce number of key
+                --KeyStatic.numberOfKeys;
+
+                // Notify that key amount has changed
+                GameEvents.TriggerKeyAmountChange();
+            }
+            else
+            {
+                // Inform player
+                FloatingTextSpawner.Spawn("Insufficient Keys", transform.position);
+            }
         }
     }
 

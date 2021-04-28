@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Key : Interactable
 {
+    private void Start()
+    {
+        RenderPickupUI();
+    }
+
     private void RenderPickupUI()
     {
         actionText = "Pick up";
@@ -24,7 +29,7 @@ public class Key : Interactable
         {
             // Return gameObject to the pool
             transform.parent.gameObject.SetActive(false);
-            GameEvents.TriggerKeyCollected();
+            GameEvents.TriggerKeyAmountChange();
         }
         else
         {

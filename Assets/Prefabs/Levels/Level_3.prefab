@@ -1529,7 +1529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6802d6a062980421f961d548500f3ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalChestToSpawn: 2
+  totalChestToSpawn: 10
   shinyChestRatio: 0.2
   normalChestRatio: 0.8
 --- !u!1 &297194965237049982
