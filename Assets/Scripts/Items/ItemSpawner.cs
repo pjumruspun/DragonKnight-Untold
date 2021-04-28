@@ -16,10 +16,22 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField]
     private float commonSpawnChance = 0.65f;
 
+    [SerializeField]
+    private bool guaranteedSpawn = false;
+
     public void SpawnItem()
     {
+        float commonSpawnChance = this.commonSpawnChance;
+        float rareSpawnChance = this.rareSpawnChance;
+        float ultraRareSpawnChance = this.ultraRareSpawnChance;
+
+        SpawnItem(commonSpawnChance, rareSpawnChance, ultraRareSpawnChance);
+    }
+
+    public void SpawnItem(float common, float rare, float ultraRare)
+    {
         float random = Random.Range(0.0f, 1.0f);
-        bool willSpawn = random < commonSpawnChance + rareSpawnChance + ultraRareSpawnChance;
+        bool willSpawn = random < common + rare + ultraRare;
         GameObject spawnedItem;
         if (willSpawn)
         {
@@ -38,17 +50,17 @@ public class ItemSpawner : MonoBehaviour
         {
             Item randomItem;
             // Choose rarity
-            if (random < ultraRareSpawnChance)
+            if (random < ultraRare)
             {
                 // Ultra rare spawn
                 randomItem = ItemRepository.Instance.GetRandomItem(ItemRarity.UltraRare);
             }
-            else if (random < rareSpawnChance + ultraRareSpawnChance)
+            else if (random < rare + ultraRare)
             {
                 // Rare spawn
                 randomItem = ItemRepository.Instance.GetRandomItem(ItemRarity.Rare);
             }
-            else if (random < commonSpawnChance + rareSpawnChance + ultraRareSpawnChance)
+            else if (random < common + rare + ultraRare || guaranteedSpawn)
             {
                 // Common spawn
                 randomItem = ItemRepository.Instance.GetRandomItem(ItemRarity.Common);
