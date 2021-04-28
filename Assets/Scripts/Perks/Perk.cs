@@ -4,6 +4,8 @@ using UnityEngine;
 public class Perk : ScriptableObject
 {
     new public string name = "New Perk";
+    public string description;
+    public int[] soulToUpgrade = { 100, 300, 500, 750, 1200 };
     public Sprite icon = null;
     public StatsDto stats;
     public int PerkLevel;
