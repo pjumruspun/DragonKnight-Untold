@@ -55,6 +55,13 @@ public abstract class Boss : Enemy
         GameEvents.TriggerCompleteLevel();
     }
 
+    protected override void PlayerSoulGain()
+    {
+        // Experimental value
+        SoulStatic.soul += 1000;
+        GameEvents.TriggerSoulChange();
+    }
+
     protected override void Flinch()
     {
         // Boss cannot flinch from attacks

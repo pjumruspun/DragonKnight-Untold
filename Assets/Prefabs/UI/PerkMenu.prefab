@@ -435,6 +435,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2814256651498521900}
     m_Modifications:
+    - target: {fileID: 6020130701521641156, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+      propertyPath: perkDisplayPrefab
+      value: 
+      objectReference: {fileID: 11400000, guid: 1af05b418939cad4abd075489395ec04, type: 2}
     - target: {fileID: 6020130701521641157, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -537,6 +541,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2814256651498521900}
     m_Modifications:
+    - target: {fileID: 6020130701521641156, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+      propertyPath: perkDisplayPrefab
+      value: 
+      objectReference: {fileID: 11400000, guid: 8e3e7bba96512234ba3d57478879792d, type: 2}
     - target: {fileID: 6020130701521641157, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -639,6 +647,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2814256651498521900}
     m_Modifications:
+    - target: {fileID: 6020130701521641156, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+      propertyPath: perkDisplayPrefab
+      value: 
+      objectReference: {fileID: 11400000, guid: b90ad9e2cb1b4854a81bf7185d5cd651, type: 2}
     - target: {fileID: 6020130701521641157, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -741,6 +753,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2814256651498521900}
     m_Modifications:
+    - target: {fileID: 6020130701521641156, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+      propertyPath: perkDisplayPrefab
+      value: 
+      objectReference: {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
     - target: {fileID: 6020130701521641157, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -843,6 +859,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2814256651498521900}
     m_Modifications:
+    - target: {fileID: 6020130701521641156, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+      propertyPath: perkDisplayPrefab
+      value: 
+      objectReference: {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
     - target: {fileID: 6020130701521641157, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -945,6 +965,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2814256651498521900}
     m_Modifications:
+    - target: {fileID: 6020130701521641156, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+      propertyPath: perkDisplayPrefab
+      value: 
+      objectReference: {fileID: 11400000, guid: ba03d59fd7a88b848b20ffbd2b5987d6, type: 2}
     - target: {fileID: 6020130701521641157, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -44,6 +44,8 @@ public class Enemy : Health
     public bool ShouldChase { get; set; }
     public bool IsKnockedAirborne { get; set; }
 
+    // Soul calculation formula
+    protected int soulGainedFromKill => Mathf.RoundToInt(spawnCost * 10 * Random.Range(0.8f, 1.2f));
 
     [Header("Enemy Spawning")]
     [SerializeField]
@@ -330,6 +332,15 @@ public class Enemy : Health
 
         // Notify that this enemy is dead
         EventPublisher.TriggerEnemyDead(this);
+
+        // Player soul gain
+        PlayerSoulGain();
+    }
+
+    protected virtual void PlayerSoulGain()
+    {
+        SoulStatic.soul += soulGainedFromKill;
+        GameEvents.TriggerSoulChange();
     }
 
     protected void TakeSuperArmorDamage(float superArmorDamage)

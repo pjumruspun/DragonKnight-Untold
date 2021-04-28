@@ -8,25 +8,25 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Gameplay.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 1f74c4ed0d95449598b7fbbcdc34474f
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Camp.unity
     guid: 3bdecd4c1569b41d9ae232c716b3dc7b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Level_3.unity
     guid: 757a3dc8ebdac44459f5ef4e2808e2c6
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Level_1.unity
     guid: a3ab68ac7c50d4a46ae0b13efeb41a88
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Level_2.unity
     guid: e4d4c138a76084c779a469f126597c59
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Boss_1.unity
     guid: 27671546039b4475092448d06e3bfc29
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Test Level.unity
     guid: 42838918d6b6a43c9bac7afec46c4f91
   m_configObjects: {}
