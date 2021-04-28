@@ -169,15 +169,8 @@ public class Enemy : Health
             spriteRenderer.color = hurtColor;
             CoroutineUtility.ExecDelay(() => spriteRenderer.color = originalColor, flashEffectDuration);
 
-            // Player lifesteal
-            string lifesteal = "Lifesteal";
-            bool hasLifeStealPerk = PerkListStatic.HasPerk(lifesteal);
-            int lifeStealLevel = PerkListStatic.GetPerkLevel(lifesteal);
-            float lifestealRatio = 0.025f + 0.015f * lifeStealLevel;
-            if (hasLifeStealPerk)
-            {
-                PlayerHealth.Instance.Heal(damage * lifestealRatio);
-            }
+            // Lifesteal
+            PerkEffects.LifeSteal(damage);
         }
     }
 
