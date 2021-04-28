@@ -389,7 +389,11 @@ public class Enemy : Health
     {
         if (TryGetComponent<ItemSpawner>(out ItemSpawner spawner))
         {
-            spawner.SpawnItem();
+            // Old patch spawns item
+            // spawner.SpawnItem();
+
+            // Spawn key instead in this new patch
+            spawner.SpawnKey();
         }
     }
 }

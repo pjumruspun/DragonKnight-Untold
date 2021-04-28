@@ -16,8 +16,21 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField]
     private float commonSpawnChance = 0.65f;
 
+    [Range(0.0f, 1.0f)]
+    private float keySpawnChance = 0.5f;
+
     [SerializeField]
     private bool guaranteedSpawn = false;
+
+    public void SpawnKey()
+    {
+        float random = Random.Range(0.0f, 1.0f);
+        if (random < keySpawnChance)
+        {
+            // Spawn a key
+            ObjectManager.Instance.Keys.SpawnObject(transform.position);
+        }
+    }
 
     public void SpawnItem()
     {

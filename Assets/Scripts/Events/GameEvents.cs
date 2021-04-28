@@ -10,12 +10,14 @@ public class GameEvents
     public delegate void OnMoveToNextLevel();
     public delegate void OnRestartGame();
     public delegate void OnResetGame();
+    public delegate void OnKeyCollected();
 
     public static event OnPause Pause;
     public static event OnCompleteLevel CompleteLevel;
     public static event OnMoveToNextLevel MoveToNextLevel;
     public static event OnRestartGame RestartGame;
     public static event OnResetGame ResetGame;
+    public static event OnKeyCollected KeyCollected;
 
     public static void TriggerPause(bool pause)
     {
@@ -40,5 +42,10 @@ public class GameEvents
     public static void TriggerResetGame()
     {
         ResetGame?.Invoke();
+    }
+
+    public static void TriggerKeyCollected()
+    {
+        KeyCollected?.Invoke();
     }
 }

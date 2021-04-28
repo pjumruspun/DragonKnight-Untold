@@ -91,6 +91,8 @@ MonoBehaviour:
   chargedArrowsPoolSize: 3
   itemPickupPrefab: {fileID: 4204306999793631647, guid: d7b451dd1ffed4b5a8c3c05540637b9e, type: 3}
   itemPickupPoolSize: 10
+  keyPrefab: {fileID: 3782976004530169770, guid: 72eb66fb73ed54de79956807351459dc, type: 3}
+  keyPoolsize: 10
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20
