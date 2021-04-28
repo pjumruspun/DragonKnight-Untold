@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!58 &7971157991887101745
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5417233031235150019}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.41
 --- !u!114 &8757363264107436474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +155,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7053038330368427415, guid: 40cb49326dcd14f248ed58c7667356cd, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7053038330368427415, guid: 40cb49326dcd14f248ed58c7667356cd, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7053038330368427415, guid: 40cb49326dcd14f248ed58c7667356cd, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7053038330368427400, guid: 40cb49326dcd14f248ed58c7667356cd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 40cb49326dcd14f248ed58c7667356cd, type: 3}
 --- !u!1 &5417233031235150019 stripped
 GameObject:

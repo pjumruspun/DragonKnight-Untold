@@ -48,10 +48,9 @@ MonoBehaviour:
   shouldSpawn: 1
   tilemap: {fileID: 0}
   spawnRange: 10
-  castRadius: 2
   spawnInterval: 20
   spawnAmountPerInterval: 25
-  maxSpawnAmountAtTime: 30
+  maxSpawnAmountAtTime: 150
 --- !u!114 &3282760044992471880
 MonoBehaviour:
   m_ObjectHideFlags: 0
