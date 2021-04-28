@@ -5,7 +5,7 @@ public class Perk : ScriptableObject
 {
     new public string name = "New Perk";
     public Sprite icon = null;
-    public ItemStats stats;
+    public StatsDto stats;
     public int PerkLevel;
     public int Chance = 1;
     public PerkType type;
@@ -22,7 +22,7 @@ public class Perk : ScriptableObject
 
     public void Upgrade()
     {
-        if (PerkLevel < maxPerkLevel) 
+        if (PerkLevel < maxPerkLevel)
         {
             PerkLevel += 1;
         }

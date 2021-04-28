@@ -5,10 +5,20 @@ using System.Linq;
 
 public class PlayerStats : MonoSingleton<PlayerStats>
 {
+    public int ATK => atk.GetValue;
+    public int AGI => agi.GetValue;
+    public int VIT => vit.GetValue;
+    public int TAL => tal.GetValue;
+    public int LUK => luk.GetValue;
+    public float CritDamage => critDamage.GetValue;
+    public float HealthRegen => healthRegen.GetValue;
+    public float CooldownReduction => cooldownReduction.GetValue;
     public float AttackSpeed => attackSpeed.GetValue;
     public float MovementSpeed => (1.0f + (Mathf.Max(agi.GetValue, minAgiPossible) * 0.03f)) * baseMovementSpeed.GetValue;
+
     public float MaxHealth => (1.0f + (Mathf.Max(vit.GetValue, minVitPossible) * 0.05f)) * basePlayerMaxHealth;
     public float[] SkillCooldown => CalculateSkillCooldown();
+
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
 
     [Header("Main Stats")]
@@ -68,7 +78,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     /// from the parameter "stats"
     /// </summary>
     /// <param name="stats"></param>
-    public void AssignStatsFromItems(ItemStats stats)
+    public void AssignStatsFromItems(StatsDto stats)
     {
         atk.Additive = stats.AtkAddModifier;
         atk.Multiplicative = stats.AtkMultModifier;
