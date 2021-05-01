@@ -27,7 +27,8 @@ public class PerkEffects
         if (hasBonusDamage)
         {
             target.TakeDamage(bonusDamageValue);
-            FloatingTextSpawner.Spawn(bonusDamageValue.ToString(), target.transform.position + offset, orange: true);
+            Color orange = new Color(0.9f, 0.5f, 0.1f);
+            FloatingTextSpawner.Spawn(bonusDamageValue.ToString(), target.transform.position + offset, orange);
         }
     }
 }

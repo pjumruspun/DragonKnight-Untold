@@ -23,8 +23,14 @@ public class FloatingTextSpawner : MonoSingleton<FloatingTextSpawner>
         if (floatingDamage.TryGetComponent<TextMesh>(out TextMesh textMesh))
         {
             // Ensure white color
-            // Please fix this later
-            textMesh.color = Color.white;
+            if (crit)
+            {
+                textMesh.color = new Color(0.9f, 0.1f, 0.1f);
+            }
+            else
+            {
+                textMesh.color = Color.white;
+            }
 
             // Set damage number to the text mesh
             textMesh.text = $"{Mathf.Ceil(damage)}";
@@ -47,26 +53,15 @@ public class FloatingTextSpawner : MonoSingleton<FloatingTextSpawner>
         }
     }
 
-    public static Float Spawn(string text, Vector3 position, bool green = false, bool orange = false)
+    public static Float Spawn(string text, Vector3 position, Color? color = null)
     {
         position += RandomVector();
         GameObject floatingText = ObjectManager.Instance.FloatingDamage.SpawnObject(position);
 
         if (floatingText.TryGetComponent<TextMesh>(out TextMesh textMesh))
         {
-            // Ensure the color is original
-            if (!green && !orange)
-            {
-                textMesh.color = Color.white;
-            }
-            else if (green)
-            {
-                textMesh.color = new Color(0.2f, 0.9f, 0.2f);
-            }
-            else if (orange)
-            {
-                textMesh.color = new Color(0.9f, 0.5f, 0.1f);
-            }
+            // New color if not null else white
+            textMesh.color = color ?? Color.white;
 
             // Set text to the text mesh
             textMesh.text = $"{text}";

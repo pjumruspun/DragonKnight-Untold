@@ -45,7 +45,8 @@ public class PlayerHealth : Health
     {
         if (!IsDead)
         {
-            FloatingTextSpawner.Spawn($"+{Mathf.Ceil(healAmount)}", transform.position, green: true);
+            Color green = new Color(0.2f, 0.9f, 0.2f);
+            FloatingTextSpawner.Spawn($"+{Mathf.Ceil(healAmount)}", transform.position, green);
             currentHealth += healAmount;
             if (currentHealth > maxHealth)
             {
