@@ -178,6 +178,9 @@ public class Enemy : Health
 
             // Lifesteal
             PerkEffects.LifeSteal(damage);
+
+            // Bonus flat damage
+            PerkEffects.TakeBonusDamage(damage, this);
         }
     }
 

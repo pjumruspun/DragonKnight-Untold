@@ -16,4 +16,18 @@ public class PerkEffects
             PlayerHealth.Instance.Heal(damageDealt * lifestealRatio);
         }
     }
+
+    public static void TakeBonusDamage(float damage, Enemy target)
+    {
+        string bonusDamage = "Bonus Damage";
+        bool hasBonusDamage = PerkListStatic.HasPerk(bonusDamage);
+        int bonusDamageLevel = PerkListStatic.GetPerkLevel(bonusDamage);
+        float bonusDamageValue = 3.0f + 2.0f * bonusDamageLevel;
+        Vector3 offset = new Vector3(0.5f, 0.3f, 0.0f);
+        if (hasBonusDamage)
+        {
+            target.TakeDamage(bonusDamageValue);
+            FloatingTextSpawner.Spawn(bonusDamageValue.ToString(), target.transform.position + offset, orange: true);
+        }
+    }
 }
