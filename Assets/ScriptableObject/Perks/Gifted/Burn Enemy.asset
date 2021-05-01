@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Burn Enemy
   m_EditorClassIdentifier: 
   name: Burn Enemy
+  description: 
+  soulToUpgrade: 640000002c010000f4010000ee020000b0040000
   icon: {fileID: 21300000, guid: 960a4251423ab4b008c5d38eae93ae36, type: 3}
   stats:
     AtkAddModifier: 0
