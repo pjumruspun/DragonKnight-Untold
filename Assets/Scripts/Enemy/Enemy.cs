@@ -23,6 +23,7 @@ public class Enemy : Health
         }
     }
 
+    public bool IsFlyingEnemy => isFlyingEnemy;
     public SpawnEffect GetSpawnEffect => spawnEffect;
     public int SpawnCost => spawnCost;
     public float SuperArmorPercentage => superArmor / maxSuperArmor;
@@ -46,6 +47,10 @@ public class Enemy : Health
 
     // Soul calculation formula
     protected int soulGainedFromKill => Mathf.RoundToInt(spawnCost * 10 * Random.Range(0.8f, 1.2f));
+
+    [Header("Flying Enemy")]
+    [SerializeField]
+    private bool isFlyingEnemy = false;
 
     [Header("Enemy Spawning")]
     [SerializeField]
@@ -299,6 +304,12 @@ public class Enemy : Health
 
         // Set so that we know enemy is not currently knocked when starting
         IsKnockedAirborne = false;
+
+        // If enemy is flying enemy, set gravity to 0
+        if (isFlyingEnemy && rigidbody2D != null)
+        {
+            rigidbody2D.gravityScale = 0.0f;
+        }
     }
 
     protected override void HandleHealthChange()
@@ -335,6 +346,12 @@ public class Enemy : Health
 
         // Player soul gain
         PlayerSoulGain();
+
+        // Reenable gravity if is flying enemy
+        if (isFlyingEnemy)
+        {
+            rigidbody2D.gravityScale = 1.0f;
+        }
     }
 
     protected virtual void PlayerSoulGain()

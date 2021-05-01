@@ -76,7 +76,17 @@ public class EnemyAttack : EnemyBehavior
 
         if (spawnedObject.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            projectile.SetConfig(new ProjectileConfig(enemy.GetForwardVector(), enemy.AttackDamage));
+            Vector2 direction;
+            if (enemy.IsFlyingEnemy)
+            {
+                direction = player.position - transform.position;
+            }
+            else
+            {
+                direction = enemy.GetForwardVector();
+            }
+
+            projectile.SetConfig(new ProjectileConfig(direction, enemy.AttackDamage));
         }
         else
         {

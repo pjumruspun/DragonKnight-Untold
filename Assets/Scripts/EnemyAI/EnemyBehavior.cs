@@ -97,7 +97,7 @@ public class EnemyBehavior : StateMachineBehaviour
         enemy.ShouldChase = hit && IsPlayer(hit.collider.gameObject);
     }
 
-    protected void ListenToChaseSignal()
+    protected virtual void ListenToChaseSignal()
     {
         if (DistanceToPlayerX > enemy.AttackRange)
         {

@@ -122,6 +122,10 @@ public class Projectile : MonoBehaviour
             float actualSpeed = config.speedOverride >= -0.01f ? config.speedOverride : speed;
             // Cast Vector2 to Vector3
             Vector3 direction3 = config.direction;
+
+            // Normalization
+            direction3 = direction3.normalized;
+
             // Travel
             transform.position += direction3 * actualSpeed * Time.fixedDeltaTime;
 

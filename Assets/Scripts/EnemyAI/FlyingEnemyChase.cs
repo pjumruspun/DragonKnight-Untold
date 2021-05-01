@@ -25,6 +25,16 @@ public class FlyingEnemyChase : EnemyBehavior
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
         ProcessingPath();
+        ListenToAttackSignal();
+    }
+
+    protected override void ListenToAttackSignal()
+    {
+        bool readyToAttack = enemy.CurrentCooldown < 0.01f;
+        if (DistanceToPlayer <= enemy.AttackRange && readyToAttack)
+        {
+            animator.SetTrigger("Attack");
+        }
     }
 
     private void UpdatePath()
