@@ -8,6 +8,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool FloatingDamage;
     public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
+    public ObjectPool UltimateArrows;
     public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool Keys;
@@ -37,6 +38,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     private GameObject arrowPrefab;
     [SerializeField]
     private int arrowPoolSize = 30;
+
+    [Header("Ultimate Arrows")]
+    [SerializeField]
+    private GameObject ultArrowPrefab;
+    [SerializeField]
+    private int ultArrowPoolSize = 5;
 
     [Header("Charged Arrows")]
     [SerializeField]
@@ -86,6 +93,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         CritFloatingDamage = new ObjectPool(critFloatingDamagePrefab, critFloatingDamagePoolSize);
         SwordWaves = new ObjectPool(swordWavePrefab, swordWavePoolSize);
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
+        UltimateArrows = new ObjectPool(ultArrowPrefab, ultArrowPoolSize);
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         Keys = new ObjectPool(keyPrefab, keyPoolsize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);

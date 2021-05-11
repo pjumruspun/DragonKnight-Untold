@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
   m_Name: Skill2
   m_EditorClassIdentifier: 
-  skillName: New Skill
+  skillName: Rush
   skillIcon: {fileID: 0}
-  baseDamage: 5
-  baseCooldown: 1
+  baseDamage: 3
+  baseCooldown: 3

@@ -186,7 +186,33 @@ public class ArcherSkills : PlayerSkills
     public override void UltimateSkill()
     {
         base.UltimateSkill();
-        UnlockCastingIn(0.0f);
+
+        // Ultimate = skillDamage[3]
+        float damage = PlayerStats.Instance.BaseSkillDamage[3];
+
+        // Get cooldown
+        float cooldown = PlayerStats.Instance.SkillCooldown[3];
+
+        // Lock movement
+        movement.LockMovementBySkill(0.7f, true, true, false);
+
+        // Lock flip for a while
+        movement.LockFlipBySkill(true);
+
+        // Lock skill casting by cooldown time
+        UnlockCastingIn(0.7f);
+
+        // Spawn arrow
+        AttackWithProjectile(
+            ref ObjectManager.Instance.UltimateArrows,
+            damage,
+            transform.position,
+            movement.ForwardVector,
+            superArmorDamage: 100.0f,
+            knockUpAmplitude: 3.0f,
+            hitEffect: HitEffect.Slash,
+            shouldFlinch: false
+        );
     }
 
     public void NotifySkill2ToRelease()
