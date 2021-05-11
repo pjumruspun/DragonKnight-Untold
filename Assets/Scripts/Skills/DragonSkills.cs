@@ -6,6 +6,7 @@ using System.Linq;
 [CreateAssetMenu(fileName = "New Dragon Skills", menuName = "Roguelite/Skills/Dragon")]
 public class DragonSkills : PlayerSkills
 {
+    // Skill 1 params
     private const float slashAnimLength = 0.3f;
     private const float skill1KnockUpAmplitude = 3.0f;
     private const float skill1KnockBackAmplitude = 2.0f;
@@ -14,6 +15,11 @@ public class DragonSkills : PlayerSkills
     private const float skill1AnimStopRatio = 0.2f;
     private const float skill1ScreenShakeDuration = 0.3f;
     private const float skill1ScreenShakePower = 0.15f;
+
+    // Skill 2 params
+    private const float rushingDelay = 0.05f;
+    private const float rushingDamageInterval = 0.20f;
+    private bool isRushing = false;
 
     // Skill 3 params
     private const float skill3LockMovementRatio = 0.9f;
@@ -38,6 +44,7 @@ public class DragonSkills : PlayerSkills
     private GameObject fireBreath;
     private GameObject clawSlash;
     private GameObject dragonDashEffect;
+    private GameObject dragonHorizontalDashEffect;
     private Animator clawSlashAnim;
     private Animator dashAnim;
     private Coroutine fireBreathCoroutine;
@@ -48,7 +55,8 @@ public class DragonSkills : PlayerSkills
         AttackHitbox dragonVortexHitbox,
         GameObject fireBreath,
         GameObject clawSlash,
-        GameObject dragonDashEffect
+        GameObject dragonDashEffect,
+        GameObject dragonHorizontalDashEffect
     )
     {
         base.Initialize(transform);
@@ -65,6 +73,9 @@ public class DragonSkills : PlayerSkills
 
         this.dragonDashEffect = dragonDashEffect;
         this.dragonDashEffect.SetActive(false);
+
+        this.dragonHorizontalDashEffect = dragonHorizontalDashEffect;
+        this.dragonHorizontalDashEffect.SetActive(false);
 
         if (this.clawSlash.TryGetComponent<Animator>(out Animator animator))
         {
@@ -164,6 +175,33 @@ public class DragonSkills : PlayerSkills
     public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
+        Debug.Log("Skill 2!");
+
+        dragonHorizontalDashEffect.SetActive(true);
+        isRushing = true;
+        isCastingSkill = true;
+
+        movement.LockJumpBySkill(true);
+        movement.LockFlipBySkill(true);
+        movement.LockMovementBySkill(true);
+    }
+
+    public void RushRelease()
+    {
+        if (!isRushing)
+        {
+            return;
+        }
+
+        dragonHorizontalDashEffect.SetActive(false);
+        // Kill coroutine here
+
+        isRushing = false;
+        isCastingSkill = false;
+
+        movement.LockJumpBySkill(false);
+        movement.LockFlipBySkill(false);
+        movement.LockMovementBySkill(false);
     }
 
     public void UltimateRelease()
@@ -179,7 +217,6 @@ public class DragonSkills : PlayerSkills
         isCastingSkill = false;
         isUsingUltimate = false;
 
-        // Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
         movement.LockFlipBySkill(false);
         movement.LockMovementBySkill(false);

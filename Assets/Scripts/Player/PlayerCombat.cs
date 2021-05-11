@@ -28,6 +28,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     [SerializeField]
     private GameObject dragonDashEffect;
     [SerializeField]
+    private GameObject dragonHorizontalDashEffect;
+    [SerializeField]
     private DashEffectSize chargedShotEffect;
 
     private DragonSkills dragonSkills => SkillsRepository.Dragon;
@@ -58,6 +60,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
+        EventPublisher.StopRush += StopRush;
         EventPublisher.StopChargeShot += StopChargeShot;
 
         // Initialize player starting class, player will get to choose this later
@@ -71,6 +74,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
+        EventPublisher.StopRush -= StopRush;
         EventPublisher.StopChargeShot -= StopChargeShot;
     }
 
@@ -127,6 +131,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         {
             // Release
             (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
+        }
+        else if ( // If player releases rush
+            InputManager.Skill2Release &&
+            DragonGauge.Instance.IsDragonForm
+        )
+        {
+            EventPublisher.TriggerStopRush();
         }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
@@ -224,6 +235,11 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         dragonSkills.UltimateRelease();
     }
 
+    private void StopRush()
+    {
+        dragonSkills.RushRelease();
+    }
+
     private void StopChargeShot()
     {
         if (PlayerClassStatic.currentClass == PlayerClass.Archer)
@@ -286,7 +302,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
         SkillsRepository.Archer.Initialize(transform, chargedShotEffect, airShotHitZone);
         SkillsRepository.Dragon.Initialize(
-            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
+            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect, dragonHorizontalDashEffect
         );
     }
 

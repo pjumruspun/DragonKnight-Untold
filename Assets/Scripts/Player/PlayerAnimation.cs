@@ -77,6 +77,11 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         animator.ResetTrigger("StopCharging");
     }
 
+    public void StopDragonRush()
+    {
+        animator.SetTrigger("FinishedSkill2");
+    }
+
     public void PlayDashAttackAnimation()
     {
         // Skill 2 animation is the same as dash attack animation
@@ -117,6 +122,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerChangeClass += ChangeHumanAnimator;
         EventPublisher.StopChargeShot += StopChargingShot;
         EventPublisher.StopFireBreath += PlayStopFireBreathAnimation;
+        EventPublisher.StopRush += StopDragonRush;
         EventPublisher.PlayerStatsChange += AdjustAttackSpeed;
 
         ChangeHumanAnimator(PlayerClassStatic.currentClass);
@@ -140,6 +146,7 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         EventPublisher.PlayerChangeClass -= ChangeHumanAnimator;
         EventPublisher.StopChargeShot -= StopChargingShot;
         EventPublisher.StopFireBreath -= PlayStopFireBreathAnimation;
+        EventPublisher.StopRush -= StopDragonRush;
         EventPublisher.PlayerStatsChange -= AdjustAttackSpeed;
     }
 
