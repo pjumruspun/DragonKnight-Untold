@@ -52,7 +52,6 @@ public class PerkEffects
         float healthConsumed = 1.0f * berserkLevel;
         if (hasBerserk)
         {
-            Debug.Log(healthConsumed);
             PlayerHealth.Instance.TakeDamage(healthConsumed);
         }
     }

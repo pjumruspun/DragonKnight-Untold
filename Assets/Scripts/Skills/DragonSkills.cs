@@ -183,7 +183,6 @@ public class DragonSkills : PlayerSkills
     {
         currentCooldown[1] = dragonAttackCooldown[1];
         float damage = dragonAttackDamage[1];
-        Debug.Log("Skill 2!");
 
         isRushing = true;
         isCastingSkill = true;
@@ -317,6 +316,7 @@ public class DragonSkills : PlayerSkills
     {
         yield return new WaitForSeconds(delay);
         dragonHorizontalDashEffect.SetActive(true);
+
         while (true)
         {
             movement.MoveForwardBySkill(skill2Speed, interval, groundOnly: false, forceMode: ForceMode2D.Impulse);
@@ -326,6 +326,7 @@ public class DragonSkills : PlayerSkills
                 knockUpAmplitude: skill2KnockUpAmplitude,
                 knockBackAmplitude: skill2KnockBackAmplitude
             );
+
             yield return new WaitForSeconds(interval);
         }
     }
