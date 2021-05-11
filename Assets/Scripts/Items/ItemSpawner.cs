@@ -19,6 +19,9 @@ public class ItemSpawner : MonoBehaviour
     [Range(0.0f, 1.0f)]
     private float keySpawnChance = 0.5f;
 
+    [Range(0.0f, 1.0f)]
+    private float potionSpawnChance = 0.15f;
+
     [SerializeField]
     private bool guaranteedSpawn = false;
 
@@ -29,6 +32,16 @@ public class ItemSpawner : MonoBehaviour
         {
             // Spawn a key
             ObjectManager.Instance.Keys.SpawnObject(transform.position);
+        }
+    }
+
+    public void SpawnPotion()
+    {
+        float random = Random.Range(0.0f, 1.0f);
+        if (random < potionSpawnChance)
+        {
+            // Spawn a potion
+            ObjectManager.Instance.HealthPotion.SpawnObject(transform.position);
         }
     }
 

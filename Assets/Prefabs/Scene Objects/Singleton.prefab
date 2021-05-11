@@ -95,6 +95,8 @@ MonoBehaviour:
   itemPickupPoolSize: 10
   keyPrefab: {fileID: 3782976004530169770, guid: 72eb66fb73ed54de79956807351459dc, type: 3}
   keyPoolsize: 10
+  healthPotionPrefab: {fileID: 1990242251908392230, guid: a73fa0ff09a4844a984f4e35ce812c8e, type: 3}
+  healthPotionPoolsize: 10
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20

@@ -12,6 +12,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool Keys;
+    public ObjectPool HealthPotion;
     public ObjectPool SlashEffect;
     public ObjectPool CurveRoute;
 
@@ -63,6 +64,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private int keyPoolsize = 10;
 
+    [Header("Health Potion")]
+    [SerializeField]
+    private GameObject healthPotionPrefab;
+    [SerializeField]
+    private int healthPotionPoolsize = 10;
+
     [Header("Slash Effect")]
     [SerializeField]
     private GameObject slashEffectPrefab;
@@ -96,6 +103,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         UltimateArrows = new ObjectPool(ultArrowPrefab, ultArrowPoolSize);
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         Keys = new ObjectPool(keyPrefab, keyPoolsize);
+        HealthPotion = new ObjectPool(healthPotionPrefab, healthPotionPoolsize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
         ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);
         CurveRoute = new ObjectPool(curveRoutePrefab, curveRoutePoolSize);

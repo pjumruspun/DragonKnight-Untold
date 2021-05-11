@@ -419,6 +419,9 @@ public class Enemy : Health
 
             // Spawn key instead in this new patch
             spawner.SpawnKey();
+
+            // Spawn health potion as well
+            spawner.SpawnPotion();
         }
     }
 }
