@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Archer Skills", menuName = "Roguelite/Skills/Archer")]
 public class ArcherSkills : PlayerSkills
 {
+    public bool HasFiredSpreadShot => hasFiredSpreadShot;
+
     private DashEffectSize chargedShotEffect;
     private AttackHitbox airShotHitZone;
 

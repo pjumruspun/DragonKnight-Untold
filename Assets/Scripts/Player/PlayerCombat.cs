@@ -175,9 +175,20 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private void ActivateSkill(int skillNumber)
     {
-        // Archer spread shot has problem here
-        // Health just got consumed so fast
-        PerkEffects.BerserkConsumeHealth();
+        if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
+        {
+            Debug.Log(((ArcherSkills)CurrentSkills()).HasFiredSpreadShot);
+            if (!((ArcherSkills)CurrentSkills()).HasFiredSpreadShot)
+            {
+                // Only consume if hasn't fired spread shot
+                PerkEffects.BerserkConsumeHealth();
+            }
+        }
+        else
+        {
+            // Always consumed if other classes
+            PerkEffects.BerserkConsumeHealth();
+        }
 
         switch (skillNumber)
         {
