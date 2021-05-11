@@ -336,6 +336,7 @@ public class DragonSkills : PlayerSkills
 
         while (true)
         {
+            DragonGaugeStatic.dragonEnergy -= 1.0f;
             movement.MoveForwardBySkill(skill2Speed, interval, groundOnly: false, forceMode: ForceMode2D.Impulse);
             AttackWithHitbox(
                 dragonRushHitbox,
@@ -355,6 +356,7 @@ public class DragonSkills : PlayerSkills
         fireBreath.SetActive(true);
         while (true)
         {
+            DragonGaugeStatic.dragonEnergy -= 1.0f;
             isUsingUltimate = true;
             yield return new WaitForSeconds(interval);
             AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude);
