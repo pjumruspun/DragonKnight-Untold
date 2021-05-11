@@ -69,8 +69,6 @@ public class StatsUI : MonoBehaviour
 
     private void UpdateUI()
     {
-        Debug.Log(atk.text);
-        Debug.Log(PlayerStats.Instance.ATK);
         atk.text = $"ATK: {PlayerStats.Instance.ATK}";
         agi.text = $"AGI: {PlayerStats.Instance.AGI}";
         vit.text = $"VIT: {PlayerStats.Instance.VIT}";

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : Health
 {
+    public bool IsAtMaxHP => currentHealth > maxHealth - 0.01f;
     // Can't multiple inherit so we need to handmade a singleton here
     public static PlayerHealth Instance { get; private set; }
     public bool HasSuccessfullyBlocked => hasSuccessfullyBlocked;
@@ -45,7 +46,8 @@ public class PlayerHealth : Health
     {
         if (!IsDead)
         {
-            FloatingTextSpawner.Spawn($"+{Mathf.Ceil(healAmount)}", transform.position, green: true);
+            Color green = new Color(0.2f, 0.9f, 0.2f);
+            FloatingTextSpawner.Spawn($"+{Mathf.Ceil(healAmount)}", transform.position, green);
             currentHealth += healAmount;
             if (currentHealth > maxHealth)
             {

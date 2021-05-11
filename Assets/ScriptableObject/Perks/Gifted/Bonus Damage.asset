@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Bonus Damage
   m_EditorClassIdentifier: 
   name: Bonus Damage
+  description: 
+  soulToUpgrade: 640000002c010000f4010000ee020000b0040000
   icon: {fileID: 21300000, guid: 38b3cc8d75e8644848ba168c7d7b4411, type: 3}
   stats:
     AtkAddModifier: 0

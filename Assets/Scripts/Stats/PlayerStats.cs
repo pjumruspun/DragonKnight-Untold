@@ -122,9 +122,25 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     {
         base.Awake();
 
+        if (PlayerStatsStatic.shouldRandom)
+        {
+            RandomStat();
+        }
+        else
+        {
+            AssignStatsFromStatic();
+        }
+
+        // Events
+        EventPublisher.PlayerChangeClass += AdjustSkillParams;
+        EventPublisher.PlayerDead += ShouldResetStat;
+    }
+
+    private void RandomStat()
+    {
         System.Random rnd = new System.Random();
         float sumStatFactor = (float)rnd.NextDouble();
-        float sumStat = 50f * Mathf.Min(0.75f + sumStatFactor,1.5f);
+        float sumStat = 50f * Mathf.Min(0.75f + sumStatFactor, 1.5f);
 
         float atkFactor = (float)rnd.NextDouble();
         float agiFactor = (float)rnd.NextDouble();
@@ -136,19 +152,34 @@ public class PlayerStats : MonoSingleton<PlayerStats>
 
         float sumFactor = atkFactor + agiFactor + vitFactor + talFactor + lukFactor;
 
-        atk = new Stats<int>(Mathf.CeilToInt(atkFactor/sumFactor * sumStat));
-        agi = new Stats<int>(Mathf.CeilToInt(agiFactor/sumFactor * sumStat));
-        vit = new Stats<int>(Mathf.CeilToInt(vitFactor/sumFactor * sumStat));
-        tal = new Stats<int>(Mathf.CeilToInt(talFactor/sumFactor * sumStat));
-        luk = new Stats<int>(Mathf.CeilToInt(lukFactor/sumFactor * sumStat));
+        atk = new Stats<int>(Mathf.CeilToInt(atkFactor / sumFactor * sumStat));
+        agi = new Stats<int>(Mathf.CeilToInt(agiFactor / sumFactor * sumStat));
+        vit = new Stats<int>(Mathf.CeilToInt(vitFactor / sumFactor * sumStat));
+        tal = new Stats<int>(Mathf.CeilToInt(talFactor / sumFactor * sumStat));
+        luk = new Stats<int>(Mathf.CeilToInt(lukFactor / sumFactor * sumStat));
 
-        // Events
-        EventPublisher.PlayerChangeClass += AdjustSkillParams;
+        PlayerStatsStatic.atk = atk.GetValue;
+        PlayerStatsStatic.agi = agi.GetValue;
+        PlayerStatsStatic.vit = vit.GetValue;
+        PlayerStatsStatic.tal = tal.GetValue;
+        PlayerStatsStatic.luk = luk.GetValue;
+
+        PlayerStatsStatic.shouldRandom = false;
+    }
+
+    private void AssignStatsFromStatic()
+    {
+        atk = new Stats<int>(PlayerStatsStatic.atk);
+        agi = new Stats<int>(PlayerStatsStatic.agi);
+        vit = new Stats<int>(PlayerStatsStatic.vit);
+        tal = new Stats<int>(PlayerStatsStatic.tal);
+        luk = new Stats<int>(PlayerStatsStatic.luk);
     }
 
     private void OnDestroy()
     {
         EventPublisher.PlayerChangeClass -= AdjustSkillParams;
+        EventPublisher.PlayerDead -= ShouldResetStat;
     }
 
     private float CalculateCritChance()
@@ -192,5 +223,10 @@ public class PlayerStats : MonoSingleton<PlayerStats>
 
         baseSkillCooldown = skills.GetBaseSkillCooldowns.Cast<float>().ToArray();
         baseSkillDamage = skills.GetBaseSkillDamage.Cast<float>().ToArray();
+    }
+
+    private void ShouldResetStat()
+    {
+        PlayerStatsStatic.shouldRandom = true;
     }
 }

@@ -25,6 +25,16 @@ public class FlyingEnemyChase : EnemyBehavior
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
         ProcessingPath();
+        ListenToAttackSignal();
+    }
+
+    protected override void ListenToAttackSignal()
+    {
+        bool readyToAttack = enemy.CurrentCooldown < 0.01f;
+        if (DistanceToPlayer <= enemy.AttackRange && readyToAttack)
+        {
+            animator.SetTrigger("Attack");
+        }
     }
 
     private void UpdatePath()
@@ -33,8 +43,6 @@ public class FlyingEnemyChase : EnemyBehavior
         {
             seeker.StartPath(transform.position, player.position, OnPathComplete);
         }
-
-        // Debug.Log("Updated path");
     }
 
     private void OnPathComplete(Path path)
@@ -48,8 +56,8 @@ public class FlyingEnemyChase : EnemyBehavior
 
     private void Chase()
     {
-        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - (Vector2)transform.position).normalized;
-        Vector2 moveVector = direction * cachedActualSpeed;
+        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rigidbody2D.position).normalized;
+        Vector2 moveVector = direction * cachedActualSpeed * 4.0f;
         float distance = Vector2.Distance(transform.position, path.vectorPath[currentWaypoint]);
 
         if (distance < nextWaypointDistance)
@@ -58,7 +66,7 @@ public class FlyingEnemyChase : EnemyBehavior
             ++currentWaypoint;
         }
 
-        rigidbody2D.velocity = moveVector;
+        rigidbody2D.AddForce(moveVector);
     }
 
     private void ProcessingPath()

@@ -87,12 +87,16 @@ MonoBehaviour:
   swordWavePoolSize: 5
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
   arrowPoolSize: 30
+  ultArrowPrefab: {fileID: 1140243388120012218, guid: d22efac804d39487cb2f25c2163e3aad, type: 3}
+  ultArrowPoolSize: 5
   chargedArrowsPrefab: {fileID: 3962329292907818302, guid: 4a26c7e0a76954002a8c98382ef6e6f7, type: 3}
   chargedArrowsPoolSize: 3
   itemPickupPrefab: {fileID: 4204306999793631647, guid: d7b451dd1ffed4b5a8c3c05540637b9e, type: 3}
   itemPickupPoolSize: 10
   keyPrefab: {fileID: 3782976004530169770, guid: 72eb66fb73ed54de79956807351459dc, type: 3}
   keyPoolsize: 10
+  healthPotionPrefab: {fileID: 1990242251908392230, guid: a73fa0ff09a4844a984f4e35ce812c8e, type: 3}
+  healthPotionPoolsize: 10
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20
@@ -183,11 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   giftedPerk:
   - {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
-  - {fileID: 11400000, guid: ba03d59fd7a88b848b20ffbd2b5987d6, type: 2}
   - {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
-  - {fileID: 11400000, guid: b90ad9e2cb1b4854a81bf7185d5cd651, type: 2}
   - {fileID: 11400000, guid: 1af05b418939cad4abd075489395ec04, type: 2}
-  - {fileID: 11400000, guid: 8e3e7bba96512234ba3d57478879792d, type: 2}
   developedPerk: []
   wearablePerk: []
 --- !u!114 &8330308788624485017

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
+    public bool IsRushing => DragonGauge.Instance.IsDragonForm && (CurrentSkills() as DragonSkills).IsRushing;
     public bool IsCastingSkill => CurrentSkills().IsCastingSkill;
     public int SwordCombo =>
         PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();
@@ -16,6 +17,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     [SerializeField]
     private AttackHitbox dragonVortexHitbox;
     [SerializeField]
+    private AttackHitbox dragonRushHitbox;
+    [SerializeField]
     private AttackHitbox airShotHitZone;
 
     [Header("Skill Effects")]
@@ -27,6 +30,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private GameObject clawSlash;
     [SerializeField]
     private GameObject dragonDashEffect;
+    [SerializeField]
+    private GameObject dragonHorizontalDashEffect;
     [SerializeField]
     private DashEffectSize chargedShotEffect;
 
@@ -58,6 +63,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass += ProcessChangingClass;
         EventPublisher.PlayerShapeshift += StopFireOnDragonDown;
         EventPublisher.StopFireBreath += StopFireBreath;
+        EventPublisher.StopRush += StopRush;
         EventPublisher.StopChargeShot += StopChargeShot;
 
         // Initialize player starting class, player will get to choose this later
@@ -71,6 +77,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         EventPublisher.PlayerChangeClass -= ProcessChangingClass;
         EventPublisher.PlayerShapeshift -= StopFireOnDragonDown;
         EventPublisher.StopFireBreath -= StopFireBreath;
+        EventPublisher.StopRush -= StopRush;
         EventPublisher.StopChargeShot -= StopChargeShot;
     }
 
@@ -128,6 +135,13 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
             // Release
             (CurrentSkills() as ArcherSkills).NotifySkill2ToRelease();
         }
+        else if ( // If player releases rush
+            InputManager.Skill2Release &&
+            DragonGauge.Instance.IsDragonForm
+        )
+        {
+            EventPublisher.TriggerStopRush();
+        }
         else if (InputManager.Skill3 && IsSkillReady(2))
         {
             if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
@@ -175,6 +189,21 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private void ActivateSkill(int skillNumber)
     {
+        if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
+        {
+            Debug.Log(((ArcherSkills)CurrentSkills()).HasFiredSpreadShot);
+            if (!((ArcherSkills)CurrentSkills()).HasFiredSpreadShot)
+            {
+                // Only consume if hasn't fired spread shot
+                PerkEffects.BerserkConsumeHealth();
+            }
+        }
+        else
+        {
+            // Always consumed if other classes
+            PerkEffects.BerserkConsumeHealth();
+        }
+
         switch (skillNumber)
         {
             case 0:
@@ -207,6 +236,11 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     private void StopFireBreath()
     {
         dragonSkills.UltimateRelease();
+    }
+
+    private void StopRush()
+    {
+        dragonSkills.RushRelease();
     }
 
     private void StopChargeShot()
@@ -271,7 +305,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
         SkillsRepository.Archer.Initialize(transform, chargedShotEffect, airShotHitZone);
         SkillsRepository.Dragon.Initialize(
-            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect
+            transform, dragonPrimaryHitbox, dragonVortexHitbox, dragonRushHitbox, fireBreath, clawSlash, dragonDashEffect, dragonHorizontalDashEffect
         );
     }
 

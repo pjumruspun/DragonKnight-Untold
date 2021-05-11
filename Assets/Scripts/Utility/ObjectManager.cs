@@ -8,9 +8,11 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool FloatingDamage;
     public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
+    public ObjectPool UltimateArrows;
     public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool Keys;
+    public ObjectPool HealthPotion;
     public ObjectPool SlashEffect;
     public ObjectPool CurveRoute;
 
@@ -38,6 +40,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private int arrowPoolSize = 30;
 
+    [Header("Ultimate Arrows")]
+    [SerializeField]
+    private GameObject ultArrowPrefab;
+    [SerializeField]
+    private int ultArrowPoolSize = 5;
+
     [Header("Charged Arrows")]
     [SerializeField]
     private GameObject chargedArrowsPrefab;
@@ -55,6 +63,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     private GameObject keyPrefab;
     [SerializeField]
     private int keyPoolsize = 10;
+
+    [Header("Health Potion")]
+    [SerializeField]
+    private GameObject healthPotionPrefab;
+    [SerializeField]
+    private int healthPotionPoolsize = 10;
 
     [Header("Slash Effect")]
     [SerializeField]
@@ -86,8 +100,10 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         CritFloatingDamage = new ObjectPool(critFloatingDamagePrefab, critFloatingDamagePoolSize);
         SwordWaves = new ObjectPool(swordWavePrefab, swordWavePoolSize);
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
+        UltimateArrows = new ObjectPool(ultArrowPrefab, ultArrowPoolSize);
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         Keys = new ObjectPool(keyPrefab, keyPoolsize);
+        HealthPotion = new ObjectPool(healthPotionPrefab, healthPotionPoolsize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
         ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);
         CurveRoute = new ObjectPool(curveRoutePrefab, curveRoutePoolSize);

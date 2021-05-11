@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3282760044992471894
 Transform:
   m_ObjectHideFlags: 0
@@ -48,10 +48,9 @@ MonoBehaviour:
   shouldSpawn: 1
   tilemap: {fileID: 0}
   spawnRange: 10
-  castRadius: 2
   spawnInterval: 20
   spawnAmountPerInterval: 25
-  maxSpawnAmountAtTime: 30
+  maxSpawnAmountAtTime: 120
 --- !u!114 &3282760044992471880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +66,7 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 7845668831850652229, guid: 406199930399b412398fc5239a13599d, type: 3}
   - {fileID: 8164413801992587744, guid: 9510868298a5f4b61a6eebb847a06443, type: 3}
+  - {fileID: 5417233031235150019, guid: fbfaf7ac4f5844e4f82ba8af47c0c22c, type: 3}
   spawnDelay: 0.5
 --- !u!114 &154852864825570490
 MonoBehaviour:
