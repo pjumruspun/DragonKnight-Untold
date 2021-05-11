@@ -17,10 +17,12 @@ public class ItemSpawner : MonoBehaviour
     private float commonSpawnChance = 0.65f;
 
     [Range(0.0f, 1.0f)]
+    [SerializeField]
     private float keySpawnChance = 0.5f;
 
     [Range(0.0f, 1.0f)]
-    private float potionSpawnChance = 0.15f;
+    [SerializeField]
+    private float potionSpawnChance = 0.25f;
 
     [SerializeField]
     private bool guaranteedSpawn = false;
