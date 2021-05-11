@@ -175,6 +175,10 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
 
     private void ActivateSkill(int skillNumber)
     {
+        // Archer spread shot has problem here
+        // Health just got consumed so fast
+        PerkEffects.BerserkConsumeHealth();
+
         switch (skillNumber)
         {
             case 0:

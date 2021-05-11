@@ -144,6 +144,7 @@ public class Enemy : Health
     {
         if (!IsDead)
         {
+            damage = PerkEffects.CalculateBerserkDamage(damage);
             TakeDamage(damage);
             EnemyStunnedBehavior behavior = animator.GetBehaviour<EnemyStunnedBehavior>();
             if (knockUpAmplitude > 0.01f)
