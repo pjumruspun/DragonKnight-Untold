@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : Health
 {
+    public bool IsAtMaxHP => currentHealth > maxHealth - 0.01f;
     // Can't multiple inherit so we need to handmade a singleton here
     public static PlayerHealth Instance { get; private set; }
     public bool HasSuccessfullyBlocked => hasSuccessfullyBlocked;
