@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 public class PerkListStatic
 {
+    public static bool shouldRandom = true;
     public static List<Perk> perks = new List<Perk>();
 
     public static bool HasPerk(string perkName)
