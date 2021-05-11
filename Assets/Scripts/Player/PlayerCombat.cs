@@ -16,6 +16,8 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     [SerializeField]
     private AttackHitbox dragonVortexHitbox;
     [SerializeField]
+    private AttackHitbox dragonRushHitbox;
+    [SerializeField]
     private AttackHitbox airShotHitZone;
 
     [Header("Skill Effects")]
@@ -302,7 +304,7 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
         SkillsRepository.Sword.Initialize(transform, swordPrimaryHitbox, dashEffect);
         SkillsRepository.Archer.Initialize(transform, chargedShotEffect, airShotHitZone);
         SkillsRepository.Dragon.Initialize(
-            transform, dragonPrimaryHitbox, dragonVortexHitbox, fireBreath, clawSlash, dragonDashEffect, dragonHorizontalDashEffect
+            transform, dragonPrimaryHitbox, dragonVortexHitbox, dragonRushHitbox, fireBreath, clawSlash, dragonDashEffect, dragonHorizontalDashEffect
         );
     }
 

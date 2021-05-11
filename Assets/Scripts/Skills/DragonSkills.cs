@@ -17,6 +17,9 @@ public class DragonSkills : PlayerSkills
     private const float skill1ScreenShakePower = 0.15f;
 
     // Skill 2 params
+    private const float skill2Speed = 10.0f;
+    private const float skill2KnockBackAmplitude = 10.0f;
+    private const float skill2KnockUpAmplitude = 1.5f;
     private const float rushingDelay = 0.05f;
     private const float rushingDamageInterval = 0.20f;
     private bool isRushing = false;
@@ -37,6 +40,7 @@ public class DragonSkills : PlayerSkills
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox dragonVortexHitbox;
     private AttackHitbox fireBreathHitbox;
+    private AttackHitbox dragonRushHitbox;
     private float[] dragonAttackDamage = new float[4];
     private float[] dragonAttackCooldown = new float[4];
 
@@ -47,12 +51,14 @@ public class DragonSkills : PlayerSkills
     private GameObject dragonHorizontalDashEffect;
     private Animator clawSlashAnim;
     private Animator dashAnim;
+    private Coroutine rushCoroutine;
     private Coroutine fireBreathCoroutine;
 
     public void Initialize(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
         AttackHitbox dragonVortexHitbox,
+        AttackHitbox dragonRushHitbox,
         GameObject fireBreath,
         GameObject clawSlash,
         GameObject dragonDashEffect,
@@ -63,6 +69,7 @@ public class DragonSkills : PlayerSkills
 
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.dragonVortexHitbox = dragonVortexHitbox;
+        this.dragonRushHitbox = dragonRushHitbox;
 
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
@@ -175,11 +182,13 @@ public class DragonSkills : PlayerSkills
     public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
+        float damage = dragonAttackDamage[1];
         Debug.Log("Skill 2!");
 
-        dragonHorizontalDashEffect.SetActive(true);
         isRushing = true;
         isCastingSkill = true;
+
+        rushCoroutine = CoroutineUtility.Instance.StartCoroutine(Rush(damage, rushingDelay, rushingDamageInterval));
 
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
@@ -194,7 +203,7 @@ public class DragonSkills : PlayerSkills
         }
 
         dragonHorizontalDashEffect.SetActive(false);
-        // Kill coroutine here
+        CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
 
         isRushing = false;
         isCastingSkill = false;
@@ -302,6 +311,23 @@ public class DragonSkills : PlayerSkills
         movement.LockJumpBySkill(true);
         movement.LockFlipBySkill(true);
         movement.LockMovementBySkill(true);
+    }
+
+    private IEnumerator Rush(float damage, float delay, float interval)
+    {
+        yield return new WaitForSeconds(delay);
+        dragonHorizontalDashEffect.SetActive(true);
+        while (true)
+        {
+            movement.MoveForwardBySkill(skill2Speed, interval, groundOnly: false, forceMode: ForceMode2D.Impulse);
+            AttackWithHitbox(
+                dragonRushHitbox,
+                damage,
+                knockUpAmplitude: skill2KnockUpAmplitude,
+                knockBackAmplitude: skill2KnockBackAmplitude
+            );
+            yield return new WaitForSeconds(interval);
+        }
     }
 
     private IEnumerator DelayedFireBreath(float damage, float delay, float interval)
