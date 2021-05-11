@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class GroundChecker : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.layer == Layers.groundLayerIndex)
+        if (other.gameObject.layer == Layers.groundLayerIndex && PlayerCombat.Instance.IsRushing)
         {
-            Debug.Log("Touched ground!");
+            ScreenShake.Instance.StartShaking(0.25f, 0.2f);
             EventPublisher.TriggerStopRush();
         }
     }
@@ -17,7 +17,7 @@ public class GroundChecker : MonoBehaviour
     {
         if (other.gameObject.layer == Layers.groundLayerIndex)
         {
-            Debug.Log("Untouched ground!");
+            // Debug.Log("Untouched ground!");
         }
     }
 }

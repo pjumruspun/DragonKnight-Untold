@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerCombat : MonoSingleton<PlayerCombat>
 {
+    public bool IsRushing => DragonGauge.Instance.IsDragonForm && (CurrentSkills() as DragonSkills).IsRushing;
     public bool IsCastingSkill => CurrentSkills().IsCastingSkill;
     public int SwordCombo =>
         PlayerClassStatic.currentClass == PlayerClass.Sword ? ((SwordSkills)humanSkills).CurrentCombo : throw new System.InvalidOperationException();

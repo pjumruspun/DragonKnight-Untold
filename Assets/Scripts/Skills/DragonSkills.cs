@@ -6,6 +6,8 @@ using System.Linq;
 [CreateAssetMenu(fileName = "New Dragon Skills", menuName = "Roguelite/Skills/Dragon")]
 public class DragonSkills : PlayerSkills
 {
+    public bool IsRushing => isRushing;
+
     // Skill 1 params
     private const float slashAnimLength = 0.3f;
     private const float skill1KnockUpAmplitude = 3.0f;
@@ -18,8 +20,12 @@ public class DragonSkills : PlayerSkills
 
     // Skill 2 params
     private const float skill2Speed = 10.0f;
+    private const float skill2FinalDamageFactor = 3.0f;
     private const float skill2KnockBackAmplitude = 10.0f;
     private const float skill2KnockUpAmplitude = 1.5f;
+    private const float skill2FinalKnockUpAmplitude = 3.0f;
+    private const float skill2ScreenShakeDuration = 0.3f;
+    private const float skill2ScreenShakePower = 0.15f;
     private const float rushingDelay = 0.05f;
     private const float rushingDamageInterval = 0.20f;
     private bool isRushing = false;
@@ -201,6 +207,17 @@ public class DragonSkills : PlayerSkills
             return;
         }
 
+        float damage = dragonAttackDamage[1] * skill2FinalDamageFactor;
+
+        // Extra final damage
+        AttackWithHitbox(
+            dragonRushHitbox,
+            damage,
+            superArmorDamage: 100,
+            knockUpAmplitude: skill2FinalKnockUpAmplitude,
+            hitEffect: HitEffect.Slash
+        );
+
         dragonHorizontalDashEffect.SetActive(false);
         CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
 
@@ -324,7 +341,8 @@ public class DragonSkills : PlayerSkills
                 dragonRushHitbox,
                 damage,
                 knockUpAmplitude: skill2KnockUpAmplitude,
-                knockBackAmplitude: skill2KnockBackAmplitude
+                knockBackAmplitude: skill2KnockBackAmplitude,
+                hitEffect: HitEffect.Slash
             );
 
             yield return new WaitForSeconds(interval);
