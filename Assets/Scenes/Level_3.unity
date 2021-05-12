@@ -191,6 +191,22 @@ PrefabInstance:
       propertyPath: tilemap
       value: 
       objectReference: {fileID: 1527753554}
+    - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
+      propertyPath: spawnRange
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
+      propertyPath: spawnInterval
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
+      propertyPath: maxSpawnAmountAtTime
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
+      propertyPath: spawnAmountPerInterval
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 3282760044992471883, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
       propertyPath: m_Name
       value: EnemySpawner

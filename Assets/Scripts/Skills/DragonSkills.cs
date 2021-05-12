@@ -218,10 +218,10 @@ public class DragonSkills : PlayerSkills
             hitEffect: HitEffect.Slash
         );
 
-        // Deplete cooldown by 80% if hit something
+        // Deplete cooldown by 40% if hit something
         if (totalDamageDealt > 0.0f)
         {
-            const float cooldownReductionRatio = 0.8f;
+            const float cooldownReductionRatio = 0.3f;
             currentCooldown[1] *= 1.0f - cooldownReductionRatio;
         }
 
@@ -345,6 +345,11 @@ public class DragonSkills : PlayerSkills
     {
         yield return new WaitForSeconds(delay);
         dragonHorizontalDashEffect.SetActive(true);
+        DragonGaugeStatic.dragonEnergy -= 5.0f;
+        if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+        {
+            EventPublisher.TriggerStopRush();
+        }
 
         while (true)
         {
@@ -372,6 +377,13 @@ public class DragonSkills : PlayerSkills
     {
         yield return new WaitForSeconds(delay);
         fireBreath.SetActive(true);
+
+        DragonGaugeStatic.dragonEnergy -= 5.0f;
+        if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+        {
+            EventPublisher.TriggerStopRush();
+        }
+
         while (true)
         {
             DragonGaugeStatic.dragonEnergy -= 1.0f;

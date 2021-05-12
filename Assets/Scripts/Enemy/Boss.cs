@@ -19,7 +19,12 @@ public abstract class Boss : Enemy
         base.TakeDamage(damage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
 
         // Boss receives SA damage equals to damage received
-        TakeSuperArmorDamage(damage);
+        // TakeSuperArmorDamage(damage);
+    }
+
+    protected override void KnockedBack(float amplitude)
+    {
+        // Boss doesn't get knocked
     }
 
     protected override void EnableEnemy()

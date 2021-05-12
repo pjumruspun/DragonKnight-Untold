@@ -15,4 +15,4 @@ MonoBehaviour:
   skillName: Counter Slash
   skillIcon: {fileID: 21300000, guid: eb1cb8fcbde374717b77323231123e66, type: 3}
   baseDamage: 40
-  baseCooldown: 1
+  baseCooldown: 4

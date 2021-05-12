@@ -976,6 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f508de7331b214aaab63a8ee0ccd4dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFlyingEnemy: 0
   spawnEffect: 0
   spawnCost: 5
   enemyBaseSpeed: 1.5
@@ -984,17 +985,17 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 0
   groundDetector: {fileID: 2419719778490068726}
-  startMaxHealth: 1500
+  startMaxHealth: 3000
   hpBar: {fileID: 4100709551577818779}
   secondsToDespawn: 2
   showSuperArmorBar: 1
-  maxSuperArmor: 600
+  maxSuperArmor: 450
   superArmorBar: {fileID: 3833112096350911891}
   secondsBeforeGetUp: 1.5
   stunStars: {fileID: 1828762843847529045}
-  attackDamage: 25
-  attackCooldown: 3
-  attackRange: 1
+  attackDamage: 30
+  attackCooldown: 2.5
+  attackRange: 1.5
   attackDelay: 0.3
   hurtColor: {r: 0.75, g: 0, b: 0, a: 1}
   attackHitbox: {fileID: 0}
@@ -1130,3 +1131,6 @@ MonoBehaviour:
   ultraRareSpawnChance: 0.05
   rareSpawnChance: 0.1
   commonSpawnChance: 0.15
+  keySpawnChance: 0.3
+  potionSpawnChance: 0.25
+  guaranteedSpawn: 0
