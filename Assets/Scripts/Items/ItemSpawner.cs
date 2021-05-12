@@ -18,7 +18,7 @@ public class ItemSpawner : MonoBehaviour
 
     [Range(0.0f, 1.0f)]
     [SerializeField]
-    private float keySpawnChance = 0.5f;
+    private float keySpawnChance = 0.3f;
 
     [Range(0.0f, 1.0f)]
     [SerializeField]

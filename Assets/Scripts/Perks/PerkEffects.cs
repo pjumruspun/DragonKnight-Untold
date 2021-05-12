@@ -37,7 +37,7 @@ public class PerkEffects
     {
         bool hasBerserk = PerkListStatic.HasPerk(berserk);
         int berserkLevel = PerkListStatic.GetPerkLevel(berserk);
-        float multiplier = 0.05f + 0.1f * berserkLevel;
+        float multiplier = 0.05f + 0.2f * berserkLevel;
         if (hasBerserk)
         {
             return damage * (1.0f + multiplier);
@@ -49,7 +49,7 @@ public class PerkEffects
     {
         bool hasBerserk = PerkListStatic.HasPerk(berserk);
         int berserkLevel = PerkListStatic.GetPerkLevel(berserk);
-        float healthConsumed = 1.0f * berserkLevel;
+        float healthConsumed = 0.2f + 0.2f * berserkLevel;
         if (hasBerserk)
         {
             PlayerHealth.Instance.TakeDamage(healthConsumed);

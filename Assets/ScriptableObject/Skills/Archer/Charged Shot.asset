@@ -15,4 +15,4 @@ MonoBehaviour:
   skillName: Charged Shot
   skillIcon: {fileID: 21300000, guid: 3fc5271792128494e8ed8788ea89ef41, type: 3}
   baseDamage: 3
-  baseCooldown: 2
+  baseCooldown: 5

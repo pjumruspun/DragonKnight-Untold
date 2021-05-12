@@ -670,6 +670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2cabacce0a64572bba304027dc28d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFlyingEnemy: 0
   spawnEffect: 1
   spawnCost: 8
   enemyBaseSpeed: 1.5
@@ -687,7 +688,7 @@ MonoBehaviour:
   secondsBeforeGetUp: 1.5
   stunStars: {fileID: 3209291099088129778}
   attackDamage: 15
-  attackCooldown: 2
+  attackCooldown: 3
   attackRange: 5
   attackDelay: 0.3
   hurtColor: {r: 0.75, g: 0, b: 0, a: 1}
@@ -824,6 +825,9 @@ MonoBehaviour:
   ultraRareSpawnChance: 0.15
   rareSpawnChance: 0.3
   commonSpawnChance: 0.65
+  keySpawnChance: 0.3
+  potionSpawnChance: 0.25
+  guaranteedSpawn: 0
 --- !u!1 &8598101820295051518
 GameObject:
   m_ObjectHideFlags: 0

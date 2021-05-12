@@ -210,13 +210,20 @@ public class DragonSkills : PlayerSkills
         float damage = dragonAttackDamage[1] * skill2FinalDamageFactor;
 
         // Extra final damage
-        AttackWithHitbox(
+        float totalDamageDealt = AttackWithHitbox(
             dragonRushHitbox,
             damage,
             superArmorDamage: 100,
             knockUpAmplitude: skill2FinalKnockUpAmplitude,
             hitEffect: HitEffect.Slash
         );
+
+        // Deplete cooldown by 80% if hit something
+        if (totalDamageDealt > 0.0f)
+        {
+            const float cooldownReductionRatio = 0.8f;
+            currentCooldown[1] *= 1.0f - cooldownReductionRatio;
+        }
 
         dragonHorizontalDashEffect.SetActive(false);
 
