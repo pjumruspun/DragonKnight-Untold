@@ -10,12 +10,16 @@ public class GameEvents
     public delegate void OnMoveToNextLevel();
     public delegate void OnRestartGame();
     public delegate void OnResetGame();
+    public delegate void OnKeyAmountChange();
+    public delegate void OnSoulChange();
 
     public static event OnPause Pause;
     public static event OnCompleteLevel CompleteLevel;
     public static event OnMoveToNextLevel MoveToNextLevel;
     public static event OnRestartGame RestartGame;
     public static event OnResetGame ResetGame;
+    public static event OnKeyAmountChange KeyAmountChange;
+    public static event OnSoulChange SoulChange;
 
     public static void TriggerPause(bool pause)
     {
@@ -40,5 +44,15 @@ public class GameEvents
     public static void TriggerResetGame()
     {
         ResetGame?.Invoke();
+    }
+
+    public static void TriggerKeyAmountChange()
+    {
+        KeyAmountChange?.Invoke();
+    }
+
+    public static void TriggerSoulChange()
+    {
+        SoulChange?.Invoke();
     }
 }

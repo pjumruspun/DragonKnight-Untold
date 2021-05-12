@@ -25,14 +25,17 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (
             other.gameObject.layer == Layers.interactableLayerIndex
             && other.TryGetComponent<Interactable>(out Interactable interactable)
         )
         {
-            SetFocus(interactable);
+            if (interactable.IsActive)
+            {
+                SetFocus(interactable);
+            }
         }
     }
 

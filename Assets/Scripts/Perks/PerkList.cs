@@ -36,18 +36,29 @@ public class PerkList : MonoSingleton<PerkList>
     public void ResetPerk()
     {
         PerkListStatic.perks = new List<Perk>();
+        PerkListStatic.shouldRandom = true;
     }
 
     private void Start()
     {
         CalculatePerkStats();
+        if (PerkListStatic.shouldRandom)
+        {
+            RandomPerk();
+        }
+
+        GameEvents.RestartGame += ResetPerk;
+    }
+
+    private void RandomPerk()
+    {
         List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
         for (int i = 0; i < initPerk.Count; i++)
         {
             this.AddGiftedPerk(initPerk[i]);
         }
 
-        GameEvents.RestartGame += ResetPerk;
+        PerkListStatic.shouldRandom = false;
     }
 
     private void OnDestroy()
@@ -57,7 +68,7 @@ public class PerkList : MonoSingleton<PerkList>
 
     private void CalculatePerkStats()
     {
-        ItemStats accumulatedStats = new ItemStats();
+        StatsDto accumulatedStats = new StatsDto();
         foreach (var perk in PerkListStatic.perks)
         {
             accumulatedStats = accumulatedStats + perk.stats;

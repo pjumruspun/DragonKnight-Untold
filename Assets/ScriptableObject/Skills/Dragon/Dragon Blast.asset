@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Dragon Blast
   skillIcon: {fileID: 21300000, guid: 234d430e9e9714f548377acf8ab3f302, type: 3}
-  baseDamage: 5
-  baseCooldown: 1
+  baseDamage: 10
+  baseCooldown: 10

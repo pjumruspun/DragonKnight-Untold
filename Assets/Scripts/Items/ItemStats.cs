@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public struct ItemStats
+public struct StatsDto
 {
     // Main Stats
     [Header("Additive Modifiers")]
@@ -34,7 +34,7 @@ public struct ItemStats
     public float CooldownReductionMultModifier;
 
 
-    public ItemStats(
+    public StatsDto(
         int atkAddModifier,
         int agiAddModifier,
         int vitAddModifier,
@@ -79,11 +79,11 @@ public struct ItemStats
         this.CooldownReductionMultModifier = cooldownReductionMultModifier;
     }
 
-    public static ItemStats operator +(ItemStats a) => a;
+    public static StatsDto operator +(StatsDto a) => a;
 
-    public static ItemStats operator -(ItemStats a)
+    public static StatsDto operator -(StatsDto a)
     {
-        return new ItemStats(
+        return new StatsDto(
             -a.AtkAddModifier,
             -a.AgiAddModifier,
             -a.VitAddModifier,
@@ -107,9 +107,9 @@ public struct ItemStats
         );
     }
 
-    public static ItemStats operator +(ItemStats a, ItemStats b)
+    public static StatsDto operator +(StatsDto a, StatsDto b)
     {
-        return new ItemStats(
+        return new StatsDto(
             a.AtkAddModifier + b.AtkAddModifier,
             a.AgiAddModifier + b.AgiAddModifier,
             a.VitAddModifier + b.VitAddModifier,
@@ -133,9 +133,9 @@ public struct ItemStats
         );
     }
 
-    public static ItemStats operator -(ItemStats a, ItemStats b)
+    public static StatsDto operator -(StatsDto a, StatsDto b)
     {
-        return new ItemStats(
+        return new StatsDto(
             a.AtkAddModifier - b.AtkAddModifier,
             a.AgiAddModifier - b.AgiAddModifier,
             a.VitAddModifier - b.VitAddModifier,

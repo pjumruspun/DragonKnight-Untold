@@ -58,6 +58,9 @@ public class DestroyerChase : EnemyChase
         bool readyToAttack = enemy.CurrentCooldown < 0.01f;
         if (readyToAttack)
         {
+            // Lock flip
+
+
             float softmaxAmplitude = punchingProbability + stompingProbability;
             if (jumpStompEnabled)
             {

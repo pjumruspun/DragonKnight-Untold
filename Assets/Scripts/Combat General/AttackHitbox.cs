@@ -10,6 +10,7 @@ public class AttackHitbox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Screen shaking
         hitColliders.Add(other);
     }
 

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1738964386786973918}
+  - component: {fileID: 4403897192015577546}
   - component: {fileID: 3344070514507765947}
   - component: {fileID: 1738964386786973919}
   - component: {fileID: 1738964386786973729}
@@ -19,6 +20,7 @@ GameObject:
   - component: {fileID: 1092361242974706490}
   - component: {fileID: 4931698282099627305}
   - component: {fileID: 8330308788624485017}
+  - component: {fileID: 4211855644239207942}
   m_Layer: 0
   m_Name: Singleton
   m_TagString: Untagged
@@ -40,6 +42,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4403897192015577546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4202fddc00b84a38a9ae3394a5cd429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - {fileID: 11400000, guid: b822d75437fd941b3a30198524c02c35, type: 2}
+  - {fileID: 11400000, guid: 2d3c56a0ed94944c5818574939312128, type: 2}
+  - {fileID: 11400000, guid: eccbe3ce6cfd546569063c3177f1c6f1, type: 2}
+  - {fileID: 11400000, guid: 20feeb225809f4c0ba9b40622e2e804a, type: 2}
+  - {fileID: 11400000, guid: 288f655859c9d4daaae5fe8496709bde, type: 2}
+  - {fileID: 11400000, guid: 44f406e71d3c84b739b7edc9d3229555, type: 2}
+  - {fileID: 11400000, guid: ccbe7c7a0369342438936830bec4b670, type: 2}
+  - {fileID: 11400000, guid: 0389619458a1a4b6fadb5a3fec1743c5, type: 2}
+  - {fileID: 11400000, guid: 4cfe07199da094ac88b360fb69019d0a, type: 2}
+  - {fileID: 11400000, guid: f8bcbc84158eb4bc2ae1fd338e0a4e86, type: 2}
+  - {fileID: 11400000, guid: d1ed8f422fd4f487797d3288b8216fda, type: 2}
+  - {fileID: 11400000, guid: 5d8935182efd243a4bff10ecdf823cc1, type: 2}
+  - {fileID: 11400000, guid: 79a8ad883e1134ebf86427f6a90888ce, type: 2}
+  - {fileID: 11400000, guid: c76a7149a3d974d5c817ba67fd1c2e1c, type: 2}
+  - {fileID: 11400000, guid: 6008ceff58a7e453aa1de4b2e37c74af, type: 2}
+  - {fileID: 11400000, guid: 828e1a56276144e40affc8a3d4581203, type: 2}
+  - {fileID: 11400000, guid: 1774b22a9d2d24fbf85804f26a61e816, type: 2}
+  - {fileID: 11400000, guid: cbe433784a7a547619ce0e76f6dba066, type: 2}
 --- !u!114 &3344070514507765947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,14 +120,22 @@ MonoBehaviour:
   swordWavePoolSize: 5
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
   arrowPoolSize: 30
+  ultArrowPrefab: {fileID: 1140243388120012218, guid: d22efac804d39487cb2f25c2163e3aad, type: 3}
+  ultArrowPoolSize: 5
   chargedArrowsPrefab: {fileID: 3962329292907818302, guid: 4a26c7e0a76954002a8c98382ef6e6f7, type: 3}
   chargedArrowsPoolSize: 3
   itemPickupPrefab: {fileID: 4204306999793631647, guid: d7b451dd1ffed4b5a8c3c05540637b9e, type: 3}
   itemPickupPoolSize: 10
+  keyPrefab: {fileID: 3782976004530169770, guid: 72eb66fb73ed54de79956807351459dc, type: 3}
+  keyPoolsize: 10
+  healthPotionPrefab: {fileID: 1990242251908392230, guid: a73fa0ff09a4844a984f4e35ce812c8e, type: 3}
+  healthPotionPoolsize: 10
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20
   slashEffectDestroyDuration: 0.5
+  explosionEffectPrefab: {fileID: 5226946013174736703, guid: f6745755e266f4f62a225e78772f3214, type: 3}
+  explosionEffectPoolsize: 5
   curveRoutePrefab: {fileID: 8222993445341329185, guid: 58191bc7ec7fc4a28bdd534385fda292, type: 3}
   curveRoutePoolSize: 20
 --- !u!114 &1738964386786973728
@@ -181,11 +222,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   giftedPerk:
   - {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
-  - {fileID: 11400000, guid: ba03d59fd7a88b848b20ffbd2b5987d6, type: 2}
   - {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
-  - {fileID: 11400000, guid: b90ad9e2cb1b4854a81bf7185d5cd651, type: 2}
   - {fileID: 11400000, guid: 1af05b418939cad4abd075489395ec04, type: 2}
-  - {fileID: 11400000, guid: 8e3e7bba96512234ba3d57478879792d, type: 2}
   developedPerk: []
   wearablePerk: []
 --- !u!114 &8330308788624485017
@@ -198,5 +236,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a371fccfee89974eb8ddb1c94eda725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4211855644239207942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738964386786973916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc29c440d05c14c9a8a90aa12e35808a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

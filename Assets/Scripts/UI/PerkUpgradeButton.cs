@@ -11,27 +11,83 @@ public class PerkUpgradeButton : MonoBehaviour
     private Image perkIcon;
     [SerializeField]
     private Text perkLevelText;
-
-    void Start()
+    [SerializeField]
+    private Text soulCostText;
+    [SerializeField]
+    private Button perkUpgradeButton;
+    private int perkLevel => PerkListStatic.GetPerkLevel(perkDisplayPrefab);
+    private int SoulCost()
     {
+        if (perkLevel < 5)
+        {
+            return perkDisplayPrefab.soulToUpgrade[perkLevel];
+        }
+
+        return -1;
+    }
+
+    private void Start()
+    {
+        Debug.Log(perkLevel);
+        Debug.Log(perkDisplayPrefab.soulToUpgrade[0]);
         if (perkDisplayPrefab.icon != null)
         {
             perkIcon.sprite = perkDisplayPrefab.icon;
         }
+
+        if (perkLevel == 5)
+        {
+            // Cannot upgrade anymore
+            perkUpgradeButton.gameObject.SetActive(false);
+        }
     }
 
-    void Update()
+    private void Update()
     {
-        perkLevelText.text = PerkListStatic.GetPerkLevel(perkDisplayPrefab).ToString();
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        // Level text
+        string level = perkLevel.ToString();
+        perkLevelText.text = $"Lv {level}/5";
+
+        // Soul cost text
+        if (perkLevel < 5)
+        {
+            soulCostText.text = $"Cost: {SoulCost()} Soul";
+        }
+        else
+        {
+            soulCostText.text = $"MAX LEVEL";
+        }
     }
 
     public void UpgradeLevel()
     {
-        Debug.Log("upgrade perk" + perkDisplayPrefab.name);
-        PerkList.Instance.Upgrade(perkDisplayPrefab);
-        if (PerkListStatic.GetPerkLevel(perkDisplayPrefab) == 0)
+        Debug.Log($"Soul cost = {SoulCost()}");
+        // Check if player have enough soul
+        if (SoulStatic.soul >= SoulCost())
         {
-            PerkList.Instance.AddDevelopedPerk(perkDisplayPrefab);
+            // Pay soul
+            SoulStatic.soul -= SoulCost();
+            GameEvents.TriggerSoulChange();
+
+            // Upgrade
+            PerkList.Instance.Upgrade(perkDisplayPrefab);
+            Debug.Log(perkLevel);
+
+
+            if (perkLevel == 0)
+            {
+                PerkList.Instance.AddDevelopedPerk(perkDisplayPrefab);
+            }
+            else if (perkLevel == 5)
+            {
+                // Cannot upgrade anymore
+                perkUpgradeButton.gameObject.SetActive(false);
+            }
         }
     }
 }

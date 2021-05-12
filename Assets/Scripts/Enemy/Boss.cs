@@ -19,7 +19,12 @@ public abstract class Boss : Enemy
         base.TakeDamage(damage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
 
         // Boss receives SA damage equals to damage received
-        TakeSuperArmorDamage(damage);
+        // TakeSuperArmorDamage(damage);
+    }
+
+    protected override void KnockedBack(float amplitude)
+    {
+        // Boss doesn't get knocked
     }
 
     protected override void EnableEnemy()
@@ -53,6 +58,13 @@ public abstract class Boss : Enemy
 
         // Complete level in boss level
         GameEvents.TriggerCompleteLevel();
+    }
+
+    protected override void PlayerSoulGain()
+    {
+        // Experimental value
+        SoulStatic.soul += 1000;
+        GameEvents.TriggerSoulChange();
     }
 
     protected override void Flinch()

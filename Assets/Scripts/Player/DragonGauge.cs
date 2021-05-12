@@ -67,7 +67,9 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     {
         if (!isDragonForm)
         {
+            // Dragon up
             currentShapeshiftCooldown = shapeshiftCooldown;
+            SoundManager.Play(SFXName.DragonRoar);
         }
 
         isDragonForm = !isDragonForm;
@@ -83,6 +85,7 @@ public class DragonGauge : MonoSingleton<DragonGauge>
             // Strip dragon form if dragon energy is empty
             if (DragonGaugeStatic.dragonEnergy <= 0.0f)
             {
+                DragonGaugeStatic.dragonEnergy = 0.0f;
                 ShapeShift();
             }
         }
@@ -119,6 +122,8 @@ public class DragonGauge : MonoSingleton<DragonGauge>
             // Player dragon down
             isDragonForm = false;
             EventPublisher.TriggerPlayerShapeshift(false);
+            EventPublisher.TriggerStopFireBreath();
+            EventPublisher.TriggerStopRush();
         }
     }
 

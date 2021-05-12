@@ -6,6 +6,9 @@ using System.Linq;
 [CreateAssetMenu(fileName = "New Dragon Skills", menuName = "Roguelite/Skills/Dragon")]
 public class DragonSkills : PlayerSkills
 {
+    public bool IsRushing => isRushing;
+
+    // Skill 1 params
     private const float slashAnimLength = 0.3f;
     private const float skill1KnockUpAmplitude = 3.0f;
     private const float skill1KnockBackAmplitude = 2.0f;
@@ -14,6 +17,18 @@ public class DragonSkills : PlayerSkills
     private const float skill1AnimStopRatio = 0.2f;
     private const float skill1ScreenShakeDuration = 0.3f;
     private const float skill1ScreenShakePower = 0.15f;
+
+    // Skill 2 params
+    private const float skill2Speed = 10.0f;
+    private const float skill2FinalDamageFactor = 3.0f;
+    private const float skill2KnockBackAmplitude = 10.0f;
+    private const float skill2KnockUpAmplitude = 1.5f;
+    private const float skill2FinalKnockUpAmplitude = 3.0f;
+    private const float skill2ScreenShakeDuration = 0.3f;
+    private const float skill2ScreenShakePower = 0.15f;
+    private const float rushingDelay = 0.05f;
+    private const float rushingDamageInterval = 0.20f;
+    private bool isRushing = false;
 
     // Skill 3 params
     private const float skill3LockMovementRatio = 0.9f;
@@ -31,6 +46,7 @@ public class DragonSkills : PlayerSkills
     private AttackHitbox dragonPrimaryHitbox;
     private AttackHitbox dragonVortexHitbox;
     private AttackHitbox fireBreathHitbox;
+    private AttackHitbox dragonRushHitbox;
     private float[] dragonAttackDamage = new float[4];
     private float[] dragonAttackCooldown = new float[4];
 
@@ -38,23 +54,28 @@ public class DragonSkills : PlayerSkills
     private GameObject fireBreath;
     private GameObject clawSlash;
     private GameObject dragonDashEffect;
+    private GameObject dragonHorizontalDashEffect;
     private Animator clawSlashAnim;
     private Animator dashAnim;
+    private Coroutine rushCoroutine;
     private Coroutine fireBreathCoroutine;
 
     public void Initialize(
         Transform transform,
         AttackHitbox dragonPrimaryHitbox,
         AttackHitbox dragonVortexHitbox,
+        AttackHitbox dragonRushHitbox,
         GameObject fireBreath,
         GameObject clawSlash,
-        GameObject dragonDashEffect
+        GameObject dragonDashEffect,
+        GameObject dragonHorizontalDashEffect
     )
     {
         base.Initialize(transform);
 
         this.dragonPrimaryHitbox = dragonPrimaryHitbox;
         this.dragonVortexHitbox = dragonVortexHitbox;
+        this.dragonRushHitbox = dragonRushHitbox;
 
         this.fireBreath = fireBreath;
         this.fireBreathHitbox = fireBreath.GetComponent<AttackHitbox>();
@@ -65,6 +86,9 @@ public class DragonSkills : PlayerSkills
 
         this.dragonDashEffect = dragonDashEffect;
         this.dragonDashEffect.SetActive(false);
+
+        this.dragonHorizontalDashEffect = dragonHorizontalDashEffect;
+        this.dragonHorizontalDashEffect.SetActive(false);
 
         if (this.clawSlash.TryGetComponent<Animator>(out Animator animator))
         {
@@ -129,8 +153,12 @@ public class DragonSkills : PlayerSkills
                 dragonSuperArmorAttack,
                 knockUpAmplitude: skill1KnockUpAmplitude,
                 knockBackAmplitude: skill1KnockBackAmplitude,
-                hitEffect: HitEffect.Slash
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.GenericHit
             );
+
+            // Play sound
+            SoundManager.Play(SFXName.DragonClaw);
 
             if (totalDamage > 0.0f)
             {
@@ -164,6 +192,57 @@ public class DragonSkills : PlayerSkills
     public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
+        float damage = dragonAttackDamage[1];
+
+        isRushing = true;
+        isCastingSkill = true;
+
+        rushCoroutine = CoroutineUtility.Instance.StartCoroutine(Rush(damage, rushingDelay, rushingDamageInterval));
+
+        movement.LockJumpBySkill(true);
+        movement.LockFlipBySkill(true);
+        movement.LockMovementBySkill(true);
+    }
+
+    public void RushRelease()
+    {
+        if (!isRushing)
+        {
+            return;
+        }
+
+        float damage = dragonAttackDamage[1] * skill2FinalDamageFactor;
+
+        // Extra final damage
+        float totalDamageDealt = AttackWithHitbox(
+            dragonRushHitbox,
+            damage,
+            superArmorDamage: 100,
+            knockUpAmplitude: skill2FinalKnockUpAmplitude,
+            hitEffect: HitEffect.Slash
+        );
+
+        // Deplete cooldown by 40% if hit something
+        if (totalDamageDealt > 0.0f)
+        {
+            const float cooldownReductionRatio = 0.3f;
+            currentCooldown[1] *= 1.0f - cooldownReductionRatio;
+        }
+
+        dragonHorizontalDashEffect.SetActive(false);
+
+        if (rushCoroutine != null)
+        {
+            CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
+            rushCoroutine = null;
+        }
+
+        isRushing = false;
+        isCastingSkill = false;
+
+        movement.LockJumpBySkill(false);
+        movement.LockFlipBySkill(false);
+        movement.LockMovementBySkill(false);
     }
 
     public void UltimateRelease()
@@ -179,7 +258,6 @@ public class DragonSkills : PlayerSkills
         isCastingSkill = false;
         isUsingUltimate = false;
 
-        // Debug.Log("Fire breath stop");
         movement.LockJumpBySkill(false);
         movement.LockFlipBySkill(false);
         movement.LockMovementBySkill(false);
@@ -238,7 +316,8 @@ public class DragonSkills : PlayerSkills
                     superArmorDamage,
                     knockUpAmplitude: skill3KnockUpAmplitude,
                     knockBackAmplitude: skill3KnockBackAmplitude,
-                    hitEffect: HitEffect.Slash
+                    hitEffect: HitEffect.Slash,
+                    sfx: SFXName.GenericHit
                 );
 
                 // If hit, reduce cooldown
@@ -267,15 +346,56 @@ public class DragonSkills : PlayerSkills
         movement.LockMovementBySkill(true);
     }
 
+    private IEnumerator Rush(float damage, float delay, float interval)
+    {
+        yield return new WaitForSeconds(delay);
+        dragonHorizontalDashEffect.SetActive(true);
+        DragonGaugeStatic.dragonEnergy -= 5.0f;
+        if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+        {
+            EventPublisher.TriggerStopRush();
+        }
+
+        while (true)
+        {
+            isRushing = true;
+            DragonGaugeStatic.dragonEnergy -= 1.0f;
+            if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+            {
+                EventPublisher.TriggerStopRush();
+            }
+
+            movement.MoveForwardBySkill(skill2Speed, interval, groundOnly: false, forceMode: ForceMode2D.Impulse);
+            AttackWithHitbox(
+                dragonRushHitbox,
+                damage,
+                knockUpAmplitude: skill2KnockUpAmplitude,
+                knockBackAmplitude: skill2KnockBackAmplitude,
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.GenericHit
+            );
+
+            yield return new WaitForSeconds(interval);
+        }
+    }
+
     private IEnumerator DelayedFireBreath(float damage, float delay, float interval)
     {
         yield return new WaitForSeconds(delay);
         fireBreath.SetActive(true);
+
+        DragonGaugeStatic.dragonEnergy -= 5.0f;
+        if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+        {
+            EventPublisher.TriggerStopRush();
+        }
+
         while (true)
         {
+            DragonGaugeStatic.dragonEnergy -= 1.0f;
             isUsingUltimate = true;
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude);
+            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude, sfx: SFXName.GenericHit);
         }
     }
 }

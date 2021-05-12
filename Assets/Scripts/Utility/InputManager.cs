@@ -16,4 +16,5 @@ public class InputManager
     public static bool Interact => Input.GetKeyDown(KeyCode.F);
     public static bool Pause => Input.GetKeyDown(KeyCode.Escape);
     public static bool PerkMenu => Input.GetKeyDown(KeyCode.Tab);
+    public static bool StatsWindow => Input.GetKeyDown(KeyCode.Q);
 }
