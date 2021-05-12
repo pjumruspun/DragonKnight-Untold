@@ -76,6 +76,7 @@ public class SwordSkills : PlayerSkills
     {
         base.Skill1();
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+
         // Process combo
         float currentTime = Time.time;
         if (currentTime - lastAttackTime <= resetComboRatio * animLength)
@@ -112,13 +113,23 @@ public class SwordSkills : PlayerSkills
         // Then attack
         float anticipationPeriod = animLength * skill1AnticipationRatio;
         CoroutineUtility.ExecDelay(() =>
-            AttackWithHitbox(
+        {
+            SoundManager.Play(SFXName.Sword1);
+
+            float damageDealt = AttackWithHitbox(
                 swordPrimaryHitbox,
                 damage,
                 knockUpAmplitude: skill1KnockUpAmplitude,
                 knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo],
                 hitEffect: HitEffect.Slash
-        ), anticipationPeriod);
+            );
+
+            if (damageDealt > 0.0f)
+            {
+                SoundManager.Play(SFXName.SwordHit1);
+            }
+
+        }, anticipationPeriod);
 
         // Unlock casting skills
         UnlockCastingIn(animLength * skillCastingRatio[0]);
