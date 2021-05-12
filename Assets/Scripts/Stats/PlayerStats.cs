@@ -43,10 +43,11 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     [SerializeField]
     private Stats<float> attackSpeed = new Stats<float>(1.0f); // Only affects skill 1, auto attack
     [SerializeField]
-    private Stats<float> cooldownReduction = new Stats<float>(1.0f); // Only affects skill 2, 3, and 4
+    private Stats<float> cooldownReduction = new Stats<float>(0.0f); // Only affects skill 2, 3, and 4
     private float basePlayerMaxHealth = 200;
     private float[] baseSkillCooldown = new float[4];
     private float[] baseSkillDamage = new float[4];
+    private float actualCooldownRatio => 1 / (1 + cooldownReduction.GetValue);
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
@@ -134,6 +135,8 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         // Events
         EventPublisher.PlayerChangeClass += AdjustSkillParams;
         EventPublisher.PlayerDead += ShouldResetStat;
+
+        Debug.Log(cooldownReduction.GetValue);
     }
 
     private void RandomStat()
@@ -199,10 +202,18 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         for (int i = 0; i < 4; ++i)
         {
             results[i] = baseSkillCooldown[i];
+            if (i == 0)
+            {
+                // Only skill 1 is affected by attack speed
+                results[i] /= attackSpeed.GetValue;
+            }
+            else
+            {
+                // Skill 1 2 3 affected by cooldown reduction
+                results[i] *= actualCooldownRatio;
+            }
         }
 
-        // Only skill 1 is affected by attack speed
-        results[0] /= attackSpeed.GetValue;
         return results;
     }
 

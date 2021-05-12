@@ -11,6 +11,7 @@ public class SoulUI : MonoBehaviour
     private void Start()
     {
         GameEvents.SoulChange += UpdateUI;
+        UpdateUI();
     }
 
     private void OnDestroy()

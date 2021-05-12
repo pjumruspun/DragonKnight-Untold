@@ -156,9 +156,19 @@ MonoBehaviour:
   rareItems:
   - {fileID: 11400000, guid: 7f57930189aa84727946adcb4279c580, type: 2}
   - {fileID: 11400000, guid: 9b8d6affc4f044074b915cdf55386fe6, type: 2}
+  - {fileID: 11400000, guid: c6ab5df90afa441a389863f267bcc058, type: 2}
+  - {fileID: 11400000, guid: 56e553db36de9477db46aaf46b50e844, type: 2}
+  - {fileID: 11400000, guid: c00832959e8934aaab3742adc75277c7, type: 2}
+  - {fileID: 11400000, guid: 4cebf7bc0513e4bc9a0a403ca715c086, type: 2}
+  - {fileID: 11400000, guid: 990596debb8b249adbc48eca9e810f24, type: 2}
   commonItems:
   - {fileID: 11400000, guid: c3cc87b701e8b4d39a8dcca86807f213, type: 2}
   - {fileID: 11400000, guid: c5ba2c90c8c14448caa67081ed97102a, type: 2}
+  - {fileID: 11400000, guid: 46bb10740d1d84a40857185e6dc307a2, type: 2}
+  - {fileID: 11400000, guid: 26b251a6c9f314379b86a58d189336ef, type: 2}
+  - {fileID: 11400000, guid: 262a8d277276b4ee6a60b8f494055bff, type: 2}
+  - {fileID: 11400000, guid: 11a9a0aeade0740ffbe78c7cb363531d, type: 2}
+  - {fileID: 11400000, guid: 9b418d4839338439a821af9a77a3dec9, type: 2}
 --- !u!114 &4582279271211583108
 MonoBehaviour:
   m_ObjectHideFlags: 0

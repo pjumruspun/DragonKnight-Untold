@@ -85,6 +85,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill2()
     {
         currentCooldown[1] = PlayerStats.Instance.SkillCooldown[1];
+        Debug.Log(currentCooldown[1]);
         isCastingSkill = true;
     }
 
@@ -94,6 +95,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void Skill3()
     {
         currentCooldown[2] = PlayerStats.Instance.SkillCooldown[2];
+        Debug.Log(currentCooldown[2]);
         isCastingSkill = true;
     }
 
@@ -103,6 +105,7 @@ public abstract class PlayerSkills : ScriptableObject
     public virtual void UltimateSkill()
     {
         currentCooldown[3] = PlayerStats.Instance.SkillCooldown[3];
+        Debug.Log(currentCooldown[3]);
         isCastingSkill = true;
     }
 
