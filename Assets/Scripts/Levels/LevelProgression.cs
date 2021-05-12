@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelProgression : MonoSingleton<LevelProgression>
 {
+    public static bool HasCompletedLevel => Instance.enemyCostKilledThisStage >= StageManager.CostToPassLevel;
     public static float LevelCompletionPercentage => Mathf.Min(1.0f, Instance.enemyCostKilledThisStage / StageManager.CostToPassLevel);
     private float enemyCostKilledThisStage = 0;
 
@@ -42,7 +43,7 @@ public class LevelProgression : MonoSingleton<LevelProgression>
         enemyCostKilledThisStage += enemy.SpawnCost;
 
         // For normal stages, killing more than threshold should let the player pass level
-        if (enemyCostKilledThisStage >= StageManager.CostToPassLevel)
+        if (HasCompletedLevel)
         {
             GameEvents.TriggerCompleteLevel();
         }

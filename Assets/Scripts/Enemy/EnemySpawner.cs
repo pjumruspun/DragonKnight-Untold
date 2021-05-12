@@ -36,7 +36,12 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     private void Update()
     {
-        if (shouldSpawn && Time.time - lastTimeSpawned >= spawnInterval && currentSpawnAmount < maxSpawnAmountAtTime)
+        if (
+            shouldSpawn &&
+            Time.time - lastTimeSpawned >= spawnInterval &&
+            currentSpawnAmount < maxSpawnAmountAtTime &&
+            !LevelProgression.HasCompletedLevel
+        )
         {
             // Try spawn
             MassSpawnEnemy();
