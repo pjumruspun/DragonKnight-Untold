@@ -7,8 +7,28 @@ public class SoundManager : MonoSingleton<SoundManager>
 
     private static Dictionary<SFXName, SFX> soundCache = new Dictionary<SFXName, SFX>();
 
-    public static void Play(SFXName name)
+    public static void Play(SFXName name, bool critVariation = false)
     {
+        if (name == SFXName.None)
+        {
+            return;
+        }
+
+        if (critVariation)
+        {
+            switch (name)
+            {
+                case SFXName.SwordHit:
+                    Play(SFXName.SwordCriticalHit);
+                    return;
+                case SFXName.ArrowHit:
+                    Play(SFXName.ArrowCriticalHit);
+                    return;
+                default:
+                    throw new System.Exception($"There is no crit variation for sound {name}");
+            }
+        }
+
         if (soundCache.TryGetValue(name, out SFX sound))
         {
             sound.Source.Play();
@@ -45,9 +65,6 @@ public class SoundManager : MonoSingleton<SoundManager>
             sound.Source.loop = sound.Loop;
             soundCache[sound.Name] = sound;
         }
-
-        Debug.Log(SoundRepository.AllSounds);
-        Debug.Log(soundCache);
 
         // Play BGM?
     }

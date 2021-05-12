@@ -121,13 +121,9 @@ public class SwordSkills : PlayerSkills
                 damage,
                 knockUpAmplitude: skill1KnockUpAmplitude,
                 knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo],
-                hitEffect: HitEffect.Slash
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.SwordHit
             );
-
-            if (damageDealt > 0.0f)
-            {
-                SoundManager.Play(SFXName.SwordHit1);
-            }
 
         }, anticipationPeriod);
 

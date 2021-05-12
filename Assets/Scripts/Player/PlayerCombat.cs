@@ -191,7 +191,6 @@ public class PlayerCombat : MonoSingleton<PlayerCombat>
     {
         if (PlayerClassStatic.currentClass == PlayerClass.Archer && !DragonGauge.Instance.IsDragonForm)
         {
-            Debug.Log(((ArcherSkills)CurrentSkills()).HasFiredSpreadShot);
             if (!((ArcherSkills)CurrentSkills()).HasFiredSpreadShot)
             {
                 // Only consume if hasn't fired spread shot

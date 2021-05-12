@@ -55,21 +55,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - name: 0
+  - name: 1
+    critVariation: 0
     clip: {fileID: 8300000, guid: cb9ab3c9c5f3b4bf0a86c26efef25f60, type: 3}
     volume: 0.6
     loop: 0
-  - name: 1
+  - name: 2
+    critVariation: 0
     clip: {fileID: 8300000, guid: 97e2e4594451540999c3b0a987c64704, type: 3}
     volume: 0.6
     loop: 0
-  - name: 2
-    clip: {fileID: 8300000, guid: 769552c9928994c38a3e32f2e03fbe58, type: 3}
-    volume: 0.6
-    loop: 0
   - name: 3
-    clip: {fileID: 8300000, guid: 1ef7f4a2153e84153b145f70fd964c48, type: 3}
+    critVariation: 0
+    clip: {fileID: 8300000, guid: 769552c9928994c38a3e32f2e03fbe58, type: 3}
     volume: 0.25
+    loop: 0
+  - name: 4
+    critVariation: 7
+    clip: {fileID: 8300000, guid: dfeed9e072ab64489a4c0715ffd8b03e, type: 3}
+    volume: 0.15
+    loop: 0
+  - name: 5
+    critVariation: 0
+    clip: {fileID: 8300000, guid: a6561103a433b445bae4e35fe969b969, type: 3}
+    volume: 0.35
+    loop: 0
+  - name: 7
+    critVariation: 0
+    clip: {fileID: 8300000, guid: f09748270764d4630ac64b1bb77b99c4, type: 3}
+    volume: 0.4
+    loop: 0
+  - name: 8
+    critVariation: 0
+    clip: {fileID: 8300000, guid: 687d0c0f497974475bdd25bbe0ce9331, type: 3}
+    volume: 0.4
+    loop: 0
+  - name: 6
+    critVariation: 8
+    clip: {fileID: 8300000, guid: c2ddceec69d4547c68df00bcf9470615, type: 3}
+    volume: 0.2
     loop: 0
 --- !u!114 &3344070514507765947
 MonoBehaviour:
