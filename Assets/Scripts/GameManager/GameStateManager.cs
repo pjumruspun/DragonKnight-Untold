@@ -48,19 +48,19 @@ public class GameStateManager : MonoSingleton<GameStateManager>
         {
             gameState = GameState.Gameplay;
             GameEvents.TriggerPause(false);
-            CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.CampBGM), 0.5f);
+            CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.CampBGM), 1.0f);
         }
         else if (scene.name.Split('_')[0] == "Level")
         {
             gameState = GameState.Gameplay;
             GameEvents.TriggerPause(false);
-            CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.StageBGM), 0.5f);
+            CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.StageBGM), 1.0f);
         }
         else if (scene.name.Split('_')[0] == "Boss")
         {
             gameState = GameState.Gameplay;
             GameEvents.TriggerPause(false);
-            CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.BossBGM), 0.5f);
+            CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.BossBGM), 1.0f);
         }
         else
         {

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d08ce4d54c3349ec93483cf22d25b68, type: 3}
-  m_Name: Sword2
+  m_Name: ChestOpen
   m_EditorClassIdentifier: 
-  name: 101
-  clip: {fileID: 8300000, guid: 97e2e4594451540999c3b0a987c64704, type: 3}
-  volume: 0.4
+  name: 5
+  clip: {fileID: 8300000, guid: 6683d1c528e0a44b4aba09c4869e1d19, type: 3}
+  volume: 0.6
   loop: 0

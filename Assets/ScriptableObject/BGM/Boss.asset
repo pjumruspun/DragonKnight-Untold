@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d08ce4d54c3349ec93483cf22d25b68, type: 3}
   m_Name: Boss
   m_EditorClassIdentifier: 
-  name: 10
+  name: 2002
   clip: {fileID: 8300000, guid: a09e0aac8bcd34ce69bfeb45898f67cf, type: 3}
   volume: 0.25
   loop: 1

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d08ce4d54c3349ec93483cf22d25b68, type: 3}
   m_Name: Sword1
   m_EditorClassIdentifier: 
-  name: 1
+  name: 100
   clip: {fileID: 8300000, guid: cb9ab3c9c5f3b4bf0a86c26efef25f60, type: 3}
   volume: 0.4
   loop: 0

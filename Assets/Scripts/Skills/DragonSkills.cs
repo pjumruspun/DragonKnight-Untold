@@ -153,8 +153,12 @@ public class DragonSkills : PlayerSkills
                 dragonSuperArmorAttack,
                 knockUpAmplitude: skill1KnockUpAmplitude,
                 knockBackAmplitude: skill1KnockBackAmplitude,
-                hitEffect: HitEffect.Slash
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.GenericHit
             );
+
+            // Play sound
+            SoundManager.Play(SFXName.DragonClaw);
 
             if (totalDamage > 0.0f)
             {
@@ -312,7 +316,8 @@ public class DragonSkills : PlayerSkills
                     superArmorDamage,
                     knockUpAmplitude: skill3KnockUpAmplitude,
                     knockBackAmplitude: skill3KnockBackAmplitude,
-                    hitEffect: HitEffect.Slash
+                    hitEffect: HitEffect.Slash,
+                    sfx: SFXName.GenericHit
                 );
 
                 // If hit, reduce cooldown
@@ -366,7 +371,8 @@ public class DragonSkills : PlayerSkills
                 damage,
                 knockUpAmplitude: skill2KnockUpAmplitude,
                 knockBackAmplitude: skill2KnockBackAmplitude,
-                hitEffect: HitEffect.Slash
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.GenericHit
             );
 
             yield return new WaitForSeconds(interval);
@@ -389,7 +395,7 @@ public class DragonSkills : PlayerSkills
             DragonGaugeStatic.dragonEnergy -= 1.0f;
             isUsingUltimate = true;
             yield return new WaitForSeconds(interval);
-            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude);
+            AttackWithHitbox(fireBreathHitbox, damage, knockUpAmplitude: ultKnockUpAmplitude, sfx: SFXName.GenericHit);
         }
     }
 }

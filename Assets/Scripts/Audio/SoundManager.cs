@@ -25,7 +25,20 @@ public class SoundManager : MonoSingleton<SoundManager>
         }
         else
         {
-            Debug.LogAssertion($"[ERROR] AudioManager.Play: soundCache missed: {name}");
+            Debug.LogAssertion($"[ERROR] Play: soundCache missed: {name}");
+        }
+    }
+
+    public static void Stop(SFXName name)
+    {
+
+        if (soundCache.TryGetValue(name, out SFX sound))
+        {
+            sound.Source.Stop();
+        }
+        else
+        {
+            Debug.LogAssertion($"[ERROR] Stop: soundCache missed: {name}");
         }
     }
 

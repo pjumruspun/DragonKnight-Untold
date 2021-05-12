@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d08ce4d54c3349ec93483cf22d25b68, type: 3}
   m_Name: Arrow
   m_EditorClassIdentifier: 
-  name: 5
+  name: 200
   clip: {fileID: 8300000, guid: a6561103a433b445bae4e35fe969b969, type: 3}
   volume: 0.4
   loop: 0

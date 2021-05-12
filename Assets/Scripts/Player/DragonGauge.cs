@@ -67,7 +67,9 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     {
         if (!isDragonForm)
         {
+            // Dragon up
             currentShapeshiftCooldown = shapeshiftCooldown;
+            SoundManager.Play(SFXName.DragonRoar);
         }
 
         isDragonForm = !isDragonForm;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d08ce4d54c3349ec93483cf22d25b68, type: 3}
   m_Name: Camp
   m_EditorClassIdentifier: 
-  name: 8
+  name: 2000
   clip: {fileID: 8300000, guid: 9b17de67826b34263afb555e202d1ba0, type: 3}
   volume: 0.25
   loop: 1
