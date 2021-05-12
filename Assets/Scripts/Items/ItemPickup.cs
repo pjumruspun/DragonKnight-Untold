@@ -67,6 +67,9 @@ public class ItemPickup : Interactable
         // Add to player
         Inventory.Instance.Add(item);
 
+        // Play sound
+        SoundManager.Play(SFXName.ItemPickup);
+
         // Remove gameObject from the scene
         // Need to change to disable object pool later
         ObjectManager.Instance.ItemPickups.ReturnObject(transform.parent.gameObject);

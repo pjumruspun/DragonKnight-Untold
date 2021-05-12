@@ -125,6 +125,7 @@ public abstract class PlayerSkills : ScriptableObject
         float knockUpAmplitude = 0.0f,
         float knockBackAmplitude = 0.0f,
         HitEffect hitEffect = HitEffect.None,
+        SFXName sfx = SFXName.None,
         bool shouldHitContinuously = false,
         float hitInterval = 1.0f,
         bool shouldFlinch = true,
@@ -155,6 +156,7 @@ public abstract class PlayerSkills : ScriptableObject
                 knockUpAmplitude,
                 knockBackAmplitude,
                 hitEffect,
+                sfx,
                 shouldHitContinuously,
                 hitInterval,
                 shouldFlinch,
@@ -183,10 +185,12 @@ public abstract class PlayerSkills : ScriptableObject
         float superArmorDamage = 0.0f,
         float knockUpAmplitude = 0.0f,
         float knockBackAmplitude = 0.0f,
-        HitEffect hitEffect = HitEffect.None
+        HitEffect hitEffect = HitEffect.None,
+        SFXName sfx = SFXName.None
     )
     {
         float totalDamageDealt = 0.0f;
+        bool landedCrit = false;
         HashSet<Collider2D> collidersToRemove = new HashSet<Collider2D>();
         foreach (Collider2D enemyCollider in desiredHitbox.HitColliders)
         {
@@ -199,6 +203,12 @@ public abstract class PlayerSkills : ScriptableObject
                 {
                     // Damage the enemy here
                     PlayerStats.Instance.CalculateDamage(attackDamage, out float finalDamage, out bool crit);
+                    if (crit)
+                    {
+                        // Mark that this attack was crit
+                        landedCrit = true;
+                    }
+
                     enemy.TakeDamage(finalDamage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
                     totalDamageDealt += finalDamage;
 
@@ -222,6 +232,12 @@ public abstract class PlayerSkills : ScriptableObject
         foreach (Collider2D unrelatedCollider in collidersToRemove)
         {
             desiredHitbox.HitColliders.Remove(unrelatedCollider);
+        }
+
+        // Play sound if dealt damage
+        if (totalDamageDealt > 0.0f)
+        {
+            SoundManager.Play(sfx, landedCrit);
         }
 
         return totalDamageDealt;

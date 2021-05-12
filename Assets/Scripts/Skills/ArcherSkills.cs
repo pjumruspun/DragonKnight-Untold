@@ -127,6 +127,9 @@ public class ArcherSkills : PlayerSkills
             }
         }, gap);
 
+        // Play sound
+        SoundManager.Play(SFXName.ArcherArrow);
+
         // Spawn arrow
         Projectile arrow = AttackWithProjectile(
             ref ObjectManager.Instance.Arrows,
@@ -135,6 +138,7 @@ public class ArcherSkills : PlayerSkills
             movement.ForwardVector,
             knockUpAmplitude: airShotKnockUpAmplitude,
             hitEffect: HitEffect.Slash,
+            sfx: SFXName.ArrowHit,
             shouldFlinch: false,
             overrideSpeed: 0.0f
         );
@@ -202,6 +206,9 @@ public class ArcherSkills : PlayerSkills
         // Lock skill casting by cooldown time
         UnlockCastingIn(0.4f);
 
+        // Play sound
+        SoundManager.Play(SFXName.ArcherArrow);
+
         // Spawn arrow
         AttackWithProjectile(
             ref ObjectManager.Instance.UltimateArrows,
@@ -211,6 +218,7 @@ public class ArcherSkills : PlayerSkills
             superArmorDamage: 100.0f,
             knockUpAmplitude: 3.0f,
             hitEffect: HitEffect.Slash,
+            sfx: SFXName.ArrowHit,
             shouldFlinch: false
         );
     }
@@ -241,6 +249,7 @@ public class ArcherSkills : PlayerSkills
             knockBackAmplitude: knockBackAmplitude,
             knockUpAmplitude: chargedShotKnockUpAmplitude,
             hitEffect: HitEffect.Slash,
+            sfx: SFXName.ArrowHit,
             shouldHitContinuously: true,
             hitInterval: chargedShotHitInterval
         );
@@ -323,6 +332,9 @@ public class ArcherSkills : PlayerSkills
             }
         }, gap);
 
+        // Play sound
+        SoundManager.Play(SFXName.ArcherArrow);
+
         // Spawn arrow
         AttackWithProjectile(
             ref ObjectManager.Instance.Arrows,
@@ -330,6 +342,7 @@ public class ArcherSkills : PlayerSkills
             transform.position,
             movement.ForwardVector,
             hitEffect: HitEffect.Slash,
+            sfx: SFXName.ArrowHit,
             shouldFlinch: false
         );
     }
@@ -342,6 +355,9 @@ public class ArcherSkills : PlayerSkills
 
         // Damage
         float damage = PlayerStats.Instance.BaseSkillDamage[0];
+
+        // Play sound
+        SoundManager.Play(SFXName.ArcherArrow);
 
         // Spawn spread shot
         CoroutineUtility.Instance.CreateCoroutine(ArrowRain(damage, 0.3f, 1, 3));
@@ -423,6 +439,8 @@ public class ArcherSkills : PlayerSkills
                     transform.position,
                     movement.ForwardVector,
                     -7.5f - j * 15.0f,
+                    hitEffect: HitEffect.Slash,
+                    sfx: SFXName.ArrowHit,
                     knockUpAmplitude: 2.5f
                 );
             }

@@ -76,6 +76,7 @@ public class SwordSkills : PlayerSkills
     {
         base.Skill1();
         float animLength = PlayerAnimation.Instance.GetAnimLength(0);
+
         // Process combo
         float currentTime = Time.time;
         if (currentTime - lastAttackTime <= resetComboRatio * animLength)
@@ -112,13 +113,19 @@ public class SwordSkills : PlayerSkills
         // Then attack
         float anticipationPeriod = animLength * skill1AnticipationRatio;
         CoroutineUtility.ExecDelay(() =>
-            AttackWithHitbox(
+        {
+            SoundManager.Play(SFXName.Sword1);
+
+            float damageDealt = AttackWithHitbox(
                 swordPrimaryHitbox,
                 damage,
                 knockUpAmplitude: skill1KnockUpAmplitude,
                 knockBackAmplitude: skill1KnockBackAmplitudes[currentCombo],
-                hitEffect: HitEffect.Slash
-        ), anticipationPeriod);
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.SwordHit
+            );
+
+        }, anticipationPeriod);
 
         // Unlock casting skills
         UnlockCastingIn(animLength * skillCastingRatio[0]);
@@ -136,6 +143,9 @@ public class SwordSkills : PlayerSkills
         // Lock player's movement according to anim length
         float animLength = PlayerAnimation.Instance.GetAnimLength(1);
         movement.LockMovementBySkill(animLength * swordSkill2LockMovementRatio, true, true);
+
+        // Play initial sound
+        SoundManager.Play(SFXName.Sword1);
 
         // Spawn sword wave with delay
         CoroutineUtility.Instance.CreateCoroutine(SwordWave(damage, movement.ForwardVector, animLength * skill2AnticipationRatio));
@@ -186,7 +196,8 @@ public class SwordSkills : PlayerSkills
                             damage / totalHits,
                             knockUpAmplitude: skill3DashKnockUpAmplitude,
                             knockBackAmplitude: skill3DashKnockBackAmplitude,
-                            hitEffect: HitEffect.Slash
+                            hitEffect: HitEffect.Slash,
+                            sfx: SFXName.SwordHit
                     );
                 }, i * (animLength / totalHits));
             }
@@ -292,23 +303,32 @@ public class SwordSkills : PlayerSkills
 
         // First
         CoroutineUtility.ExecDelay(() =>
+        {
             AttackWithHitbox(
                 swordPrimaryHitbox,
                 damage * counterAttackDamageRatio[0],
                 knockUpAmplitude: counterKnockUpAmplitude[0],
-                hitEffect: HitEffect.Slash
-            ), counterAttackTimeRatio[0] * animLength
-        );
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.SwordHit
+            );
+
+            SoundManager.Play(SFXName.Sword1);
+        },
+        counterAttackTimeRatio[0] * animLength);
 
         // Second
         CoroutineUtility.ExecDelay(() =>
+        {
             AttackWithHitbox(
                 swordPrimaryHitbox,
                 damage * counterAttackDamageRatio[1],
                 knockUpAmplitude: counterKnockUpAmplitude[1],
-                hitEffect: HitEffect.Slash
-            ), counterAttackTimeRatio[1] * animLength
-        );
+                hitEffect: HitEffect.Slash,
+                sfx: SFXName.SwordHit
+            );
+
+            SoundManager.Play(SFXName.Sword2);
+        }, counterAttackTimeRatio[1] * animLength);
 
         // Third, also screen shake and destroy enemy's super armor
         CoroutineUtility.ExecDelay(() =>
@@ -318,6 +338,7 @@ public class SwordSkills : PlayerSkills
                 damage * counterAttackDamageRatio[2],
                 knockUpAmplitude: counterKnockUpAmplitude[2],
                 hitEffect: HitEffect.Slash,
+                sfx: SFXName.SwordHit,
                 superArmorDamage: counterSuperArmorAttack
             );
 
@@ -331,6 +352,8 @@ public class SwordSkills : PlayerSkills
                 // Screen shaking
                 ScreenShake.Instance.StartShaking(counterScreenShakeDuration, counterScreenShakePower);
             }
+
+            SoundManager.Play(SFXName.Sword3);
         }, counterAttackTimeRatio[2] * animLength);
     }
 
@@ -357,7 +380,8 @@ public class SwordSkills : PlayerSkills
             damage, transform.position,
             forwardVector, knockUpAmplitude:
             2.0f,
-            hitEffect: HitEffect.Slash
+            hitEffect: HitEffect.Slash,
+            sfx: SFXName.SwordHit
         );
     }
 }

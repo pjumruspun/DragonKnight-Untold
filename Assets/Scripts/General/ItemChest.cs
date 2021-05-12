@@ -20,7 +20,11 @@ public class ItemChest : Chest
                 hasBeenOpened = true;
 
                 // Spawn item
-                CoroutineUtility.ExecDelay(() => itemSpawner.SpawnItem(), spawnItemDelayTime);
+                CoroutineUtility.ExecDelay(() =>
+                {
+                    itemSpawner.SpawnItem();
+                    SoundManager.Play(SFXName.ChestOpen);
+                }, spawnItemDelayTime);
 
                 // Reduce number of key
                 --KeyStatic.numberOfKeys;

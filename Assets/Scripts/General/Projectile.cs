@@ -17,6 +17,7 @@ public struct ProjectileConfig
     public float knockUpAmplitude;
     public float knockBackAmplitude;
     public HitEffect hitEffect;
+    public SFXName sfx;
     public bool shouldHitContinuously;
     public float hitInterval;
     public bool shouldFlinch;
@@ -30,6 +31,7 @@ public struct ProjectileConfig
         float knockUpAmplitude = 0.0f,
         float knockBackAmplitude = 0.0f,
         HitEffect hitEffect = HitEffect.None,
+        SFXName sfx = SFXName.None,
         bool shouldHitContinuously = false,
         float hitInterval = 1.0f,
         bool shouldFlinch = true,
@@ -43,6 +45,7 @@ public struct ProjectileConfig
         this.knockUpAmplitude = knockUpAmplitude;
         this.knockBackAmplitude = knockBackAmplitude;
         this.hitEffect = hitEffect;
+        this.sfx = sfx;
         this.shouldHitContinuously = shouldHitContinuously;
         this.hitInterval = hitInterval;
         this.shouldFlinch = shouldFlinch;
@@ -175,6 +178,9 @@ public class Projectile : MonoBehaviour
 
                         // Show hit effect if exist
                         HitEffectUtility.HitEffectFunction[config.hitEffect]?.Invoke(enemy.transform.position);
+
+                        // Play sound
+                        SoundManager.Play(config.sfx, config.crit);
                     }
                     break;
                 case Target.Player:
@@ -257,6 +263,9 @@ public class Projectile : MonoBehaviour
 
                     // Spawn hit effect if exist
                     HitEffectUtility.HitEffectFunction[config.hitEffect]?.Invoke(enemy.transform.position);
+
+                    // Play sound
+                    SoundManager.Play(config.sfx, config.crit);
                 }
                 else
                 {
