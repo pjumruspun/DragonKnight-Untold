@@ -347,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 1112589792}
     - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
       propertyPath: spawnRange
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
       propertyPath: shouldSpawn
@@ -358,8 +358,12 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
+      propertyPath: maxSpawnAmountAtTime
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3282760044992471881, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
       propertyPath: spawnAmountPerInterval
-      value: 15
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 3282760044992471883, guid: f6d9449d842bf45bcb45d553b690ac27, type: 3}
       propertyPath: m_Name

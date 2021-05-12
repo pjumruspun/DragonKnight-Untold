@@ -46,7 +46,7 @@ public class Enemy : Health
     public bool IsKnockedAirborne { get; set; }
 
     // Soul calculation formula
-    protected int soulGainedFromKill => Mathf.RoundToInt(spawnCost * 10 * Random.Range(0.8f, 1.2f));
+    protected int soulGainedFromKill => Mathf.RoundToInt(spawnCost * 6 * Random.Range(0.8f, 1.2f));
 
     [Header("Flying Enemy")]
     [SerializeField]
@@ -383,7 +383,7 @@ public class Enemy : Health
         animator.SetBool("Stunned", true);
     }
 
-    private void KnockedBack(float amplitude)
+    protected virtual void KnockedBack(float amplitude)
     {
         Transform player = PlayerMovement.Instance.transform;
         rigidbody2D.velocity = new Vector2(0.0f, rigidbody2D.velocity.y);

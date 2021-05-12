@@ -151,6 +151,8 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         ResetStage();
         LoadScene(Scenes.Camp);
+        KeyStatic.numberOfKeys = 0;
+        SoulStatic.soul = 0;
     }
 
     private void ResetStage()

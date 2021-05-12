@@ -210,7 +210,7 @@ public class DragonSkills : PlayerSkills
         float damage = dragonAttackDamage[1] * skill2FinalDamageFactor;
 
         // Extra final damage
-        AttackWithHitbox(
+        float totalDamageDealt = AttackWithHitbox(
             dragonRushHitbox,
             damage,
             superArmorDamage: 100,
@@ -218,8 +218,20 @@ public class DragonSkills : PlayerSkills
             hitEffect: HitEffect.Slash
         );
 
+        // Deplete cooldown by 40% if hit something
+        if (totalDamageDealt > 0.0f)
+        {
+            const float cooldownReductionRatio = 0.3f;
+            currentCooldown[1] *= 1.0f - cooldownReductionRatio;
+        }
+
         dragonHorizontalDashEffect.SetActive(false);
-        CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
+
+        if (rushCoroutine != null)
+        {
+            CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
+            rushCoroutine = null;
+        }
 
         isRushing = false;
         isCastingSkill = false;
@@ -333,10 +345,21 @@ public class DragonSkills : PlayerSkills
     {
         yield return new WaitForSeconds(delay);
         dragonHorizontalDashEffect.SetActive(true);
+        DragonGaugeStatic.dragonEnergy -= 5.0f;
+        if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+        {
+            EventPublisher.TriggerStopRush();
+        }
 
         while (true)
         {
+            isRushing = true;
             DragonGaugeStatic.dragonEnergy -= 1.0f;
+            if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+            {
+                EventPublisher.TriggerStopRush();
+            }
+
             movement.MoveForwardBySkill(skill2Speed, interval, groundOnly: false, forceMode: ForceMode2D.Impulse);
             AttackWithHitbox(
                 dragonRushHitbox,
@@ -354,6 +377,13 @@ public class DragonSkills : PlayerSkills
     {
         yield return new WaitForSeconds(delay);
         fireBreath.SetActive(true);
+
+        DragonGaugeStatic.dragonEnergy -= 5.0f;
+        if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+        {
+            EventPublisher.TriggerStopRush();
+        }
+
         while (true)
         {
             DragonGaugeStatic.dragonEnergy -= 1.0f;

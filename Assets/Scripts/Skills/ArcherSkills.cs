@@ -92,7 +92,7 @@ public class ArcherSkills : PlayerSkills
 
         // Lock movement
         movement.LockJumpBySkill(true);
-        movement.LockFlipBySkill(true);
+        // movement.LockFlipBySkill(true);
         movement.LockMovementBySkill(true, false);
     }
 
@@ -200,7 +200,7 @@ public class ArcherSkills : PlayerSkills
         movement.LockFlipBySkill(true);
 
         // Lock skill casting by cooldown time
-        UnlockCastingIn(0.7f);
+        UnlockCastingIn(0.4f);
 
         // Spawn arrow
         AttackWithProjectile(
@@ -230,7 +230,7 @@ public class ArcherSkills : PlayerSkills
     public void Skill2Release()
     {
         // Spawn arrow
-        float damage = PlayerStats.Instance.BaseSkillDamage[0] * (1.5f + 0.75f * currentChargeLevel);
+        float damage = PlayerStats.Instance.BaseSkillDamage[0] * (0.75f + 0.4f * currentChargeLevel);
         float knockBackAmplitude = chargedShotKnockBackAmplitude * (0.5f + 0.1f * currentChargeLevel / maxChargeLevel);
 
         Projectile chargedShot = AttackWithProjectile(
@@ -269,7 +269,7 @@ public class ArcherSkills : PlayerSkills
         CoroutineUtility.ExecDelay(() =>
         {
             movement.LockJumpBySkill(false);
-            movement.LockFlipBySkill(false);
+            // movement.LockFlipBySkill(false);
             movement.LockMovementBySkill(false);
 
             // Also mark stop casting skill

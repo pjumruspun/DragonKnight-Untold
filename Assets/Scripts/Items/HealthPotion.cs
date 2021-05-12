@@ -36,7 +36,7 @@ public class HealthPotion : Interactable
         }
         else
         {
-            FloatingTextSpawner.Spawn("You cannot hold any more key!", transform.position);
+            FloatingTextSpawner.Spawn("You're still at Max HP!", transform.position);
         }
     }
 }

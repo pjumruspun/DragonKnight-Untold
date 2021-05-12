@@ -9,8 +9,8 @@ public class Difficulty
     public static float EnemyAttackScalingFactor =>
         1.0f + ((StageManager.currentWorld - 1) * enemyAttackScalingPerWorld) + ((StageManager.currentStage - 1) * enemyAttackScalingPerLevel);
 
-    private const float enemyHealthScalingPerWorld = 0.75f;
-    private const float enemyHealthScalingPerLevel = 0.15f;
-    private const float enemyAttackScalingPerWorld = 0.5f;
-    private const float enemyAttackScalingPerLevel = 0.1f;
+    private const float enemyHealthScalingPerWorld = 1.25f;
+    private const float enemyHealthScalingPerLevel = 0.25f;
+    private const float enemyAttackScalingPerWorld = 0.75f;
+    private const float enemyAttackScalingPerLevel = 0.15f;
 }

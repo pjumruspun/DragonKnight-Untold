@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Skill2
   m_EditorClassIdentifier: 
   skillName: Rush
-  skillIcon: {fileID: 0}
+  skillIcon: {fileID: 21300000, guid: 609e8311e7d5a45369dc02ac2876365f, type: 3}
   baseDamage: 3
   baseCooldown: 3

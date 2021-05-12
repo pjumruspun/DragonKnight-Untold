@@ -905,6 +905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b4dae916360497092d100bf4885bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFlyingEnemy: 0
   spawnEffect: 1
   spawnCost: 5
   enemyBaseSpeed: 1.5
@@ -913,7 +914,7 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 0
   groundDetector: {fileID: 707214862651218420}
-  startMaxHealth: 150
+  startMaxHealth: 250
   hpBar: {fileID: 1201546197379584409}
   secondsToDespawn: 2
   showSuperArmorBar: 1
@@ -1059,3 +1060,6 @@ MonoBehaviour:
   ultraRareSpawnChance: 0.05
   rareSpawnChance: 0.1
   commonSpawnChance: 0.15
+  keySpawnChance: 0.3
+  potionSpawnChance: 0.25
+  guaranteedSpawn: 0

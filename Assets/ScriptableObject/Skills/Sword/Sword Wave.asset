@@ -15,4 +15,4 @@ MonoBehaviour:
   skillName: New Skill
   skillIcon: {fileID: 21300000, guid: 012b230b0b7ce40868b929b0d5c0395d, type: 3}
   baseDamage: 30
-  baseCooldown: 1
+  baseCooldown: 3

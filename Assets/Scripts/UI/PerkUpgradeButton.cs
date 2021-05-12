@@ -66,15 +66,18 @@ public class PerkUpgradeButton : MonoBehaviour
 
     public void UpgradeLevel()
     {
+        Debug.Log($"Soul cost = {SoulCost()}");
         // Check if player have enough soul
-        if (SoulStatic.soul > SoulCost())
+        if (SoulStatic.soul >= SoulCost())
         {
-            // Upgrade
-            PerkList.Instance.Upgrade(perkDisplayPrefab);
-            Debug.Log(perkLevel);
             // Pay soul
             SoulStatic.soul -= SoulCost();
             GameEvents.TriggerSoulChange();
+
+            // Upgrade
+            PerkList.Instance.Upgrade(perkDisplayPrefab);
+            Debug.Log(perkLevel);
+
 
             if (perkLevel == 0)
             {

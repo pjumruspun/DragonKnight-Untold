@@ -14,6 +14,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     public ObjectPool Keys;
     public ObjectPool HealthPotion;
     public ObjectPool SlashEffect;
+    public ObjectPool Explosion;
     public ObjectPool CurveRoute;
 
     [Header("Floating Damage")]
@@ -80,6 +81,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private float slashEffectDestroyDuration = 0.5f;
 
+    [Header("Explosion Effect")]
+    [SerializeField]
+    private GameObject explosionEffectPrefab;
+    [SerializeField]
+    private int explosionEffectPoolsize = 5;
+
     [Header("Curve Route")]
     [SerializeField]
     private GameObject curveRoutePrefab;
@@ -105,6 +112,7 @@ public class ObjectManager : MonoSingleton<ObjectManager>
         Keys = new ObjectPool(keyPrefab, keyPoolsize);
         HealthPotion = new ObjectPool(healthPotionPrefab, healthPotionPoolsize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
+        Explosion = new ObjectPool(explosionEffectPrefab, explosionEffectPoolsize);
         ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);
         CurveRoute = new ObjectPool(curveRoutePrefab, curveRoutePoolSize);
     }
