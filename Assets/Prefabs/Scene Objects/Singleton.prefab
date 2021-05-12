@@ -55,46 +55,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - name: 1
-    critVariation: 0
-    clip: {fileID: 8300000, guid: cb9ab3c9c5f3b4bf0a86c26efef25f60, type: 3}
-    volume: 0.6
-    loop: 0
-  - name: 2
-    critVariation: 0
-    clip: {fileID: 8300000, guid: 97e2e4594451540999c3b0a987c64704, type: 3}
-    volume: 0.6
-    loop: 0
-  - name: 3
-    critVariation: 0
-    clip: {fileID: 8300000, guid: 769552c9928994c38a3e32f2e03fbe58, type: 3}
-    volume: 0.25
-    loop: 0
-  - name: 4
-    critVariation: 7
-    clip: {fileID: 8300000, guid: dfeed9e072ab64489a4c0715ffd8b03e, type: 3}
-    volume: 0.15
-    loop: 0
-  - name: 5
-    critVariation: 0
-    clip: {fileID: 8300000, guid: a6561103a433b445bae4e35fe969b969, type: 3}
-    volume: 0.35
-    loop: 0
-  - name: 7
-    critVariation: 0
-    clip: {fileID: 8300000, guid: f09748270764d4630ac64b1bb77b99c4, type: 3}
-    volume: 0.4
-    loop: 0
-  - name: 8
-    critVariation: 0
-    clip: {fileID: 8300000, guid: 687d0c0f497974475bdd25bbe0ce9331, type: 3}
-    volume: 0.4
-    loop: 0
-  - name: 6
-    critVariation: 8
-    clip: {fileID: 8300000, guid: c2ddceec69d4547c68df00bcf9470615, type: 3}
-    volume: 0.2
-    loop: 0
+  - {fileID: 11400000, guid: b822d75437fd941b3a30198524c02c35, type: 2}
+  - {fileID: 11400000, guid: 2d3c56a0ed94944c5818574939312128, type: 2}
+  - {fileID: 11400000, guid: eccbe3ce6cfd546569063c3177f1c6f1, type: 2}
+  - {fileID: 11400000, guid: 20feeb225809f4c0ba9b40622e2e804a, type: 2}
+  - {fileID: 11400000, guid: 288f655859c9d4daaae5fe8496709bde, type: 2}
+  - {fileID: 11400000, guid: 44f406e71d3c84b739b7edc9d3229555, type: 2}
+  - {fileID: 11400000, guid: ccbe7c7a0369342438936830bec4b670, type: 2}
+  - {fileID: 11400000, guid: 0389619458a1a4b6fadb5a3fec1743c5, type: 2}
+  - {fileID: 11400000, guid: 4cfe07199da094ac88b360fb69019d0a, type: 2}
+  - {fileID: 11400000, guid: f8bcbc84158eb4bc2ae1fd338e0a4e86, type: 2}
 --- !u!114 &3344070514507765947
 MonoBehaviour:
   m_ObjectHideFlags: 0

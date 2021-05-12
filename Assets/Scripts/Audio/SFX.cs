@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class SFX
+[CreateAssetMenu(fileName = "New SFX", menuName = "Roguelite/SFX")]
+public class SFX : ScriptableObject
 {
     public SFXName Name => name;
     public AudioClip Clip => clip;

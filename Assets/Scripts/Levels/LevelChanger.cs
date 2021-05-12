@@ -99,7 +99,7 @@ public class LevelChanger : MonoSingleton<LevelChanger>
     {
         if (Input.GetKeyDown(KeyCode.P)) // Debugging
         {
-            // LoadNextLevel();
+            LoadNextLevel();
         }
     }
 

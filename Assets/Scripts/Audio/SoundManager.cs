@@ -16,17 +16,7 @@ public class SoundManager : MonoSingleton<SoundManager>
 
         if (critVariation)
         {
-            switch (name)
-            {
-                case SFXName.SwordHit:
-                    Play(SFXName.SwordCriticalHit);
-                    return;
-                case SFXName.ArrowHit:
-                    Play(SFXName.ArrowCriticalHit);
-                    return;
-                default:
-                    throw new System.Exception($"There is no crit variation for sound {name}");
-            }
+            Play(SFXName.CriticalHit);
         }
 
         if (soundCache.TryGetValue(name, out SFX sound))
@@ -35,7 +25,7 @@ public class SoundManager : MonoSingleton<SoundManager>
         }
         else
         {
-            Debug.LogAssertion("[ERROR] AudioManager.Play: soundCache missed");
+            Debug.LogAssertion($"[ERROR] AudioManager.Play: soundCache missed: {name}");
         }
     }
 

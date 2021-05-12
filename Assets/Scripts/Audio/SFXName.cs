@@ -7,6 +7,8 @@ public enum SFXName
     SwordHit,
     ArcherArrow,
     ArrowHit,
-    SwordCriticalHit,
-    ArrowCriticalHit,
+    CriticalHit,
+    CampBGM,
+    StageBGM,
+    BossBGM,
 }
