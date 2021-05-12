@@ -219,7 +219,12 @@ public class DragonSkills : PlayerSkills
         );
 
         dragonHorizontalDashEffect.SetActive(false);
-        CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
+
+        if (rushCoroutine != null)
+        {
+            CoroutineUtility.Instance.StopCoroutine(rushCoroutine);
+            rushCoroutine = null;
+        }
 
         isRushing = false;
         isCastingSkill = false;
@@ -336,7 +341,13 @@ public class DragonSkills : PlayerSkills
 
         while (true)
         {
+            isRushing = true;
             DragonGaugeStatic.dragonEnergy -= 1.0f;
+            if (DragonGaugeStatic.dragonEnergy <= 0.0f)
+            {
+                EventPublisher.TriggerStopRush();
+            }
+
             movement.MoveForwardBySkill(skill2Speed, interval, groundOnly: false, forceMode: ForceMode2D.Impulse);
             AttackWithHitbox(
                 dragonRushHitbox,
