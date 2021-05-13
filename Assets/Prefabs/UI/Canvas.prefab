@@ -771,6 +771,7 @@ GameObject:
   - component: {fileID: 270757448808496648}
   - component: {fileID: 6160397363235383604}
   - component: {fileID: 3624017585525314996}
+  - component: {fileID: 6639836126765972532}
   m_Layer: 0
   m_Name: Crit DMG
   m_TagString: Untagged
@@ -792,10 +793,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -115}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6160397363235383604
 CanvasRenderer:
@@ -839,6 +840,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Crit DMG: 200%'
+--- !u!114 &6639836126765972532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110937245424778235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Critical Damage
+  content: Damage when landing critical hits
 --- !u!1 &2339375473040989892
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,6 +1195,7 @@ GameObject:
   - component: {fileID: 5877418205507019226}
   - component: {fileID: 1240926527703641043}
   - component: {fileID: 8908343886360761103}
+  - component: {fileID: 8699338193897151701}
   m_Layer: 0
   m_Name: Move Speed
   m_TagString: Untagged
@@ -1201,10 +1217,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -145}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1240926527703641043
 CanvasRenderer:
@@ -1248,6 +1264,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Move Speed : 70'
+--- !u!114 &8699338193897151701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629897860054230536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Movement speed
+  content: Actual movement speed value
 --- !u!1 &2816323546253283818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,6 +1439,7 @@ GameObject:
   - component: {fileID: 3032099731684490972}
   - component: {fileID: 6965171334776678037}
   - component: {fileID: 212381787477601280}
+  - component: {fileID: 6131960446454716878}
   m_Layer: 0
   m_Name: Agi
   m_TagString: Untagged
@@ -1430,10 +1461,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -145}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6965171334776678037
 CanvasRenderer:
@@ -1477,6 +1508,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Agi : 20'
+--- !u!114 &6131960446454716878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3670015508982827021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Agility
+  content: Increase movement speed by 2.5% per point
 --- !u!1 &3702301608391990189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,6 +1775,7 @@ GameObject:
   - component: {fileID: 2483765198093010790}
   - component: {fileID: 8300506317644250920}
   - component: {fileID: 8490091034709705211}
+  - component: {fileID: 377015873069792987}
   m_Layer: 0
   m_Name: Luk
   m_TagString: Untagged
@@ -1751,10 +1797,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -235}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8300506317644250920
 CanvasRenderer:
@@ -1798,6 +1844,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Luk : 50'
+--- !u!114 &377015873069792987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3909284568819090686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Luck
+  content: Increase critical chance by 2% per point
 --- !u!1 &4029601227529482752
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,6 +2078,7 @@ GameObject:
   - component: {fileID: 7577423325172673833}
   - component: {fileID: 3963261190972585160}
   - component: {fileID: 4238967024978976794}
+  - component: {fileID: 8869366413490803656}
   m_Layer: 0
   m_Name: Health Regen
   m_TagString: Untagged
@@ -2039,10 +2100,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -175}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3963261190972585160
 CanvasRenderer:
@@ -2086,6 +2147,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'HP Regen : 0'
+--- !u!114 &8869366413490803656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269599881208495093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Health Regen
+  content: Unused for now
 --- !u!1 &4331679658744024400
 GameObject:
   m_ObjectHideFlags: 0
@@ -2145,7 +2220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2790,8 +2865,8 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 50, y: 20}
-  m_Spacing: {x: 150, y: 10}
+  m_CellSize: {x: 250, y: 30}
+  m_Spacing: {x: -50, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 5
 --- !u!1 &5938324145764843807
@@ -2805,6 +2880,7 @@ GameObject:
   - component: {fileID: 6299995741483878472}
   - component: {fileID: 1926979614929965873}
   - component: {fileID: 3043859166232228943}
+  - component: {fileID: 1204230057102127544}
   m_Layer: 0
   m_Name: Atk
   m_TagString: Untagged
@@ -2826,10 +2902,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -115}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1926979614929965873
 CanvasRenderer:
@@ -2873,6 +2949,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Atk : 30'
+--- !u!114 &1204230057102127544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5938324145764843807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Attack
+  content: Increase all outgoing damage by 2% per point
 --- !u!1 &6051054723903153397
 GameObject:
   m_ObjectHideFlags: 0
@@ -2884,6 +2974,7 @@ GameObject:
   - component: {fileID: 2993332346373985579}
   - component: {fileID: 9149197944335384040}
   - component: {fileID: 3546323332683427528}
+  - component: {fileID: 4143218132817357334}
   m_Layer: 0
   m_Name: Vit
   m_TagString: Untagged
@@ -2905,10 +2996,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -175}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9149197944335384040
 CanvasRenderer:
@@ -2952,6 +3043,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Vit : 10'
+--- !u!114 &4143218132817357334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6051054723903153397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Vitality
+  content: Increase max health by 3% per point
 --- !u!1 &6123135227130065298
 GameObject:
   m_ObjectHideFlags: 0
@@ -3046,7 +3151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2070537842638183611
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3154,6 +3259,7 @@ GameObject:
   - component: {fileID: 4466176862608798845}
   - component: {fileID: 5698973118487935549}
   - component: {fileID: 3604619641600739862}
+  - component: {fileID: 7469975005287860638}
   m_Layer: 0
   m_Name: CDR
   m_TagString: Untagged
@@ -3175,10 +3281,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -235}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5698973118487935549
 CanvasRenderer:
@@ -3222,6 +3328,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'CDR: 0%'
+--- !u!114 &7469975005287860638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7635339392476482945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Cooldown Reduction
+  content: Decreases cooldown of skills, only affects skill 2, 3, and ultimate
 --- !u!1 &7835464390592354458
 GameObject:
   m_ObjectHideFlags: 0
@@ -3328,6 +3448,7 @@ GameObject:
   - component: {fileID: 4792378986839096502}
   - component: {fileID: 1979032648231035311}
   - component: {fileID: 135284901125054176}
+  - component: {fileID: 8140613473118413548}
   m_Layer: 0
   m_Name: Attack Speed
   m_TagString: Untagged
@@ -3349,10 +3470,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -205}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1979032648231035311
 CanvasRenderer:
@@ -3396,6 +3517,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Atk Speed : 1'
+--- !u!114 &8140613473118413548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8028500312786872878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Attack Speed
+  content: Increase attack speed, only affect auto attacks (skill 1)
 --- !u!1 &8179680070015733068
 GameObject:
   m_ObjectHideFlags: 0
@@ -3616,6 +3751,7 @@ GameObject:
   - component: {fileID: 7886034500459157732}
   - component: {fileID: 7422411070859935627}
   - component: {fileID: 8973294649162071164}
+  - component: {fileID: 3801526267612198656}
   m_Layer: 0
   m_Name: Tal
   m_TagString: Untagged
@@ -3637,10 +3773,10 @@ RectTransform:
   m_Father: {fileID: 6441917805433370425}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -205}
-  m_SizeDelta: {x: 50, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7422411070859935627
 CanvasRenderer:
@@ -3684,6 +3820,21 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 'Tal : 20'
+--- !u!114 &3801526267612198656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9156037886510096713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: Talent
+  content: Increase max dragon energy, reduces dragon energy draining rate, and increase
+    dragon damage by 2% per point
 --- !u!1001 &878096316194797629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4069,27 +4220,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583447, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583447, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583447, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583447, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583447, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583447, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -160
       objectReference: {fileID: 0}
     - target: {fileID: 16435957402583448, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_Name
@@ -4249,7 +4400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 16435958326552003, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 16435958601735089, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_Text
@@ -4257,27 +4408,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 16435959266391261, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 16435959266391261, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 16435959266391261, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 16435959266391261, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 16435959266391261, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 16435959266391261, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_RootOrder
@@ -4285,27 +4436,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2597614861660534128, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -270
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a1bd9c5aa5b7435593e1e32bd668992, type: 3}

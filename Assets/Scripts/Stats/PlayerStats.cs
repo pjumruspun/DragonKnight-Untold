@@ -14,7 +14,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     public float HealthRegen => healthRegen.GetValue;
     public float CooldownReduction => cooldownReduction.GetValue;
     public float AttackSpeed => attackSpeed.GetValue;
-    public float DamageMultiplier => (1 + 0.025f * atk.GetValue);
+    public float DamageMultiplier => (1 + 0.02f * atk.GetValue);
     public float MovementSpeed => (1.0f + (Mathf.Max(AGI, minAgiPossible) * 0.025f)) * baseMovementSpeed.GetValue;
     public float MovementSpeedRatio => MovementSpeed / baseMoveSpeed;
     public float MaxHealth => (1.0f + (Mathf.Max(VIT, minVitPossible) * 0.03f)) * basePlayerMaxHealth;

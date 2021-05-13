@@ -11,7 +11,6 @@ public class TooltipManager : MonoSingleton<TooltipManager>
     {
         Instance.tooltip.SetText(content, header);
         Instance.tooltip.gameObject.SetActive(true);
-        Debug.Log($"Showing content: {content}");
     }
 
     public static void Hide()

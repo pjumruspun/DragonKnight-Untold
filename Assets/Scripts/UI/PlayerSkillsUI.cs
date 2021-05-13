@@ -126,7 +126,24 @@ public class PlayerSkillsUI : MonoBehaviour
 
         for (int i = 0; i < tooltips.Count; ++i)
         {
-            string header = skills[i].skillName;
+            string header = "";
+            switch (i)
+            {
+                case 0:
+                    header += $"<color=#FEAE10>[Space Bar]</color> {skills[i].skillName}";
+                    Debug.Log(header);
+                    break;
+                case 1:
+                    header += $"<color=#FEAE10>[Z]</color> {skills[i].skillName}";
+                    break;
+                case 2:
+                    header += $"<color=#FEAE10>[X]</color> {skills[i].skillName}";
+                    break;
+                case 3:
+                    header += $"<color=#FEAE10>[C]</color> {skills[i].skillName}";
+                    break;
+            }
+
             string content = skills[i].description;
             content += $"\n\n Cooldown: {skillCooldowns[i]} seconds";
             tooltips[i].SetText(content, header);
@@ -140,7 +157,24 @@ public class PlayerSkillsUI : MonoBehaviour
 
         for (int i = 0; i < tooltips.Count; ++i)
         {
-            string header = skills[i].skillName;
+            string header = "";
+            switch (i)
+            {
+                case 0:
+                    header += $"<color=#FEAE10>[Space Bar]</color> {skills[i].skillName}";
+                    Debug.Log(header);
+                    break;
+                case 1:
+                    header += $"<color=#FEAE10>[Z]</color> {skills[i].skillName}";
+                    break;
+                case 2:
+                    header += $"<color=#FEAE10>[X]</color> {skills[i].skillName}";
+                    break;
+                case 3:
+                    header += $"<color=#FEAE10>[C]</color> {skills[i].skillName}";
+                    break;
+            }
+
             string content = skills[i].description;
             content += $"\n\n Cooldown: {skillCooldowns[i]} seconds";
             tooltips[i].SetText(content, header);

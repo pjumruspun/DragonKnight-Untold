@@ -9,6 +9,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     private string header = default;
 
     [SerializeField]
+    [TextArea]
     private string content = default;
 
     public void SetText(string content, string header = "")
