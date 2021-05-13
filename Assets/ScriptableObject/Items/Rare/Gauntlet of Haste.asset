@@ -29,7 +29,7 @@ MonoBehaviour:
     CritDamageAddModifier: 0
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
-    AttackSpeedAddModifier: 0.15
+    AttackSpeedAddModifier: 0.12
     CooldownReductionAddModifier: 0
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0

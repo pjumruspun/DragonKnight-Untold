@@ -46,7 +46,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     [SerializeField]
     private Stats<float> critDamage = new Stats<float>(1.5f);
     [SerializeField]
-    private Stats<float> baseMovementSpeed = new Stats<float>(3.0f);
+    private Stats<float> baseMovementSpeed = new Stats<float>(4.0f);
     [SerializeField]
     private Stats<float> healthRegen = new Stats<float>(1.0f);
     [SerializeField]
