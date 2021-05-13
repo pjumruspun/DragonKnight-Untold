@@ -79,6 +79,7 @@ public class PlayerHealth : Health
         }
 
         EventPublisher.PlayerStatsChange += UpdateMaxHealth;
+        GameEvents.PerkUpgrade += BerserkUpgradeWrapper;
     }
 
     protected override void HandleHealthChange()
@@ -95,6 +96,7 @@ public class PlayerHealth : Health
     private void OnDestroy()
     {
         EventPublisher.PlayerStatsChange -= UpdateMaxHealth;
+        GameEvents.PerkUpgrade -= BerserkUpgradeWrapper;
 
         // Fetch data if there is scene transition
         PlayerHealthStatic.currentHealth = currentHealth;
@@ -103,6 +105,10 @@ public class PlayerHealth : Health
     private void UpdateMaxHealth()
     {
         float finalMaxHealth = PlayerStats.Instance.MaxHealth;
+        Debug.Log($"Before: {finalMaxHealth}");
+        finalMaxHealth *= PerkEffects.BerserkMaxHealthRatio();
+        Debug.Log($"After: {finalMaxHealth}, Max health percentage: {PerkEffects.BerserkMaxHealthRatio()}");
+
         if (finalMaxHealth > maxHealth)
         {
             // Increase current health with the same amount of max health increased
@@ -135,5 +141,11 @@ public class PlayerHealth : Health
     {
         // Set to -1.0f so that PlayerHealth doesn't import health from PlayerHealthStatic
         PlayerHealthStatic.currentHealth = -1.0f;
+    }
+
+    private void BerserkUpgradeWrapper(string perkName, int perkLevel)
+    {
+        // Params don't really matter here, just need to call UpdateMaxHealth()
+        UpdateMaxHealth();
     }
 }

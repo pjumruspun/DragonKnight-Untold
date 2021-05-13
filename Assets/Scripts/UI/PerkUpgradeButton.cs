@@ -76,18 +76,23 @@ public class PerkUpgradeButton : MonoBehaviour
 
             // Upgrade
             PerkList.Instance.Upgrade(perkDisplayPrefab);
-            Debug.Log(perkLevel);
-
 
             if (perkLevel == 0)
             {
                 PerkList.Instance.AddDevelopedPerk(perkDisplayPrefab);
+
+                // Notify event
+                GameEvents.TriggerPerkUpgrade(perkDisplayPrefab.name, 1);
+                return;
             }
             else if (perkLevel == 5)
             {
                 // Cannot upgrade anymore
                 perkUpgradeButton.gameObject.SetActive(false);
             }
+
+            // Notify event
+            GameEvents.TriggerPerkUpgrade(perkDisplayPrefab.name, perkLevel);
         }
     }
 }

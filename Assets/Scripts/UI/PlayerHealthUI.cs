@@ -29,7 +29,8 @@ public class PlayerHealthUI : MonoBehaviour
     {
         float currentHealth = PlayerHealth.Instance.CurrentHealth;
         float maxHealth = PlayerHealth.Instance.MaxHealth;
-        healthFill.fillAmount = currentHealth / maxHealth;
+        float maxHealthRatio = PerkEffects.BerserkMaxHealthRatio();
+        healthFill.fillAmount = maxHealthRatio * currentHealth / maxHealth;
     }
 
     private void UpdateHPText()
