@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
   m_Name: Sword Wave
   m_EditorClassIdentifier: 
-  skillName: New Skill
+  skillName: Moon Slash
   skillIcon: {fileID: 21300000, guid: 012b230b0b7ce40868b929b0d5c0395d, type: 3}
+  description: Release a wave of energy in front of you. The energy wave can pierce
+    through enemies and stagger them.
   baseDamage: 30
   baseCooldown: 3

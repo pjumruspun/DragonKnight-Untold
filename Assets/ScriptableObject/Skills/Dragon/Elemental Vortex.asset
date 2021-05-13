@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Elemental Vortex
   skillIcon: {fileID: 21300000, guid: 6602b3bcbee154833888bbc2e39b8303, type: 3}
+  description: Fly upward while creating an elemental vortex around yourself. The
+    vortex can stun enemies and knocking them up.
   baseDamage: 20
   baseCooldown: 3

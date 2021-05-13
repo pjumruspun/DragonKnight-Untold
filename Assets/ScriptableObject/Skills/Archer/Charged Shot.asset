@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Charged Shot
   skillIcon: {fileID: 21300000, guid: 3fc5271792128494e8ed8788ea89ef41, type: 3}
+  description: Stand still and charge your arrow, release to fire a powerful piercing
+    arrow that deals damage depends on the charging time.
   baseDamage: 3
   baseCooldown: 5

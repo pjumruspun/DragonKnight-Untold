@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
   m_Name: Sword Auto Attack
   m_EditorClassIdentifier: 
-  skillName: New Skill
+  skillName: Slash
   skillIcon: {fileID: 21300000, guid: a47af6fe3567e428ba68fc3aa7d29e08, type: 3}
+  description: Slash enemies in front of you. Capable of flinching enemies.
   baseDamage: 10
   baseCooldown: 0.6

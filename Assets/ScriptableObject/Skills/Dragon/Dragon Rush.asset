@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
-  m_Name: Skill2
+  m_Name: Dragon Rush
   m_EditorClassIdentifier: 
-  skillName: Rush
+  skillName: Dragon Rush
   skillIcon: {fileID: 21300000, guid: 609e8311e7d5a45369dc02ac2876365f, type: 3}
+  description: While activating, rush into enemies in front of you and pushing them
+    together with you. Rushing is cancelled when releasing the skill button or when
+    you hit a wall. If you hit a wall, deals additional damage to the enemies caught
+    in the impact.
   baseDamage: 3
   baseCooldown: 3

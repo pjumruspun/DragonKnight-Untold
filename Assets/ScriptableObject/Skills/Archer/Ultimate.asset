@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Stun Arrow
   skillIcon: {fileID: 21300000, guid: d26d8158a370a44919aa01c349cddb21, type: 3}
+  description: Shoot a piercing arrow that can stun multiple enemies. Launch enemies
+    into the air upon impact.
   baseDamage: 30
   baseCooldown: 5
