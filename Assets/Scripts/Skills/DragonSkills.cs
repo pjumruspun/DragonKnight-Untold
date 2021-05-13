@@ -129,7 +129,7 @@ public class DragonSkills : PlayerSkills
         isCastingSkill = true;
 
         // Primary attack = dragonAttackDamage[0]
-        float damage = dragonAttackDamage[0];
+        float damage = dragonAttackDamage[0] * PlayerStats.Instance.DragonDamageMultiplier;
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
@@ -192,7 +192,7 @@ public class DragonSkills : PlayerSkills
     public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
-        float damage = dragonAttackDamage[1];
+        float damage = dragonAttackDamage[1] * PlayerStats.Instance.DragonDamageMultiplier;
 
         isRushing = true;
         isCastingSkill = true;
@@ -269,7 +269,7 @@ public class DragonSkills : PlayerSkills
 
         isCastingSkill = true;
 
-        float damage = dragonAttackDamage[2];
+        float damage = dragonAttackDamage[2] * PlayerStats.Instance.DragonDamageMultiplier;
         float animLength = PlayerAnimation.Instance.GetAnimLength(2);
         float lockMovementDuration = animLength * skill3LockMovementRatio;
 
@@ -338,7 +338,7 @@ public class DragonSkills : PlayerSkills
         isCastingSkill = true;
 
         // Ult = dragonAttackDamage[3]
-        float damage = dragonAttackDamage[3];
+        float damage = dragonAttackDamage[3] * PlayerStats.Instance.DragonDamageMultiplier;
 
         fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, ultDelay, ultInterval));
         movement.LockJumpBySkill(true);

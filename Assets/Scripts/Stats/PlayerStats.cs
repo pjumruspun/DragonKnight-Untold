@@ -14,9 +14,12 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     public float HealthRegen => healthRegen.GetValue;
     public float CooldownReduction => cooldownReduction.GetValue;
     public float AttackSpeed => attackSpeed.GetValue;
-    public float MovementSpeed => (1.0f + (Mathf.Max(agi.GetValue, minAgiPossible) * 0.03f)) * baseMovementSpeed.GetValue;
-
-    public float MaxHealth => (1.0f + (Mathf.Max(vit.GetValue, minVitPossible) * 0.05f)) * basePlayerMaxHealth;
+    public float DamageMultiplier => (1 + 0.025f * atk.GetValue);
+    public float MovementSpeed => (1.0f + (Mathf.Max(AGI, minAgiPossible) * 0.025f)) * baseMovementSpeed.GetValue;
+    public float MaxHealth => (1.0f + (Mathf.Max(VIT, minVitPossible) * 0.03f)) * basePlayerMaxHealth;
+    public float MaxDragonEnergyMultiplier => 1.0f + 0.02f * TAL;
+    public float DragonEnergyDrainMultiplier => 1.0f / (1.0f + 0.02f * TAL);
+    public float DragonDamageMultiplier => 1.0f + 0.02f * TAL;
 
     /// <summary>
     /// Actual value of skill cooldowns after cooldown reduction
@@ -60,7 +63,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         float random = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
-        float damage = baseDamage * (1 + 0.03f * atk.GetValue);
+        float damage = baseDamage * DamageMultiplier;
 
         // Handle crit
         if (random < CalculateCritChance() && canCrit)
