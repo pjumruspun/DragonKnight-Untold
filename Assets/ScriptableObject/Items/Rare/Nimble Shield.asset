@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
   m_Name: Nimble Shield
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
-  rarity: 0
+  name: Nimble Shield
+  icon: {fileID: 21300000, guid: f7c14296e42db4afb80c50c28fc57623, type: 3}
+  rarity: 1
   stats:
     AtkAddModifier: 0
-    AgiAddModifier: 0
-    VitAddModifier: 0
+    AgiAddModifier: 5
+    VitAddModifier: 3
     TalAddModifier: 0
     LukAddModifier: 0
     AtkMultModifier: 0

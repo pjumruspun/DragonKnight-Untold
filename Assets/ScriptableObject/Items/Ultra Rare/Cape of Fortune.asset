@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
-  m_Name: New Item
+  m_Name: Cape of Fortune
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
-  rarity: 0
+  name: Cape of Fortune
+  icon: {fileID: 21300000, guid: 95fd1bb30b37c41fc8a374582182f8f5, type: 3}
+  rarity: 2
   stats:
-    AtkAddModifier: 0
+    AtkAddModifier: -2
     AgiAddModifier: 0
-    VitAddModifier: 0
+    VitAddModifier: -2
     TalAddModifier: 0
-    LukAddModifier: 0
+    LukAddModifier: 15
     AtkMultModifier: 0
     AgiMultModifier: 0
     VitMultModifier: 0

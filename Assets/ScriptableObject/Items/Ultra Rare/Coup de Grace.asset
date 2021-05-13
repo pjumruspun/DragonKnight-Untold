@@ -16,17 +16,17 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 4a0fc9262ba6144d6986947f2744d850, type: 3}
   rarity: 2
   stats:
-    AtkAddModifier: 0
+    AtkAddModifier: 3
     AgiAddModifier: 0
-    VitAddModifier: -10
+    VitAddModifier: -5
     TalAddModifier: 0
-    LukAddModifier: -2
+    LukAddModifier: -3
     AtkMultModifier: 0
     AgiMultModifier: 0
     VitMultModifier: 0
     TalMultModifier: 0
     LukMultModifier: 0
-    CritDamageAddModifier: 1.5
+    CritDamageAddModifier: 1.25
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
     AttackSpeedAddModifier: 0

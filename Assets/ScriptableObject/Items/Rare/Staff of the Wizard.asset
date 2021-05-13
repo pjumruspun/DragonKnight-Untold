@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
-  m_Name: Wizard Staff
+  m_Name: Staff of the Wizard
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
-  rarity: 0
+  name: Staff of the Wizard
+  icon: {fileID: 21300000, guid: dc8e6fe661bf54f1194d713c474215ba, type: 3}
+  rarity: 1
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
     AttackSpeedAddModifier: 0
-    CooldownReductionAddModifier: 0
+    CooldownReductionAddModifier: 0.1
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0
     HealthRegenMultModifier: 0

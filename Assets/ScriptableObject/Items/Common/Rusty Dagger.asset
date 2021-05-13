@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
   m_Name: Rusty Dagger
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
+  name: Rusty Dagger
+  icon: {fileID: 21300000, guid: ee3901e3eca7847a9b06352b2d9a7ed0, type: 3}
   rarity: 0
   stats:
-    AtkAddModifier: 0
+    AtkAddModifier: 2
     AgiAddModifier: 0
     VitAddModifier: 0
     TalAddModifier: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
     CritDamageAddModifier: 0
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
-    AttackSpeedAddModifier: 0
+    AttackSpeedAddModifier: 0.06
     CooldownReductionAddModifier: 0
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0

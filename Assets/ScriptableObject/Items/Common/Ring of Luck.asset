@@ -20,7 +20,7 @@ MonoBehaviour:
     AgiAddModifier: 0
     VitAddModifier: 0
     TalAddModifier: 0
-    LukAddModifier: 5
+    LukAddModifier: 4
     AtkMultModifier: 0
     AgiMultModifier: 0
     VitMultModifier: 0

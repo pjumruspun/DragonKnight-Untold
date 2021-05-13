@@ -27,7 +27,7 @@ MonoBehaviour:
     TalMultModifier: 0
     LukMultModifier: 0
     CritDamageAddModifier: 0
-    MovementSpeedAddModifier: 0.4
+    MovementSpeedAddModifier: 0.35
     HealthRegenAddModifier: 0
     AttackSpeedAddModifier: 0
     CooldownReductionAddModifier: 0

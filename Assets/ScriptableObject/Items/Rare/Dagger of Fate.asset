@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
   m_Name: Dagger of Fate
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
-  rarity: 0
+  name: Dagger of Fate
+  icon: {fileID: 21300000, guid: b42961bfa07164b3188447e8f65e90b4, type: 3}
+  rarity: 1
   stats:
-    AtkAddModifier: 0
+    AtkAddModifier: 1
     AgiAddModifier: 0
     VitAddModifier: 0
     TalAddModifier: 0
-    LukAddModifier: 0
+    LukAddModifier: 5
     AtkMultModifier: 0
     AgiMultModifier: 0
     VitMultModifier: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
     CritDamageAddModifier: 0
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
-    AttackSpeedAddModifier: 0
+    AttackSpeedAddModifier: 0.08
     CooldownReductionAddModifier: 0
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0

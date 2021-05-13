@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
-  m_Name: New Item
+  m_Name: Mystic Staff
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
-  rarity: 0
+  name: Mystic Staff
+  icon: {fileID: 21300000, guid: d702cff2edde440f79deddd9a652e3c3, type: 3}
+  rarity: 2
   stats:
-    AtkAddModifier: 0
+    AtkAddModifier: 4
     AgiAddModifier: 0
     VitAddModifier: 0
     TalAddModifier: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
     AttackSpeedAddModifier: 0
-    CooldownReductionAddModifier: 0
+    CooldownReductionAddModifier: 0.2
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0
     HealthRegenMultModifier: 0
