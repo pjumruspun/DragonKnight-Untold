@@ -5,6 +5,7 @@ using System.Linq;
 
 public abstract class PlayerSkills : ScriptableObject
 {
+    public IEnumerable<Skill> GetSkills => from skill in skills select skill;
     public IEnumerable<Sprite> GetIcons => from skill in skills select skill.skillIcon;
     public IEnumerable<float> GetBaseSkillCooldowns => from skill in skills select skill.baseCooldown;
     public IEnumerable<float> GetBaseSkillDamage => from skill in skills select skill.baseDamage;

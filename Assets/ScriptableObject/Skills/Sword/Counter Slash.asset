@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Counter Slash
   skillIcon: {fileID: 21300000, guid: eb1cb8fcbde374717b77323231123e66, type: 3}
+  description: Guard yourself from any incoming attacks for a brief moment. If you're
+    hit while guarding, land powerful blows to the enemies in front of you afterwards.
   baseDamage: 40
   baseCooldown: 4

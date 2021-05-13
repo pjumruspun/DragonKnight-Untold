@@ -47,7 +47,7 @@ public class ItemUI : MonoSingleton<ItemUI>
                 GameObject icon = Instantiate(itemDisplayPrefab);
                 if (icon.TryGetComponent<ItemIcon>(out ItemIcon itemIcon))
                 {
-                    itemIcon.SetIcon(item.icon);
+                    itemIcon.SetItem(item);
                     itemIcon.SetCount(count);
                     icon.transform.SetParent(transform);
                     itemIcons[item] = icon;

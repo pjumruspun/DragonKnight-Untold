@@ -7,12 +7,19 @@ public class ItemIcon : MonoBehaviour
 {
     [SerializeField]
     private Image icon;
+
     [SerializeField]
     private Text count;
 
-    public void SetIcon(Sprite sprite)
+    [SerializeField]
+    private TooltipTrigger tooltipTrigger;
+
+    public void SetItem(Item item)
     {
-        icon.sprite = sprite;
+        icon.sprite = item.icon;
+        string header = item.name;
+        string content = "Each stack provides:\n\n" + item.stats.GetDescription();
+        tooltipTrigger.SetText(content, header);
     }
 
     public void SetCount(int count)

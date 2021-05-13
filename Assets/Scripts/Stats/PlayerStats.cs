@@ -17,6 +17,12 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     public float MovementSpeed => (1.0f + (Mathf.Max(agi.GetValue, minAgiPossible) * 0.03f)) * baseMovementSpeed.GetValue;
 
     public float MaxHealth => (1.0f + (Mathf.Max(vit.GetValue, minVitPossible) * 0.05f)) * basePlayerMaxHealth;
+
+    /// <summary>
+    /// Actual value of skill cooldowns after cooldown reduction
+    /// from items and stats.
+    /// </summary>
+    /// <returns>Array of float with length = 4</returns>
     public float[] SkillCooldown => CalculateSkillCooldown();
 
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
