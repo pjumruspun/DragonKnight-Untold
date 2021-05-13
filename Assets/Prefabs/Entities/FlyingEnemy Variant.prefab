@@ -45,7 +45,7 @@ MonoBehaviour:
   superArmorBar: {fileID: 2816397916392350642}
   secondsBeforeGetUp: 1.5
   stunStars: {fileID: 812121008906423412}
-  attackDamage: 10
+  attackDamage: 15
   attackCooldown: 3
   attackRange: 6
   attackDelay: 0.3

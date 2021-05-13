@@ -981,7 +981,7 @@ MonoBehaviour:
   spawnCost: 5
   enemyBaseSpeed: 1.5
   randomSpeedFactor: 0.5
-  chasingRange: 6
+  chasingRange: 20
   chasingInterval: 0.5
   canSeeThroughWalls: 0
   groundDetector: {fileID: 2419719778490068726}
@@ -998,6 +998,7 @@ MonoBehaviour:
   attackRange: 1.5
   attackDelay: 0.3
   hurtColor: {r: 0.75, g: 0, b: 0, a: 1}
+  soulGivenOnDeath: 1200
   attackHitbox: {fileID: 0}
 --- !u!212 &6415880568046649056
 SpriteRenderer:

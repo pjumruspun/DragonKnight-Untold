@@ -37,6 +37,9 @@ public abstract class Boss : Enemy
 
         // Instead we will use separated UI
         BossEvents.TriggerBossSpawn(this);
+
+        // Increase super armor relatively to health increment
+        SetMaxSuperArmor(Difficulty.EnemyHealthScalingFactor * maxSuperArmor);
     }
 
     protected override void HandleHealthChange()

@@ -94,7 +94,7 @@ public class Enemy : Health
     [SerializeField]
     private bool showSuperArmorBar = true;
     [SerializeField]
-    private float maxSuperArmor = 100;
+    protected float maxSuperArmor = 100;
     [SerializeField]
     protected Slider superArmorBar;
     [SerializeField]
@@ -259,6 +259,12 @@ public class Enemy : Health
     public void SetRendererActive(bool active)
     {
         spriteRenderer.enabled = active;
+    }
+
+    protected void SetMaxSuperArmor(float maxSuperArmor)
+    {
+        this.maxSuperArmor = maxSuperArmor;
+        RestoreSuperArmor();
     }
 
     protected override void Start()

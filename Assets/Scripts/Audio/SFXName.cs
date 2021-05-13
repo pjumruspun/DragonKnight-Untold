@@ -19,4 +19,5 @@ public enum SFXName
     CampBGM = 2000,
     StageBGM = 2001,
     BossBGM = 2002,
+    VictoryBGM = 2003,
 }
