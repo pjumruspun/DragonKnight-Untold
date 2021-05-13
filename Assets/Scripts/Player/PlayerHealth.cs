@@ -105,9 +105,7 @@ public class PlayerHealth : Health
     private void UpdateMaxHealth()
     {
         float finalMaxHealth = PlayerStats.Instance.MaxHealth;
-        Debug.Log($"Before: {finalMaxHealth}");
         finalMaxHealth *= PerkEffects.BerserkMaxHealthRatio();
-        Debug.Log($"After: {finalMaxHealth}, Max health percentage: {PerkEffects.BerserkMaxHealthRatio()}");
 
         if (finalMaxHealth > maxHealth)
         {

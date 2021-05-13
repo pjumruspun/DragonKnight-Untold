@@ -95,8 +95,6 @@ public class PlayerSkillsUI : MonoBehaviour
         {
             ChangeSkillIcons(PlayerClassStatic.currentClass);
         }
-
-        UpdateTooltips();
     }
 
     private void ChangeSkillIcons(PlayerClass playerClass)
@@ -118,12 +116,26 @@ public class PlayerSkillsUI : MonoBehaviour
             }
         }
 
-        UpdateTooltips();
+        UpdateTooltipsOnClassChange(playerClass);
     }
 
     private void UpdateTooltips()
     {
         List<Skill> skills = SkillsRepository.GetSkillsWithDragon(PlayerClassStatic.currentClass).GetSkills.Cast<Skill>().ToList<Skill>();
+        float[] skillCooldowns = PlayerStats.Instance.SkillCooldown;
+
+        for (int i = 0; i < tooltips.Count; ++i)
+        {
+            string header = skills[i].skillName;
+            string content = skills[i].description;
+            content += $"\n\n Cooldown: {skillCooldowns[i]} seconds";
+            tooltips[i].SetText(content, header);
+        }
+    }
+
+    private void UpdateTooltipsOnClassChange(PlayerClass playerClass)
+    {
+        List<Skill> skills = SkillsRepository.GetSkillsWithDragon(playerClass).GetSkills.Cast<Skill>().ToList<Skill>();
         float[] skillCooldowns = PlayerStats.Instance.SkillCooldown;
 
         for (int i = 0; i < tooltips.Count; ++i)
