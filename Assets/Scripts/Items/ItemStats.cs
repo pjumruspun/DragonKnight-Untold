@@ -163,6 +163,7 @@ public struct StatsDto
     {
         string description = "";
 
+        // Positive values
         if (AtkAddModifier > 0)
         {
             description += $"ATK +{AtkAddModifier}\n";
@@ -245,6 +246,92 @@ public struct StatsDto
         if (CooldownReductionMultModifier > 0.0f)
         {
             description += $"CDR +{CooldownReductionMultModifier * 100.0f}%\n";
+        }
+
+        // Negative values
+
+        if (AtkAddModifier < 0)
+        {
+            description += $"ATK {AtkAddModifier}\n";
+        }
+        if (AgiAddModifier < 0)
+        {
+            description += $"AGI {AgiAddModifier}\n";
+        }
+        if (VitAddModifier < 0)
+        {
+            description += $"VIT {VitAddModifier}\n";
+        }
+        if (TalAddModifier < 0)
+        {
+            description += $"TAL {TalAddModifier}\n";
+        }
+        if (LukAddModifier < 0)
+        {
+            description += $"LUK {LukAddModifier}\n";
+        }
+
+        if (AtkMultModifier < 0.0f)
+        {
+            description += $"ATK {AtkMultModifier * 100.0f}%\n";
+        }
+        if (AgiMultModifier < 0.0f)
+        {
+            description += $"AGI {AgiMultModifier * 100.0f}%\n";
+        }
+        if (VitMultModifier < 0.0f)
+        {
+            description += $"VIT {VitMultModifier * 100.0f}%\n";
+        }
+        if (TalMultModifier < 0.0f)
+        {
+            description += $"TAL {TalMultModifier * 100.0f}%\n";
+        }
+        if (LukMultModifier < 0.0f)
+        {
+            description += $"LUK {LukMultModifier * 100.0f}%\n";
+        }
+
+        if (CritDamageAddModifier < 0.0f)
+        {
+            description += $"CRIT DMG {CritDamageAddModifier * 100.0f}%\n";
+        }
+        if (MovementSpeedAddModifier < 0.0f)
+        {
+            description += $"MOVE SPD {MovementSpeedAddModifier}\n";
+        }
+        if (HealthRegenAddModifier < 0.0f)
+        {
+            description += $"REGEN {HealthRegenAddModifier}\n";
+        }
+        if (AttackSpeedAddModifier < 0.0f)
+        {
+            description += $"ATK SPD {AttackSpeedAddModifier * 100.0f}%\n";
+        }
+        if (CooldownReductionAddModifier < 0.0f)
+        {
+            description += $"CDR {CooldownReductionAddModifier * 100.0f}%\n";
+        }
+
+        if (CritDamageMultModifier < 0.0f)
+        {
+            description += $"CRIT DMG {CritDamageMultModifier * 100.0f}%\n";
+        }
+        if (MovementSpeedMultModifier < 0.0f)
+        {
+            description += $"MOVE SPD {MovementSpeedMultModifier * 100.0f}%\n";
+        }
+        if (HealthRegenMultModifier < 0.0f)
+        {
+            description += $"REGEN {HealthRegenMultModifier * 100.0f}%\n";
+        }
+        if (AttackSpeedMultModifier < 0.0f)
+        {
+            description += $"ATK SPD {AttackSpeedMultModifier * 100.0f}%\n";
+        }
+        if (CooldownReductionMultModifier < 0.0f)
+        {
+            description += $"CDR {CooldownReductionMultModifier * 100.0f}%\n";
         }
 
         return description;
