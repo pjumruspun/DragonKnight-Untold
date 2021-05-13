@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class EnemyStunnedBehavior : EnemyBehavior
 {
+    [SerializeField]
+    private bool shouldRecoverAfterTime = false;
+
+    [SerializeField]
+    private float timeToRecover = 0.0f;
+
     private bool isStunned = false;
     private float cachedGravityScale;
     private float currentNotMoveYDuration;
     private float velocityY;
+    private float timeWhenStunned;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -37,6 +44,9 @@ public class EnemyStunnedBehavior : EnemyBehavior
 
         // Tell that enemy is currently in the air
         enemy.IsKnockedAirborne = true;
+
+        // Mark the time that enemy has been stunned
+        timeWhenStunned = Time.time;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -90,10 +100,20 @@ public class EnemyStunnedBehavior : EnemyBehavior
             enemy.IsKnockedAirborne = false;
         }
 
-        if (currentNotMoveYDuration > enemy.SecondsBeforeGetUp)
+        if (ShouldGetUp())
         {
             // Can now get up
             animator.SetBool("Stunned", false);
         }
+    }
+
+    private bool ShouldGetUp()
+    {
+        bool naturalGetUp = currentNotMoveYDuration > enemy.SecondsBeforeGetUp;
+
+        float currentStunnedDuration = Time.time - timeWhenStunned;
+        bool getUpByTime = shouldRecoverAfterTime && currentStunnedDuration > timeToRecover;
+
+        return naturalGetUp || getUpByTime;
     }
 }

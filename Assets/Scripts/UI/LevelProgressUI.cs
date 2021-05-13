@@ -110,7 +110,6 @@ public class LevelProgressUI : MonoBehaviour
         {
             levelProgressText.text = completedLevelString;
             levelProgressFill.fillAmount = 1.0f;
-
         }
         else
         {

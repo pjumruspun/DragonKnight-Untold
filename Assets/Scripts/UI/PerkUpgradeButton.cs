@@ -72,7 +72,7 @@ public class PerkUpgradeButton : MonoBehaviour
         {
             // Pay soul
             SoulStatic.soul -= SoulCost();
-            GameEvents.TriggerSoulChange();
+            GameEvents.TriggerSoulChange(-SoulCost());
 
             // Upgrade
             PerkList.Instance.Upgrade(perkDisplayPrefab);

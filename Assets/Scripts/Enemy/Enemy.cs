@@ -361,7 +361,7 @@ public class Enemy : Health
     protected virtual void PlayerSoulGain()
     {
         SoulStatic.soul += soulGainedFromKill;
-        GameEvents.TriggerSoulChange();
+        GameEvents.TriggerSoulChange(soulGainedFromKill);
     }
 
     protected void TakeSuperArmorDamage(float superArmorDamage)

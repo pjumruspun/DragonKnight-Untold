@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class Boss : Enemy
 {
+    [Header("Soul Reward")]
+    [SerializeField]
+    private int soulGivenOnDeath = 1200 * StageManager.currentWorld;
     private static readonly float timeFreezeOnDead = 0.0f;
     private static readonly float screenShakeDurOnDead = 0.4f;
     private static readonly float screenShakePowOnDead = 0.2f;
@@ -16,10 +19,8 @@ public abstract class Boss : Enemy
         bool shouldFlinch = false
     )
     {
-        base.TakeDamage(damage, crit, superArmorDamage, knockUpAmplitude, knockBackAmplitude);
-
-        // Boss receives SA damage equals to damage received
-        // TakeSuperArmorDamage(damage);
+        // Instead, boss takes SA damage equals to damage received
+        base.TakeDamage(damage, crit, damage, knockUpAmplitude, knockBackAmplitude);
     }
 
     protected override void KnockedBack(float amplitude)
@@ -63,8 +64,8 @@ public abstract class Boss : Enemy
     protected override void PlayerSoulGain()
     {
         // Experimental value
-        SoulStatic.soul += 1000;
-        GameEvents.TriggerSoulChange();
+        SoulStatic.soul += soulGivenOnDeath;
+        GameEvents.TriggerSoulChange(soulGivenOnDeath);
     }
 
     protected override void Flinch()

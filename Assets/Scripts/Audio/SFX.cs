@@ -13,7 +13,7 @@ public class SFX : ScriptableObject
     public AudioSource Source { get; set; }
 
     [SerializeField]
-    private SFXName name = default;
+    private new SFXName name = default;
 
     [SerializeField]
     private AudioClip clip = default;

@@ -989,7 +989,7 @@ MonoBehaviour:
   hpBar: {fileID: 4100709551577818779}
   secondsToDespawn: 2
   showSuperArmorBar: 1
-  maxSuperArmor: 450
+  maxSuperArmor: 500
   superArmorBar: {fileID: 3833112096350911891}
   secondsBeforeGetUp: 1.5
   stunStars: {fileID: 1828762843847529045}
@@ -1132,5 +1132,5 @@ MonoBehaviour:
   rareSpawnChance: 0.1
   commonSpawnChance: 0.15
   keySpawnChance: 0.3
-  potionSpawnChance: 0.25
+  potionSpawnChance: 1
   guaranteedSpawn: 0

@@ -33,7 +33,7 @@ public class ItemSpawner : MonoBehaviour
         if (random < keySpawnChance)
         {
             // Spawn a key
-            ObjectManager.Instance.Keys.SpawnObject(transform.position);
+            ObjectManager.Instance.Keys.SpawnObject(transform.position + RandomPosition());
         }
     }
 
@@ -43,7 +43,7 @@ public class ItemSpawner : MonoBehaviour
         if (random < potionSpawnChance)
         {
             // Spawn a potion
-            ObjectManager.Instance.HealthPotion.SpawnObject(transform.position);
+            ObjectManager.Instance.HealthPotion.SpawnObject(transform.position + RandomPosition());
         }
     }
 
@@ -64,7 +64,7 @@ public class ItemSpawner : MonoBehaviour
         if (willSpawn)
         {
             // Blank item
-            spawnedItem = ObjectManager.Instance.ItemPickups.SpawnObject(transform.position);
+            spawnedItem = ObjectManager.Instance.ItemPickups.SpawnObject(transform.position + RandomPosition());
         }
         else
         {
@@ -104,5 +104,11 @@ public class ItemSpawner : MonoBehaviour
         {
             throw new System.NullReferenceException("Spawned ItemPickup object does not contain ItemPickup Script");
         }
+    }
+
+    private Vector3 RandomPosition()
+    {
+        float randomX = Random.Range(-0.5f, 0.5f);
+        return Vector3.right * randomX;
     }
 }

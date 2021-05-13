@@ -11,7 +11,7 @@ public class GameEvents
     public delegate void OnRestartGame();
     public delegate void OnResetGame();
     public delegate void OnKeyAmountChange();
-    public delegate void OnSoulChange();
+    public delegate void OnSoulChange(int amount);
 
     public static event OnPause Pause;
     public static event OnCompleteLevel CompleteLevel;
@@ -51,8 +51,8 @@ public class GameEvents
         KeyAmountChange?.Invoke();
     }
 
-    public static void TriggerSoulChange()
+    public static void TriggerSoulChange(int amount)
     {
-        SoulChange?.Invoke();
+        SoulChange?.Invoke(amount);
     }
 }
