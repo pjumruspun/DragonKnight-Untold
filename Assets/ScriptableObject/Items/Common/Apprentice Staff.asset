@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
-  m_Name: Staff of the Wizard
+  m_Name: Apprentice Staff
   m_EditorClassIdentifier: 
-  name: Staff of the Wizard
-  icon: {fileID: 21300000, guid: dc8e6fe661bf54f1194d713c474215ba, type: 3}
-  rarity: 1
+  name: Apprentice Staff
+  icon: {fileID: 21300000, guid: e0b76b0366eec4c9d9600abbe4ab0208, type: 3}
+  rarity: 0
   stats:
     AtkAddModifier: 0
     AgiAddModifier: 0
     VitAddModifier: 0
-    TalAddModifier: 0
+    TalAddModifier: 2
     LukAddModifier: 0
     AtkMultModifier: 0
     AgiMultModifier: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
     AttackSpeedAddModifier: 0
-    CooldownReductionAddModifier: 0.15
+    CooldownReductionAddModifier: 0.05
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0
     HealthRegenMultModifier: 0

@@ -15,6 +15,6 @@ MonoBehaviour:
   skillName: Dash Attack
   skillIcon: {fileID: 21300000, guid: 9752b3a116cb7413f9994f44b3eaab08, type: 3}
   description: Dash ahead and deal damage upon hitting enemies, flinching and knocking
-    them. Dashing range depends on your movement speed.
+    them. Dashing range and total hit count depends on your movement speed.
   baseDamage: 35
   baseCooldown: 5

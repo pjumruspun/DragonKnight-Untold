@@ -32,7 +32,7 @@ public class DragonSkills : PlayerSkills
 
     // Skill 3 params
     private const float skill3LockMovementRatio = 0.9f;
-    private const float skill3SpeedMultiplier = 2.0f;
+    private const float skill3Speed = 7.0f;
     private const float skill3KnockUpAmplitude = 3.5f;
     private const float skill3KnockBackAmplitude = 0.5f;
     private const float skill3TotalCooldownReduction = 0.6f;
@@ -282,7 +282,7 @@ public class DragonSkills : PlayerSkills
         Vector2 moveVector = Vector2.up + movement.ForwardVector * 0.2f;
         movement.ForceMove(
             moveVector,
-            PlayerStats.Instance.MovementSpeed * skill3SpeedMultiplier,
+            skill3Speed,
             animLength,
             groundOnly: false,
             forceMode: ForceMode2D.Impulse

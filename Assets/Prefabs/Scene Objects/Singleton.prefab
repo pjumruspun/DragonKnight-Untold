@@ -153,6 +153,10 @@ MonoBehaviour:
   ultraRareItems:
   - {fileID: 11400000, guid: 3a347d21d88ec44349da30bcaa165418, type: 2}
   - {fileID: 11400000, guid: f95b8091a78694e6f9acc3df052c056e, type: 2}
+  - {fileID: 11400000, guid: 6b3f24358122c45d69bec2cfa9348175, type: 2}
+  - {fileID: 11400000, guid: e06b98d0eea0b4fc0ae586dc0dfd1c80, type: 2}
+  - {fileID: 11400000, guid: 53331153652d04f72a00c94e66bc6c85, type: 2}
+  - {fileID: 11400000, guid: 89585a45e291b4988a129a5db5d73e64, type: 2}
   rareItems:
   - {fileID: 11400000, guid: 7f57930189aa84727946adcb4279c580, type: 2}
   - {fileID: 11400000, guid: 9b8d6affc4f044074b915cdf55386fe6, type: 2}
@@ -161,6 +165,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c00832959e8934aaab3742adc75277c7, type: 2}
   - {fileID: 11400000, guid: 4cebf7bc0513e4bc9a0a403ca715c086, type: 2}
   - {fileID: 11400000, guid: 990596debb8b249adbc48eca9e810f24, type: 2}
+  - {fileID: 11400000, guid: 0fc95973d16cf4fdfb31662718dc4605, type: 2}
+  - {fileID: 11400000, guid: 28036eb6454e7436889cba16131aeb13, type: 2}
   commonItems:
   - {fileID: 11400000, guid: c3cc87b701e8b4d39a8dcca86807f213, type: 2}
   - {fileID: 11400000, guid: c5ba2c90c8c14448caa67081ed97102a, type: 2}
@@ -169,6 +175,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 262a8d277276b4ee6a60b8f494055bff, type: 2}
   - {fileID: 11400000, guid: 11a9a0aeade0740ffbe78c7cb363531d, type: 2}
   - {fileID: 11400000, guid: 9b418d4839338439a821af9a77a3dec9, type: 2}
+  - {fileID: 11400000, guid: 788d77758d8904be09e56bde3154c441, type: 2}
+  - {fileID: 11400000, guid: 674c980d8d0b045d3bd4e484dbf7c91a, type: 2}
 --- !u!114 &4582279271211583108
 MonoBehaviour:
   m_ObjectHideFlags: 0

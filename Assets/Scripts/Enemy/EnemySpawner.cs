@@ -23,8 +23,8 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     private const int maxSpawnAttempts = 500;
     private const float correctionOffsetY = 0.15f;
     private const float spawnAmountIncrement = 0.08f;
-    private int maxSpawnAmount => Mathf.RoundToInt(baseMaxSpawnAmount * spawnAmountIncrement);
-    private int spawnAmountPerInterval => Mathf.RoundToInt(baseSpawnAmountPerInterval * spawnAmountIncrement);
+    private int maxSpawnAmount => Mathf.RoundToInt(baseMaxSpawnAmount * (1.0f + spawnAmountIncrement * StageManager.TrashStageCount));
+    private int spawnAmountPerInterval => Mathf.RoundToInt(baseSpawnAmountPerInterval * (1.0f + spawnAmountIncrement * StageManager.TrashStageCount));
 
     private void Start()
     {

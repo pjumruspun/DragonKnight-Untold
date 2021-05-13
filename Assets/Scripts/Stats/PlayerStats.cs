@@ -16,6 +16,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     public float AttackSpeed => attackSpeed.GetValue;
     public float DamageMultiplier => (1 + 0.025f * atk.GetValue);
     public float MovementSpeed => (1.0f + (Mathf.Max(AGI, minAgiPossible) * 0.025f)) * baseMovementSpeed.GetValue;
+    public float MovementSpeedRatio => MovementSpeed / baseMoveSpeed;
     public float MaxHealth => (1.0f + (Mathf.Max(VIT, minVitPossible) * 0.03f)) * basePlayerMaxHealth;
     public float MaxDragonEnergyMultiplier => 1.0f + 0.02f * TAL;
     public float DragonEnergyDrainMultiplier => 1.0f / (1.0f + 0.02f * TAL);
@@ -46,7 +47,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     [SerializeField]
     private Stats<float> critDamage = new Stats<float>(1.5f);
     [SerializeField]
-    private Stats<float> baseMovementSpeed = new Stats<float>(4.0f);
+    private Stats<float> baseMovementSpeed = new Stats<float>(baseMoveSpeed);
     [SerializeField]
     private Stats<float> healthRegen = new Stats<float>(1.0f);
     [SerializeField]
@@ -57,6 +58,7 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     private float[] baseSkillCooldown = new float[4];
     private float[] baseSkillDamage = new float[4];
     private float actualCooldownRatio => 1 / (1 + cooldownReduction.GetValue);
+    private const float baseMoveSpeed = 4.0f;
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
