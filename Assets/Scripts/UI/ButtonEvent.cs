@@ -16,6 +16,7 @@ public class ButtonEvent : MonoBehaviour
 
     public void RestartGame()
     {
+        GameEvents.TriggerPause(false);
         GameEvents.TriggerRestartGame();
     }
 

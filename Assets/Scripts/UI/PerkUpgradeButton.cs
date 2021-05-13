@@ -15,6 +15,8 @@ public class PerkUpgradeButton : MonoBehaviour
     private Text soulCostText;
     [SerializeField]
     private Button perkUpgradeButton;
+    [SerializeField]
+    private TooltipTrigger tooltipTrigger;
     private int perkLevel => PerkListStatic.GetPerkLevel(perkDisplayPrefab);
     private int SoulCost()
     {
@@ -28,8 +30,6 @@ public class PerkUpgradeButton : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(perkLevel);
-        Debug.Log(perkDisplayPrefab.soulToUpgrade[0]);
         if (perkDisplayPrefab.icon != null)
         {
             perkIcon.sprite = perkDisplayPrefab.icon;
@@ -40,6 +40,10 @@ public class PerkUpgradeButton : MonoBehaviour
             // Cannot upgrade anymore
             perkUpgradeButton.gameObject.SetActive(false);
         }
+
+        string content = perkDisplayPrefab.description;
+        string header = perkDisplayPrefab.name;
+        tooltipTrigger.SetText(content, header);
     }
 
     private void Update()
