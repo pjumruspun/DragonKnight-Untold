@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PerkUpgradeButton : MonoBehaviour
 {
     [SerializeField]
-    private Perk perkDisplayPrefab;
+    private PerkTemplate perkDisplayPrefab;
     [SerializeField]
     private Image perkIcon;
     [SerializeField]
@@ -83,10 +83,10 @@ public class PerkUpgradeButton : MonoBehaviour
 
             if (perkLevel == 0)
             {
-                PerkList.Instance.AddDevelopedPerk(perkDisplayPrefab);
+                PerkList.Instance.AddPerk(perkDisplayPrefab);
 
                 // Notify event
-                GameEvents.TriggerPerkUpgrade(perkDisplayPrefab.name, 1);
+                GameEvents.TriggerPerkUpgrade(perkDisplayPrefab.type, 1);
                 return;
             }
             else if (perkLevel == 5)
@@ -96,7 +96,7 @@ public class PerkUpgradeButton : MonoBehaviour
             }
 
             // Notify event
-            GameEvents.TriggerPerkUpgrade(perkDisplayPrefab.name, perkLevel);
+            GameEvents.TriggerPerkUpgrade(perkDisplayPrefab.type, perkLevel);
         }
     }
 }

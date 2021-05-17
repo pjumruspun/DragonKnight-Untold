@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class SoulStatic
 {
-    public static int soul = 0;
+    public static int soul = 99999;
 }

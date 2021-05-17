@@ -23,7 +23,6 @@ public class PerkMenu : MonoBehaviour
         {
             bool shouldActive = !perkMenuObject.activeInHierarchy;
             perkMenuObject.SetActive(shouldActive);
-            Debug.Log($"Set active {shouldActive}");
         }
     }
 }

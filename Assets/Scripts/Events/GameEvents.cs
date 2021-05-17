@@ -12,7 +12,7 @@ public class GameEvents
     public delegate void OnResetGame();
     public delegate void OnKeyAmountChange();
     public delegate void OnSoulChange(int amount);
-    public delegate void OnPerkUpgrade(string perkName, int level);
+    public delegate void OnPerkUpgrade(PerkType perkType, int level);
 
     public static event OnPause Pause;
     public static event OnCompleteLevel CompleteLevel;
@@ -58,8 +58,8 @@ public class GameEvents
         SoulChange?.Invoke(amount);
     }
 
-    public static void TriggerPerkUpgrade(string perkName, int perkLevel)
+    public static void TriggerPerkUpgrade(PerkType perkType, int perkLevel)
     {
-        PerkUpgrade?.Invoke(perkName, perkLevel);
+        PerkUpgrade?.Invoke(perkType, perkLevel);
     }
 }

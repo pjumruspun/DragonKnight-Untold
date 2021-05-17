@@ -4,30 +4,21 @@ using UnityEngine;
 
 public class PerkList : MonoSingleton<PerkList>
 {
-    public void AddGiftedPerk(Perk perk)
+    public void AddPerk(PerkTemplate perk)
     {
-        Perk newPerk = new Perk(perk);
+        PerkTemplate newPerk = new PerkTemplate(perk);
         newPerk.PerkLevel = 1;
-        newPerk.type = PerkType.Gifted;
         PerkListStatic.perks.Add(newPerk);
     }
 
-    public void AddDevelopedPerk(Perk perk)
-    {
-        Perk newPerk = new Perk(perk);
-        newPerk.PerkLevel = 1;
-        newPerk.type = PerkType.Developed;
-        PerkListStatic.perks.Add(newPerk);
-    }
-
-    public void Upgrade(Perk targetPerk)
+    public void Upgrade(PerkTemplate targetPerk)
     {
         foreach (var perk in PerkListStatic.perks)
         {
-            if (perk.name == targetPerk.name)
+            if (perk.type == targetPerk.type)
             {
                 perk.Upgrade();
-                Debug.Log($"{perk.name} is at level {perk.PerkLevel}");
+                Debug.Log($"{perk.type} is at level {perk.PerkLevel}");
                 break;
             }
         }
@@ -35,27 +26,23 @@ public class PerkList : MonoSingleton<PerkList>
 
     public void ResetPerk()
     {
-        PerkListStatic.perks = new List<Perk>();
+        PerkListStatic.perks = new List<PerkTemplate>();
         PerkListStatic.shouldRandom = true;
     }
 
     private void Start()
     {
         CalculatePerkStats();
-        if (PerkListStatic.shouldRandom)
-        {
-            RandomPerk();
-        }
-
+        // Try to not random perk on start anymore
         GameEvents.RestartGame += ResetPerk;
     }
 
     private void RandomPerk()
     {
-        List<Perk> initPerk = new List<Perk>(PerkRepository.GetRandomGiftedPerk());
+        List<PerkTemplate> initPerk = new List<PerkTemplate>(PerkRepository.GetRandomGiftedPerk());
         for (int i = 0; i < initPerk.Count; i++)
         {
-            this.AddGiftedPerk(initPerk[i]);
+            this.AddPerk(initPerk[i]);
         }
 
         PerkListStatic.shouldRandom = false;

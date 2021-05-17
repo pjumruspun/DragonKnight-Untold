@@ -141,7 +141,7 @@ public class PlayerHealth : Health
         PlayerHealthStatic.currentHealth = -1.0f;
     }
 
-    private void BerserkUpgradeWrapper(string perkName, int perkLevel)
+    private void BerserkUpgradeWrapper(PerkType perkType, int perkLevel)
     {
         // Params don't really matter here, just need to call UpdateMaxHealth()
         UpdateMaxHealth();

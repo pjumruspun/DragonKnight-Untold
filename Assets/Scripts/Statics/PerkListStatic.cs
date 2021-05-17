@@ -3,13 +3,13 @@ using System.Collections.Generic;
 public class PerkListStatic
 {
     public static bool shouldRandom = true;
-    public static List<Perk> perks = new List<Perk>();
+    public static List<PerkTemplate> perks = new List<PerkTemplate>();
 
-    public static bool HasPerk(string perkName)
+    public static bool HasPerk(PerkType perkType)
     {
         foreach (var perk in perks)
         {
-            if (perk.name == perkName)
+            if (perk.type == perkType)
             {
                 return true;
             }
@@ -18,16 +18,16 @@ public class PerkListStatic
         return false;
     }
 
-    public static int GetPerkLevel(Perk targetPerk)
+    public static int GetPerkLevel(PerkTemplate targetPerk)
     {
-        return GetPerkLevel(targetPerk.name);
+        return GetPerkLevel(targetPerk.type);
     }
 
-    public static int GetPerkLevel(string perkName)
+    public static int GetPerkLevel(PerkType perkType)
     {
         foreach (var perk in PerkListStatic.perks)
         {
-            if (perk.name == perkName)
+            if (perk.type == perkType)
             {
                 return perk.PerkLevel;
             }

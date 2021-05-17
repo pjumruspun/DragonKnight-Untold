@@ -6,26 +6,26 @@ using UnityEngine;
 public class PerkRepository : MonoSingleton<PerkRepository>
 {
     [SerializeField]
-    private List<Perk> giftedPerk;
+    private List<PerkTemplate> giftedPerk;
     [SerializeField]
-    private List<Perk> developedPerk;
+    private List<PerkTemplate> developedPerk;
     [SerializeField]
-    private List<Perk> wearablePerk;
+    private List<PerkTemplate> wearablePerk;
 
-    public static List<Perk> GetRandomGiftedPerk()
+    public static List<PerkTemplate> GetRandomGiftedPerk()
     {
-        float[] probNumOfPerk = {0.15F, 0.95F, 1.0F};
+        float[] probNumOfPerk = { 0.15F, 0.95F, 1.0F };
         System.Random rnd = new System.Random();
 
         int sumOfChance = 0;
-        for(int i = 0; i < Instance.giftedPerk.Count; i++)
+        for (int i = 0; i < Instance.giftedPerk.Count; i++)
         {
             sumOfChance += Instance.giftedPerk[i].Chance;
         }
-        
+
         List<float> probGiftedPerk = new List<float>();
         float cumuProb = 0;
-        for(int i = 0; i < Instance.giftedPerk.Count; i++)
+        for (int i = 0; i < Instance.giftedPerk.Count; i++)
         {
             cumuProb += (float)Instance.giftedPerk[i].Chance / (float)sumOfChance;
             probGiftedPerk.Add(cumuProb);
@@ -33,27 +33,27 @@ public class PerkRepository : MonoSingleton<PerkRepository>
 
         float prob = (float)rnd.NextDouble();
         int numberOfPerk = 0;
-        for(int i = 0; i < probNumOfPerk.Length; i++)
+        for (int i = 0; i < probNumOfPerk.Length; i++)
         {
-            if(prob < probNumOfPerk[i]) 
+            if (prob < probNumOfPerk[i])
             {
                 numberOfPerk = i + 1;
                 break;
             }
-            
+
         }
 
         int loopTime = 0;
         int maxLoopTime = 10000;
-        List<Perk> playerPerk = new List<Perk>();
-        while(numberOfPerk > 0)
+        List<PerkTemplate> playerPerk = new List<PerkTemplate>();
+        while (numberOfPerk > 0)
         {
             double perkProb = rnd.NextDouble();
-            for(int i = 0; i < probGiftedPerk.Count; i++)
+            for (int i = 0; i < probGiftedPerk.Count; i++)
             {
-                if(perkProb < probGiftedPerk[i] && !playerPerk.Contains(Instance.giftedPerk[i])) 
+                if (perkProb < probGiftedPerk[i] && !playerPerk.Contains(Instance.giftedPerk[i]))
                 {
-                    Perk newPerk = new Perk(Instance.giftedPerk[i]);
+                    PerkTemplate newPerk = new PerkTemplate(Instance.giftedPerk[i]);
                     newPerk.PerkLevel = 1;
                     playerPerk.Add(newPerk);
                     numberOfPerk -= 1;
@@ -61,7 +61,7 @@ public class PerkRepository : MonoSingleton<PerkRepository>
                 }
             }
             loopTime += 1;
-            if(loopTime == maxLoopTime)
+            if (loopTime == maxLoopTime)
             {
                 break;
             }

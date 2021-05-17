@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21116a3f43b36d447bc1525bd2c22245, type: 3}
   m_Name: Bonus Damage
   m_EditorClassIdentifier: 
-  name: Bonus Damage
+  type: 1
   description: Deals bonus flat damage when landing any attack on enemies. This bonus
     damage cannot critically hit.
   soulToUpgrade: 20030000b004000040060000d007000060090000
@@ -40,4 +40,3 @@ MonoBehaviour:
     CooldownReductionMultModifier: 0
   PerkLevel: 1
   Chance: 10
-  type: 0
