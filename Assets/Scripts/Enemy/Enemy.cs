@@ -168,7 +168,7 @@ public class Enemy : Health
             }
 
             // Show floating damage number
-            FloatingTextSpawner.Spawn(damage, transform.position, crit);
+            FloatingTextSpawner.SpawnDamage(damage, transform.position, crit);
 
             // Update UI
             HandleHealthChange();

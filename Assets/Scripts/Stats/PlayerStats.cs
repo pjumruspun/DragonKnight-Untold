@@ -146,8 +146,6 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         // Events
         EventPublisher.PlayerChangeClass += AdjustSkillParams;
         EventPublisher.PlayerDead += ShouldResetStat;
-
-        Debug.Log(cooldownReduction.GetValue);
     }
 
     private void RandomStat()

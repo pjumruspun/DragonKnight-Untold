@@ -6,7 +6,6 @@ public class ObjectManager : MonoSingleton<ObjectManager>
 {
     public ObjectPool SwordWaves;
     public ObjectPool FloatingDamage;
-    public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
     public ObjectPool UltimateArrows;
     public ObjectPool ChargedArrows;
@@ -21,13 +20,8 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private GameObject floatingDamagePrefab;
     [SerializeField]
-    private int floatingDamagePoolSize = 20; // How many floating damage can there be at time?
+    private int floatingDamagePoolSize = 20;
 
-    [Header("Crit Floating Damage")]
-    [SerializeField]
-    private GameObject critFloatingDamagePrefab;
-    [SerializeField]
-    private int critFloatingDamagePoolSize = 20;
 
     [Header("Sword Waves")]
     [SerializeField]
@@ -104,7 +98,6 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     private void Start()
     {
         FloatingDamage = new ObjectPool(floatingDamagePrefab, floatingDamagePoolSize);
-        CritFloatingDamage = new ObjectPool(critFloatingDamagePrefab, critFloatingDamagePoolSize);
         SwordWaves = new ObjectPool(swordWavePrefab, swordWavePoolSize);
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
         UltimateArrows = new ObjectPool(ultArrowPrefab, ultArrowPoolSize);

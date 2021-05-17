@@ -114,9 +114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatingDamagePrefab: {fileID: 413647044697630453, guid: 20c727b23cc0047b68b76ec5f7c877d9, type: 3}
-  floatingDamagePoolSize: 20
+  floatingDamagePoolSize: 1
   critFloatingDamagePrefab: {fileID: 4959378005110300329, guid: 66385d4bc25e84d358fbcfecb64c8ee6, type: 3}
-  critFloatingDamagePoolSize: 20
+  critFloatingDamagePoolSize: 1
   swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
   swordWavePoolSize: 5
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}

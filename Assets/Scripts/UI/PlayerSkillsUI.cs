@@ -131,7 +131,6 @@ public class PlayerSkillsUI : MonoBehaviour
             {
                 case 0:
                     header += $"<color=#FEAE10>[Space Bar]</color> {skills[i].skillName}";
-                    Debug.Log(header);
                     break;
                 case 1:
                     header += $"<color=#FEAE10>[Z]</color> {skills[i].skillName}";
@@ -162,7 +161,6 @@ public class PlayerSkillsUI : MonoBehaviour
             {
                 case 0:
                     header += $"<color=#FEAE10>[Space Bar]</color> {skills[i].skillName}";
-                    Debug.Log(header);
                     break;
                 case 1:
                     header += $"<color=#FEAE10>[Z]</color> {skills[i].skillName}";
