@@ -17,7 +17,7 @@ public class PerkUpgradeButton : MonoBehaviour
     private Button perkUpgradeButton;
     [SerializeField]
     private TooltipTrigger tooltipTrigger;
-    private int perkLevel => PerkListStatic.GetPerkLevel(perkDisplayPrefab);
+    private int perkLevel => PerkStatic.GetPerkLevel(perkDisplayPrefab);
     private int SoulCost()
     {
         if (perkLevel < 5)

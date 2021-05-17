@@ -43,7 +43,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
             shouldSpawn &&
             Time.time - lastTimeSpawned >= spawnInterval &&
             currentSpawnAmount < maxSpawnAmount &&
-            !LevelProgression.HasCompletedLevel
+            !LevelProgression.MetCriteriaToCompleteLevel
         )
         {
             // Try spawn

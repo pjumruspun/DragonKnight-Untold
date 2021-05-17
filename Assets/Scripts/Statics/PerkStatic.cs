@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 
-public class PerkListStatic
+public class PerkStatic
 {
+    public static int upgradeToken = 0;
     public static bool shouldRandom = true;
     public static List<PerkTemplate> perks = new List<PerkTemplate>();
 
@@ -25,7 +26,7 @@ public class PerkListStatic
 
     public static int GetPerkLevel(PerkType perkType)
     {
-        foreach (var perk in PerkListStatic.perks)
+        foreach (var perk in PerkStatic.perks)
         {
             if (perk.type == perkType)
             {

@@ -8,12 +8,12 @@ public class PerkList : MonoSingleton<PerkList>
     {
         PerkTemplate newPerk = new PerkTemplate(perk);
         newPerk.PerkLevel = 1;
-        PerkListStatic.perks.Add(newPerk);
+        PerkStatic.perks.Add(newPerk);
     }
 
     public void Upgrade(PerkTemplate targetPerk)
     {
-        foreach (var perk in PerkListStatic.perks)
+        foreach (var perk in PerkStatic.perks)
         {
             if (perk.type == targetPerk.type)
             {
@@ -26,8 +26,8 @@ public class PerkList : MonoSingleton<PerkList>
 
     public void ResetPerk()
     {
-        PerkListStatic.perks = new List<PerkTemplate>();
-        PerkListStatic.shouldRandom = true;
+        PerkStatic.perks = new List<PerkTemplate>();
+        PerkStatic.shouldRandom = true;
     }
 
     private void Start()
@@ -35,6 +35,7 @@ public class PerkList : MonoSingleton<PerkList>
         CalculatePerkStats();
         // Try to not random perk on start anymore
         GameEvents.RestartGame += ResetPerk;
+        GameEvents.CompleteLevel += AddTokenOnCompleteLevel;
     }
 
     private void RandomPerk()
@@ -45,20 +46,27 @@ public class PerkList : MonoSingleton<PerkList>
             this.AddPerk(initPerk[i]);
         }
 
-        PerkListStatic.shouldRandom = false;
+        PerkStatic.shouldRandom = false;
     }
 
     private void OnDestroy()
     {
         GameEvents.RestartGame -= ResetPerk;
+        GameEvents.CompleteLevel -= AddTokenOnCompleteLevel;
     }
 
     private void CalculatePerkStats()
     {
         StatsDto accumulatedStats = new StatsDto();
-        foreach (var perk in PerkListStatic.perks)
+        foreach (var perk in PerkStatic.perks)
         {
             accumulatedStats = accumulatedStats + perk.stats;
         }
+    }
+
+    private void AddTokenOnCompleteLevel()
+    {
+        PerkStatic.upgradeToken += 1;
+        Debug.Log("Upgrade token = " + PerkStatic.upgradeToken);
     }
 }
