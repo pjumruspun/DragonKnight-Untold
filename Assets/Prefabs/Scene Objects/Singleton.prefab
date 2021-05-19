@@ -115,8 +115,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floatingDamagePrefab: {fileID: 413647044697630453, guid: 20c727b23cc0047b68b76ec5f7c877d9, type: 3}
   floatingDamagePoolSize: 1
-  critFloatingDamagePrefab: {fileID: 4959378005110300329, guid: 66385d4bc25e84d358fbcfecb64c8ee6, type: 3}
-  critFloatingDamagePoolSize: 1
   swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
   swordWavePoolSize: 5
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
@@ -239,12 +237,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df7e852e09707b498b87a09b6be449f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  giftedPerk:
-  - {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
-  - {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
+  sTemplates:
   - {fileID: 11400000, guid: 1af05b418939cad4abd075489395ec04, type: 2}
-  developedPerk: []
-  wearablePerk: []
+  - {fileID: 11400000, guid: 738e9e5d10f224dbe9c12a3d393fd999, type: 2}
+  aTemplates:
+  - {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
+  - {fileID: 11400000, guid: efe9e2b8ed2d942b0b28c1ec5e1a53d4, type: 2}
+  - {fileID: 11400000, guid: 1d93e9e464a1d4029b8756fdc47a9737, type: 2}
+  bTemplates:
+  - {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
+  - {fileID: 11400000, guid: d5966d4a0ae784a28994601a0da8da90, type: 2}
 --- !u!114 &8330308788624485017
 MonoBehaviour:
   m_ObjectHideFlags: 0

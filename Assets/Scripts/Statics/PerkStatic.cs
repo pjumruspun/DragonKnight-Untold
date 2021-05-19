@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 
 public class PerkStatic
 {
     public static int upgradeToken = 0;
     public static bool shouldRandom = true;
-    public static List<PerkTemplate> perks = new List<PerkTemplate>();
+    public static List<Perk> perks = new List<Perk>();
 
     public static bool HasPerk(PerkType perkType)
     {
@@ -26,14 +27,17 @@ public class PerkStatic
 
     public static int GetPerkLevel(PerkType perkType)
     {
-        foreach (var perk in PerkStatic.perks)
-        {
-            if (perk.type == perkType)
-            {
-                return perk.PerkLevel;
-            }
-        }
+        var query = from perk in perks where perk.type == perkType select perk;
+        int count = query.Count<Perk>();
 
-        return 0;
+        if (count == 0)
+        {
+            // No perk
+            return 0;
+        }
+        else
+        {
+            return query.First().perkLevel;
+        }
     }
 }
