@@ -48,7 +48,13 @@ public class PerkRepository : MonoSingleton<PerkRepository>
             }
 
             ++attempt;
-            if (ContainsPerk(templates, templateToAdd.type))
+            if (templateToAdd == null)
+            {
+                // If template to add is still null, it means that we are not able to get perk from that particular tier
+                Debug.LogWarning("Results has reach maximum in a tier");
+                continue;
+            }
+            else if (ContainsPerk(templates, templateToAdd.type))
             {
                 // We will try again
                 continue;
@@ -87,7 +93,8 @@ public class PerkRepository : MonoSingleton<PerkRepository>
 
         if (results.Count < 1)
         {
-            throw new System.Exception($"Error in PerkRepository: results has length < 0");
+            Debug.LogWarning("Warning: Perk possibly reached maximum in a tier as results as length of 0");
+            return null;
         }
 
         System.Random random = new System.Random();

@@ -17,4 +17,4 @@ MonoBehaviour:
   tier: 100
   description: AGI also increases your evasion
   icon: {fileID: 0}
-  maxPerkLevel: 5
+  maxPerkLevel: 1

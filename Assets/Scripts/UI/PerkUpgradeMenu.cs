@@ -34,13 +34,22 @@ public class PerkUpgradeMenu : MonoSingleton<PerkUpgradeMenu>
         List<PerkTemplate> perkTemplates = PerkRepository.GetRandomPerks(perkCardsToGenerate);
         if (perkTemplates.Count != perkCardsToGenerate)
         {
-            throw new System.Exception($"perkTemplates.Count is not equal to perkCardsToGenerate ({perkTemplates.Count}/{perkCardsToGenerate})");
+            Debug.LogWarning($"perkTemplates.Count is not equal to perkCardsToGenerate ({perkTemplates.Count}/{perkCardsToGenerate})");
         }
 
         // Then we assign to each card
         for (int i = 0; i < perkCardsToGenerate; ++i)
         {
-            perkCards[i].SetPerk(perkTemplates[i]);
+            if (i < perkTemplates.Count)
+            {
+                perkCards[i].gameObject.SetActive(true);
+                perkCards[i].SetPerk(perkTemplates[i]);
+            }
+            else
+            {
+                // Not enough perks available for all cards to display
+                perkCards[i].gameObject.SetActive(false);
+            }
         }
     }
 

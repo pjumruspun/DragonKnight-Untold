@@ -17,4 +17,4 @@ MonoBehaviour:
   tier: 200
   description: Increase range of your auto attacks and skills
   icon: {fileID: 0}
-  maxPerkLevel: 5
+  maxPerkLevel: 1

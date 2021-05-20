@@ -17,4 +17,4 @@ MonoBehaviour:
   tier: 200
   description: TAL also increases dragon energy regeneration rate
   icon: {fileID: 0}
-  maxPerkLevel: 5
+  maxPerkLevel: 1

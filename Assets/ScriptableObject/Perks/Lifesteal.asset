@@ -17,4 +17,4 @@ MonoBehaviour:
   tier: 100
   description: Heals you a tiny portion of damage you dealt.
   icon: {fileID: 21300000, guid: 79ffea36bb07b48c1a136e976eb31c7b, type: 3}
-  maxPerkLevel: 5
+  maxPerkLevel: 1
