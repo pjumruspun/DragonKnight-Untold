@@ -15,9 +15,16 @@ public class PerkUpgradeMenu : MonoSingleton<PerkUpgradeMenu>
 
     private const int perkCardsToGenerate = 3;
     private List<PerkUpgradeCard> perkCards = new List<PerkUpgradeCard>();
+    private const bool shouldPauseWhenOpen = true;
 
     public static void Activate()
     {
+        PerkMenu.Close();
+        if (shouldPauseWhenOpen)
+        {
+            Time.timeScale = 0.0f;
+        }
+
         Instance.perkUpgradeMenuObject.SetActive(true);
         Instance.SetPerksOnCards();
     }
@@ -25,6 +32,10 @@ public class PerkUpgradeMenu : MonoSingleton<PerkUpgradeMenu>
     public static void Hide()
     {
         Instance.perkUpgradeMenuObject.SetActive(false);
+        if (shouldPauseWhenOpen)
+        {
+            Time.timeScale = 1.0f;
+        }
     }
 
     private void SetPerksOnCards()

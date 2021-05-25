@@ -47,9 +47,15 @@ public class LevelProgression : MonoSingleton<LevelProgression>
         if (!hasCompletedLevel && MetCriteriaToCompleteLevel)
         {
             GameEvents.TriggerCompleteLevel();
+            OnKillingLastEnemy(enemy);
             hasCompletedLevel = true;
         }
 
         // For boss stage, boss should be defeated, which can be found in boss script itself
+    }
+
+    private void OnKillingLastEnemy(Enemy enemy)
+    {
+        ObjectManager.Instance.PerkUpgradePotion.SpawnObject(enemy.transform.position);
     }
 }

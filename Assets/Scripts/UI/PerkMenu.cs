@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PerkMenu : MonoBehaviour
+public class PerkMenu : MonoSingleton<PerkMenu>
 {
     [SerializeField]
     private GameObject perkMenuObject;
@@ -14,6 +14,26 @@ public class PerkMenu : MonoBehaviour
     private GameObject perkDisplayPrefab;
 
     private List<PerkDisplay> perkDisplays = new List<PerkDisplay>();
+    private const bool shouldPauseWhenOpen = true;
+
+    public static void Open()
+    {
+        Instance.perkMenuObject.SetActive(true);
+        Instance.UpdatePerkDisplays();
+        if (shouldPauseWhenOpen)
+        {
+            Time.timeScale = 0.0f;
+        }
+    }
+
+    public static void Close()
+    {
+        Instance.perkMenuObject.SetActive(false);
+        if (shouldPauseWhenOpen)
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
 
     private void Start()
     {
@@ -30,9 +50,15 @@ public class PerkMenu : MonoBehaviour
     {
         if (InputManager.PerkMenu)
         {
-            bool shouldActive = !perkMenuObject.activeInHierarchy;
-            perkMenuObject.SetActive(shouldActive);
-            UpdatePerkDisplays();
+            bool shouldOpen = !perkMenuObject.activeInHierarchy;
+            if (shouldOpen)
+            {
+                Open();
+            }
+            else
+            {
+                Close();
+            }
         }
     }
 

@@ -129,6 +129,8 @@ MonoBehaviour:
   keyPoolsize: 10
   healthPotionPrefab: {fileID: 1990242251908392230, guid: a73fa0ff09a4844a984f4e35ce812c8e, type: 3}
   healthPotionPoolsize: 10
+  perkUpgradePotionPrefab: {fileID: 533390681818747300, guid: 706c996aae6604b779bf39c00c1dede3, type: 3}
+  perkUpgradePotionPoolsize: 2
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20
