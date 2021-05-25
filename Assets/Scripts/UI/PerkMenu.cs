@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PerkMenu : MonoSingleton<PerkMenu>
 {
@@ -13,13 +14,18 @@ public class PerkMenu : MonoSingleton<PerkMenu>
     [SerializeField]
     private GameObject perkDisplayPrefab;
 
+    [SerializeField]
+    private TextMeshProUGUI perkPotionCountText;
+
     private List<PerkDisplay> perkDisplays = new List<PerkDisplay>();
     private const bool shouldPauseWhenOpen = true;
+    private const string perkPotionTextPrefix = "Perk Potion: ";
 
     public static void Open()
     {
         Instance.perkMenuObject.SetActive(true);
         Instance.UpdatePerkDisplays();
+        Instance.UpdatePotionText();
         if (shouldPauseWhenOpen)
         {
             Time.timeScale = 0.0f;
@@ -73,6 +79,11 @@ public class PerkMenu : MonoSingleton<PerkMenu>
             perkDisplays[index].SetPerk(perk);
             ++index;
         }
+    }
+
+    private void UpdatePotionText()
+    {
+        perkPotionCountText.text = perkPotionTextPrefix + PerkStatic.upgradeToken.ToString();
     }
 
     private void ShowPerkDisplays()

@@ -66,7 +66,6 @@ public class PerkManager : MonoSingleton<PerkManager>
         // Try to not random perk on start anymore
         GameEvents.RestartGame += ResetPerk;
         GameEvents.RestartGame += ShouldRandomPerk;
-        GameEvents.CompleteLevel += AddTokenOnCompleteLevel;
     }
 
     private void ShouldRandomPerk()
@@ -78,11 +77,5 @@ public class PerkManager : MonoSingleton<PerkManager>
     {
         GameEvents.RestartGame -= ResetPerk;
         GameEvents.RestartGame -= ShouldRandomPerk;
-        GameEvents.CompleteLevel -= AddTokenOnCompleteLevel;
-    }
-
-    private void AddTokenOnCompleteLevel()
-    {
-        PerkStatic.upgradeToken += 1;
     }
 }

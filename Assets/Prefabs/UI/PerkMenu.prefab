@@ -420,6 +420,7 @@ MonoBehaviour:
   perkMenuObject: {fileID: 2814256652561322743}
   perkDisplayParent: {fileID: 8930522057597511321}
   perkDisplayPrefab: {fileID: 6020130701521641162, guid: 4ca54b4679cc00a429d8d37c67a45552, type: 3}
+  perkPotionCountText: {fileID: 1054438484440746591}
 --- !u!1 &2814256652561322743
 GameObject:
   m_ObjectHideFlags: 0
