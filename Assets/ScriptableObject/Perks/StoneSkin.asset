@@ -15,6 +15,15 @@ MonoBehaviour:
   type: 100
   category: 200
   tier: 300
-  description: VIT also reduces incoming damage
+  description: VIT enhances all incoming heals
   icon: {fileID: 0}
-  maxPerkLevel: 1
+  maxPerkLevel: 5
+  perkUpgradeDetails:
+  - upgradeName: Incoming Heal Amp Per VIT
+    displayMethod: 0
+    values:
+    - 0.01
+    - 0.02
+    - 0.03
+    - 0.04
+    - 0.05

@@ -15,6 +15,13 @@ MonoBehaviour:
   type: 0
   category: 100
   tier: 200
-  description: Reduces max hp, but deals more damage.
+  description: Increases damage as current health goes lower
   icon: {fileID: 21300000, guid: 960a4251423ab4b008c5d38eae93ae36, type: 3}
-  maxPerkLevel: 1
+  maxPerkLevel: 3
+  perkUpgradeDetails:
+  - upgradeName: Damage Amp Per Health Missing
+    displayMethod: 0
+    values:
+    - 0.006
+    - 0.01
+    - 0.014

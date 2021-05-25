@@ -17,4 +17,11 @@ MonoBehaviour:
   tier: 100
   description: AGI also increases your evasion
   icon: {fileID: 0}
-  maxPerkLevel: 1
+  maxPerkLevel: 3
+  perkUpgradeDetails:
+  - upgradeName: Evade Chance
+    displayMethod: 0
+    values:
+    - 0.12
+    - 0.24
+    - 0.36

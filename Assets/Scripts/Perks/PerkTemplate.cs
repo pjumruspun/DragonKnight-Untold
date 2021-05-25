@@ -15,9 +15,10 @@ public class PerkTemplate : ScriptableObject
     public Sprite icon = null;
     [SerializeField]
     public int maxPerkLevel = 5;
+    public PerkUpgradeDetail[] perkUpgradeDetails;
 
     public Perk CreatePerk()
     {
-        return new Perk(type, category, tier, icon, description, maxPerkLevel);
+        return new Perk(type, category, tier, icon, description, maxPerkLevel, perkUpgradeDetails);
     }
 }

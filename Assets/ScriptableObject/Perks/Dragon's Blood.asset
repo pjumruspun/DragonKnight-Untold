@@ -17,4 +17,11 @@ MonoBehaviour:
   tier: 200
   description: TAL also increases dragon energy regeneration rate
   icon: {fileID: 0}
-  maxPerkLevel: 1
+  maxPerkLevel: 3
+  perkUpgradeDetails:
+  - upgradeName: Regen Bonus Per TAL
+    displayMethod: 0
+    values:
+    - 0.04
+    - 0.07
+    - 0.1

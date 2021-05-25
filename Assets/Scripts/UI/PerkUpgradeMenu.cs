@@ -92,4 +92,13 @@ public class PerkUpgradeMenu : MonoSingleton<PerkUpgradeMenu>
             throw new System.Exception($"perkCards.Count is not equal to perkCardsToGenerate ({perkCards.Count}/{perkCardsToGenerate})");
         }
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            PerkStatic.upgradeToken += 1;
+            Activate();
+        }
+    }
 }

@@ -14,6 +14,7 @@ public class Perk
     public string description;
     public int maxPerkLevel;
     public int perkLevel;
+    public PerkUpgradeDetail[] perkUpgradeDetails;
 
     public Perk(
         PerkType type,
@@ -21,7 +22,8 @@ public class Perk
         PerkTier tier,
         Sprite icon,
         string description,
-        int maxPerkLevel
+        int maxPerkLevel,
+        PerkUpgradeDetail[] details
     )
     {
         this.type = type;
@@ -31,5 +33,6 @@ public class Perk
         this.description = description;
         this.maxPerkLevel = maxPerkLevel;
         this.perkLevel = 1;
+        this.perkUpgradeDetails = details;
     }
 }

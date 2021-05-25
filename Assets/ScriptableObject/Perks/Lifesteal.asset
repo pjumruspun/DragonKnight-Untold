@@ -15,6 +15,19 @@ MonoBehaviour:
   type: 400
   category: 500
   tier: 100
-  description: Heals you a tiny portion of damage you dealt.
+  description: Heals you a tiny portion of damage you dealt, but lower your max health
   icon: {fileID: 21300000, guid: 79ffea36bb07b48c1a136e976eb31c7b, type: 3}
-  maxPerkLevel: 1
+  maxPerkLevel: 3
+  perkUpgradeDetails:
+  - upgradeName: Healing Amount
+    displayMethod: 0
+    values:
+    - 0.08
+    - 0.16
+    - 0.24
+  - upgradeName: Max Health Reduction
+    displayMethod: 0
+    values:
+    - 0.2
+    - 0.4
+    - 0.6

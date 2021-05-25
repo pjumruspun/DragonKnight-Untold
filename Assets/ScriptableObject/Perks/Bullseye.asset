@@ -17,4 +17,11 @@ MonoBehaviour:
   tier: 200
   description: Increase range of your auto attacks and skills
   icon: {fileID: 0}
-  maxPerkLevel: 1
+  maxPerkLevel: 3
+  perkUpgradeDetails:
+  - upgradeName: Range Increase
+    displayMethod: 0
+    values:
+    - 0.5
+    - 0.75
+    - 1
