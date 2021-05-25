@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelProgression : MonoSingleton<LevelProgression>
 {
-    public static bool HasCompletedLevel => Instance.enemyCostKilledThisStage >= StageManager.CostToPassLevel;
+    public static bool MetCriteriaToCompleteLevel => Instance.enemyCostKilledThisStage >= StageManager.CostToPassLevel;
     public static float LevelCompletionPercentage => Mathf.Min(1.0f, Instance.enemyCostKilledThisStage / StageManager.CostToPassLevel);
     private float enemyCostKilledThisStage = 0;
+    private bool hasCompletedLevel = false;
 
     private void OnEnable()
     {
@@ -43,11 +44,18 @@ public class LevelProgression : MonoSingleton<LevelProgression>
         enemyCostKilledThisStage += enemy.SpawnCost;
 
         // For normal stages, killing more than threshold should let the player pass level
-        if (HasCompletedLevel)
+        if (!hasCompletedLevel && MetCriteriaToCompleteLevel)
         {
             GameEvents.TriggerCompleteLevel();
+            OnKillingLastEnemy(enemy);
+            hasCompletedLevel = true;
         }
 
         // For boss stage, boss should be defeated, which can be found in boss script itself
+    }
+
+    private void OnKillingLastEnemy(Enemy enemy)
+    {
+        ObjectManager.Instance.PerkUpgradePotion.SpawnObject(enemy.transform.position);
     }
 }

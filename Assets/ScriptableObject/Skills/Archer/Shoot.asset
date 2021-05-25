@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
   m_Name: Shoot
   m_EditorClassIdentifier: 
-  skillName: New Skill
+  skillName: Shoot
   skillIcon: {fileID: 21300000, guid: d0a17258291694688b196123888538d1, type: 3}
+  description: Shoot an arrow in front of you. While in midair, this skill becomes
+    a downward spread shot instead.
   baseDamage: 10
   baseCooldown: 0.4

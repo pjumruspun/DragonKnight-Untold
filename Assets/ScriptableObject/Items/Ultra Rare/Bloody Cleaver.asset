@@ -17,11 +17,11 @@ MonoBehaviour:
   rarity: 2
   stats:
     AtkAddModifier: 5
-    AgiAddModifier: -10
+    AgiAddModifier: -7
     VitAddModifier: 0
     TalAddModifier: 0
-    LukAddModifier: 0
-    AtkMultModifier: 0.4
+    LukAddModifier: -3
+    AtkMultModifier: 0.25
     AgiMultModifier: 0
     VitMultModifier: 0
     TalMultModifier: 0

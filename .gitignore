@@ -61,4 +61,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Dumb EditorUserSettings
+/UserSettings/EditorUserSettings.asset
+
 .DS_Store

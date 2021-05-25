@@ -381,6 +381,9 @@ public class ArcherSkills : PlayerSkills
         // Skill 3 = skillDamage[2]
         float damage = PlayerStats.Instance.BaseSkillDamage[2];
 
+        // Scales by attack speed
+        currentCooldown[2] /= PlayerStats.Instance.AttackSpeed;
+
         // Arrow rain
         // Lock player's movement and flip
         movement.LockMovementBySkill(arrowRainLockMovementTime, false, true);

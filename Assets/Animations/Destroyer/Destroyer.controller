@@ -37,6 +37,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10615f2e687754fb09a9b0e9a262c8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shouldRecoverAfterTime: 1
+  timeToRecover: 5
 --- !u!1102 &-6780466226685191516
 AnimatorState:
   serializedVersion: 6

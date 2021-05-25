@@ -17,7 +17,7 @@ MonoBehaviour:
   rarity: 1
   stats:
     AtkAddModifier: 0
-    AgiAddModifier: 0
+    AgiAddModifier: 4
     VitAddModifier: 0
     TalAddModifier: 0
     LukAddModifier: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
     CritDamageAddModifier: 0
     MovementSpeedAddModifier: 0
     HealthRegenAddModifier: 0
-    AttackSpeedAddModifier: 0.25
+    AttackSpeedAddModifier: 0.12
     CooldownReductionAddModifier: 0
     CritDamageMultModifier: 0
     MovementSpeedMultModifier: 0

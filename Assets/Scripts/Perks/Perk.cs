@@ -1,32 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Perk", menuName = "Roguelite/Perk")]
-public class Perk : ScriptableObject
+/// <summary>
+/// This is the Perk class that will get added into PerkStatic.
+/// </summary>
+public class Perk
 {
-    new public string name = "New Perk";
-    public string description;
-    public int[] soulToUpgrade = { 100, 300, 500, 750, 1200 };
-    public Sprite icon = null;
-    public StatsDto stats;
-    public int PerkLevel;
-    public int Chance = 1;
     public PerkType type;
-    private const int maxPerkLevel = 5;
+    public PerkCategory category;
+    public PerkTier tier;
+    public Sprite icon = null;
+    public string description;
+    public int maxPerkLevel;
+    public int perkLevel;
+    public PerkUpgradeDetail[] perkUpgradeDetails;
 
-    public Perk(Perk perk)
+    public Perk(
+        PerkType type,
+        PerkCategory category,
+        PerkTier tier,
+        Sprite icon,
+        string description,
+        int maxPerkLevel,
+        PerkUpgradeDetail[] details
+    )
     {
-        this.name = perk.name;
-        this.icon = perk.icon;
-        this.PerkLevel = perk.PerkLevel;
-        this.Chance = perk.Chance;
-        this.type = perk.type;
-    }
-
-    public void Upgrade()
-    {
-        if (PerkLevel < maxPerkLevel)
-        {
-            PerkLevel += 1;
-        }
+        this.type = type;
+        this.category = category;
+        this.tier = tier;
+        this.icon = icon;
+        this.description = description;
+        this.maxPerkLevel = maxPerkLevel;
+        this.perkLevel = 1;
+        this.perkUpgradeDetails = details;
     }
 }

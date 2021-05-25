@@ -5,6 +5,7 @@ using System.Linq;
 
 public abstract class PlayerSkills : ScriptableObject
 {
+    public IEnumerable<Skill> GetSkills => from skill in skills select skill;
     public IEnumerable<Sprite> GetIcons => from skill in skills select skill.skillIcon;
     public IEnumerable<float> GetBaseSkillCooldowns => from skill in skills select skill.baseCooldown;
     public IEnumerable<float> GetBaseSkillDamage => from skill in skills select skill.baseDamage;
@@ -56,7 +57,6 @@ public abstract class PlayerSkills : ScriptableObject
     /// </summary>
     public void ProcessSkillCooldown()
     {
-        // Debug.Log($"{currentCooldown[0]} {currentCooldown[1]} {currentCooldown[2]} {currentCooldown[3]}");
         for (int i = 0; i < 4; ++i)
         {
             if (currentCooldown[i] > 0.0f)

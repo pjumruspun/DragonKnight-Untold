@@ -4,76 +4,61 @@ using UnityEngine;
 
 public class FloatingTextSpawner : MonoSingleton<FloatingTextSpawner>
 {
-    [SerializeField]
-    private float secondsToDespawn = 2.0f; // 2.0 seconds and the damage will despawn
+    private const float defaultSecondsToHide = 2.0f; // 2.0 seconds and the damage will despawn
 
-    public static Float Spawn(float damage, Vector3 position, bool crit)
+    public static FloatingText SpawnDamage(float damage, Vector3 position, bool crit, float secondsToHide = defaultSecondsToHide)
     {
         position += RandomVector();
-        GameObject floatingDamage;
-        if (crit)
-        {
-            floatingDamage = ObjectManager.Instance.CritFloatingDamage.SpawnObject(position);
-        }
-        else
-        {
-            floatingDamage = ObjectManager.Instance.FloatingDamage.SpawnObject(position);
-        }
+        GameObject floatingDamage = ObjectManager.Instance.FloatingDamage.SpawnObject(position);
 
-        if (floatingDamage.TryGetComponent<TextMesh>(out TextMesh textMesh))
+        if (floatingDamage.TryGetComponent<FloatingText>(out var floatingText))
         {
-            // Ensure white color
             if (crit)
             {
-                textMesh.color = new Color(0.9f, 0.1f, 0.1f);
-            }
-            else
-            {
-                textMesh.color = Color.white;
+                // Red text if crit
+                floatingText.SetColor(new Color(0.9f, 0.1f, 0.1f));
             }
 
             // Set damage number to the text mesh
-            textMesh.text = $"{Mathf.Ceil(damage)}";
+            string damageText = $"{Mathf.Ceil(damage)}";
 
             // Crit will add "!" at the end
-            textMesh.text += crit ? "!" : "";
+            damageText += crit ? "!" : "";
+
+            // Then set text
+            floatingText.SetText(damageText);
 
             // Disable and change color back
-            CoroutineUtility.ExecDelay(() =>
-            {
-                floatingDamage.SetActive(false);
-            }, Instance.secondsToDespawn);
+            CoroutineUtility.ExecDelay(() => floatingDamage.SetActive(false), secondsToHide);
 
-            Float floatingComponent = floatingDamage.GetComponent<Float>();
-            return floatingComponent;
+            return floatingText;
         }
         else
         {
-            throw new System.Exception($"Failed to get TextMesh component from {floatingDamage.name} GameObject.");
+            throw new System.Exception($"Failed to get FloatingText component from {floatingDamage.name} GameObject.");
         }
     }
 
-    public static Float Spawn(string text, Vector3 position, Color? color = null)
+    public static FloatingText Spawn(string text, Vector3 position, Color? color = null, float secondsToHide = defaultSecondsToHide)
     {
         position += RandomVector();
-        GameObject floatingText = ObjectManager.Instance.FloatingDamage.SpawnObject(position);
+        GameObject floatingTextObj = ObjectManager.Instance.FloatingDamage.SpawnObject(position);
 
-        if (floatingText.TryGetComponent<TextMesh>(out TextMesh textMesh))
+        if (floatingTextObj.TryGetComponent<FloatingText>(out var floatingText))
         {
             // New color if not null else white
-            textMesh.color = color ?? Color.white;
+            floatingText.SetColor(color ?? Color.white);
 
             // Set text to the text mesh
-            textMesh.text = $"{text}";
+            floatingText.SetText($"{text}");
+
+            CoroutineUtility.ExecDelay(() => floatingTextObj.SetActive(false), secondsToHide);
+            return floatingText;
         }
         else
         {
-            Debug.LogAssertion($"Failed to get TextMesh component from {floatingText.name} GameObject.");
+            throw new System.Exception($"Failed to get FloatingText component from {floatingTextObj.name} GameObject.");
         }
-
-        Instance.StartCoroutine(CoroutineUtility.Instance.HideAfterSeconds(floatingText, Instance.secondsToDespawn));
-        Float floatingComponent = floatingText.GetComponent<Float>();
-        return floatingComponent;
     }
 
     private static Vector3 RandomVector()

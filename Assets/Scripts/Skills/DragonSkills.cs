@@ -32,7 +32,7 @@ public class DragonSkills : PlayerSkills
 
     // Skill 3 params
     private const float skill3LockMovementRatio = 0.9f;
-    private const float skill3SpeedMultiplier = 2.0f;
+    private const float skill3Speed = 7.0f;
     private const float skill3KnockUpAmplitude = 3.5f;
     private const float skill3KnockBackAmplitude = 0.5f;
     private const float skill3TotalCooldownReduction = 0.6f;
@@ -129,7 +129,7 @@ public class DragonSkills : PlayerSkills
         isCastingSkill = true;
 
         // Primary attack = dragonAttackDamage[0]
-        float damage = dragonAttackDamage[0];
+        float damage = dragonAttackDamage[0] * PlayerStats.Instance.DragonDamageMultiplier;
 
         // Dragon Primary Attack
         // Night dragon is just a place holder for now
@@ -192,7 +192,7 @@ public class DragonSkills : PlayerSkills
     public override void Skill2()
     {
         currentCooldown[1] = dragonAttackCooldown[1];
-        float damage = dragonAttackDamage[1];
+        float damage = dragonAttackDamage[1] * PlayerStats.Instance.DragonDamageMultiplier;
 
         isRushing = true;
         isCastingSkill = true;
@@ -269,7 +269,7 @@ public class DragonSkills : PlayerSkills
 
         isCastingSkill = true;
 
-        float damage = dragonAttackDamage[2];
+        float damage = dragonAttackDamage[2] * PlayerStats.Instance.DragonDamageMultiplier;
         float animLength = PlayerAnimation.Instance.GetAnimLength(2);
         float lockMovementDuration = animLength * skill3LockMovementRatio;
 
@@ -282,7 +282,7 @@ public class DragonSkills : PlayerSkills
         Vector2 moveVector = Vector2.up + movement.ForwardVector * 0.2f;
         movement.ForceMove(
             moveVector,
-            PlayerStats.Instance.MovementSpeed * skill3SpeedMultiplier,
+            skill3Speed,
             animLength,
             groundOnly: false,
             forceMode: ForceMode2D.Impulse
@@ -338,7 +338,7 @@ public class DragonSkills : PlayerSkills
         isCastingSkill = true;
 
         // Ult = dragonAttackDamage[3]
-        float damage = dragonAttackDamage[3];
+        float damage = dragonAttackDamage[3] * PlayerStats.Instance.DragonDamageMultiplier;
 
         fireBreathCoroutine = CoroutineUtility.Instance.CreateCoroutine(DelayedFireBreath(damage, ultDelay, ultInterval));
         movement.LockJumpBySkill(true);

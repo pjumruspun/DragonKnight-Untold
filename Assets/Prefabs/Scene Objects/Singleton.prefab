@@ -73,6 +73,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 828e1a56276144e40affc8a3d4581203, type: 2}
   - {fileID: 11400000, guid: 1774b22a9d2d24fbf85804f26a61e816, type: 2}
   - {fileID: 11400000, guid: cbe433784a7a547619ce0e76f6dba066, type: 2}
+  - {fileID: 11400000, guid: ba0fa524b0be84928b7a6343bc3de776, type: 2}
 --- !u!114 &3344070514507765947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,9 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatingDamagePrefab: {fileID: 413647044697630453, guid: 20c727b23cc0047b68b76ec5f7c877d9, type: 3}
-  floatingDamagePoolSize: 20
-  critFloatingDamagePrefab: {fileID: 4959378005110300329, guid: 66385d4bc25e84d358fbcfecb64c8ee6, type: 3}
-  critFloatingDamagePoolSize: 20
+  floatingDamagePoolSize: 1
   swordWavePrefab: {fileID: 1184501323922044217, guid: 55ba7913a812a42438e7cbd074f84872, type: 3}
   swordWavePoolSize: 5
   arrowPrefab: {fileID: 6714752967774047931, guid: a6c9c58bab0db43e4bc382f47b4c950a, type: 3}
@@ -130,6 +129,8 @@ MonoBehaviour:
   keyPoolsize: 10
   healthPotionPrefab: {fileID: 1990242251908392230, guid: a73fa0ff09a4844a984f4e35ce812c8e, type: 3}
   healthPotionPoolsize: 10
+  perkUpgradePotionPrefab: {fileID: 533390681818747300, guid: 706c996aae6604b779bf39c00c1dede3, type: 3}
+  perkUpgradePotionPoolsize: 2
   slashEffectPrefab: {fileID: 305949009595827991, guid: 7a2443990c2e74a98ba10d13b901bdc6, type: 3}
   slashEffectPoolsize: 5
   slashEffectRandomAngle: 20
@@ -153,12 +154,30 @@ MonoBehaviour:
   ultraRareItems:
   - {fileID: 11400000, guid: 3a347d21d88ec44349da30bcaa165418, type: 2}
   - {fileID: 11400000, guid: f95b8091a78694e6f9acc3df052c056e, type: 2}
+  - {fileID: 11400000, guid: 6b3f24358122c45d69bec2cfa9348175, type: 2}
+  - {fileID: 11400000, guid: e06b98d0eea0b4fc0ae586dc0dfd1c80, type: 2}
+  - {fileID: 11400000, guid: 53331153652d04f72a00c94e66bc6c85, type: 2}
+  - {fileID: 11400000, guid: 89585a45e291b4988a129a5db5d73e64, type: 2}
   rareItems:
   - {fileID: 11400000, guid: 7f57930189aa84727946adcb4279c580, type: 2}
   - {fileID: 11400000, guid: 9b8d6affc4f044074b915cdf55386fe6, type: 2}
+  - {fileID: 11400000, guid: c6ab5df90afa441a389863f267bcc058, type: 2}
+  - {fileID: 11400000, guid: 56e553db36de9477db46aaf46b50e844, type: 2}
+  - {fileID: 11400000, guid: c00832959e8934aaab3742adc75277c7, type: 2}
+  - {fileID: 11400000, guid: 4cebf7bc0513e4bc9a0a403ca715c086, type: 2}
+  - {fileID: 11400000, guid: 990596debb8b249adbc48eca9e810f24, type: 2}
+  - {fileID: 11400000, guid: 0fc95973d16cf4fdfb31662718dc4605, type: 2}
+  - {fileID: 11400000, guid: 28036eb6454e7436889cba16131aeb13, type: 2}
   commonItems:
   - {fileID: 11400000, guid: c3cc87b701e8b4d39a8dcca86807f213, type: 2}
   - {fileID: 11400000, guid: c5ba2c90c8c14448caa67081ed97102a, type: 2}
+  - {fileID: 11400000, guid: 46bb10740d1d84a40857185e6dc307a2, type: 2}
+  - {fileID: 11400000, guid: 26b251a6c9f314379b86a58d189336ef, type: 2}
+  - {fileID: 11400000, guid: 262a8d277276b4ee6a60b8f494055bff, type: 2}
+  - {fileID: 11400000, guid: 11a9a0aeade0740ffbe78c7cb363531d, type: 2}
+  - {fileID: 11400000, guid: 9b418d4839338439a821af9a77a3dec9, type: 2}
+  - {fileID: 11400000, guid: 788d77758d8904be09e56bde3154c441, type: 2}
+  - {fileID: 11400000, guid: 674c980d8d0b045d3bd4e484dbf7c91a, type: 2}
 --- !u!114 &4582279271211583108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,12 +239,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df7e852e09707b498b87a09b6be449f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  giftedPerk:
-  - {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
-  - {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
+  sTemplates:
   - {fileID: 11400000, guid: 1af05b418939cad4abd075489395ec04, type: 2}
-  developedPerk: []
-  wearablePerk: []
+  - {fileID: 11400000, guid: 738e9e5d10f224dbe9c12a3d393fd999, type: 2}
+  aTemplates:
+  - {fileID: 11400000, guid: cde30204f2768fa4585cc67817a44dc7, type: 2}
+  - {fileID: 11400000, guid: efe9e2b8ed2d942b0b28c1ec5e1a53d4, type: 2}
+  - {fileID: 11400000, guid: 1d93e9e464a1d4029b8756fdc47a9737, type: 2}
+  bTemplates:
+  - {fileID: 11400000, guid: 347b1941b3de73f45a6f02635d6b1763, type: 2}
+  - {fileID: 11400000, guid: d5966d4a0ae784a28994601a0da8da90, type: 2}
 --- !u!114 &8330308788624485017
 MonoBehaviour:
   m_ObjectHideFlags: 0

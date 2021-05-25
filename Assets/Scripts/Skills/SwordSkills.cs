@@ -184,7 +184,8 @@ public class SwordSkills : PlayerSkills
             CoroutineUtility.ExecDelay(() => this.dashEffect.SetActive(false), animLength);
 
             // Attack
-            int totalHits = 3;
+            int baseTotalHits = 3;
+            int totalHits = Mathf.FloorToInt(baseTotalHits * PlayerStats.Instance.MovementSpeedRatio);
             for (int i = 0; i < totalHits; ++i)
             {
                 CoroutineUtility.ExecDelay(() =>

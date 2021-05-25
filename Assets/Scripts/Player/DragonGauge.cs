@@ -8,13 +8,13 @@ public class DragonGauge : MonoSingleton<DragonGauge>
     public static float CurrentShapeshiftCooldown => Instance.currentShapeshiftCooldown;
     public float MaxDragonEnergy => maxDragonEnergy;
     public bool IsDragonForm => isDragonForm;
-    private const float startingDragonEnergy = 100.0f;
-    [SerializeField]
-    private float drainingRate = 2.0f;
-    [SerializeField]
-    private float regenRate = 1.0f;
+    private float drainingRate => baseDrainingRate * PlayerStats.Instance.DragonEnergyDrainMultiplier;
+    private const float startingDragonEnergy = 50.0f;
+    private const float baseDrainingRate = 2.0f;
+    private const float regenRate = 1.0f;
     private bool isDragonForm = false;
-    private const float maxDragonEnergy = 100.0f;
+    private float maxDragonEnergy => baseMaxDragonEnergy * PlayerStats.Instance.MaxDragonEnergyMultiplier;
+    private const float baseMaxDragonEnergy = 100.0f;
     private const float shapeshiftCooldown = 3.0f;
     private float currentShapeshiftCooldown = 0.0f;
 
@@ -70,6 +70,11 @@ public class DragonGauge : MonoSingleton<DragonGauge>
             // Dragon up
             currentShapeshiftCooldown = shapeshiftCooldown;
             SoundManager.Play(SFXName.DragonRoar);
+            SoundManager.Stop(SFXName.Footstep);
+        }
+        else
+        {
+            SoundManager.Stop(SFXName.DragonFlap);
         }
 
         isDragonForm = !isDragonForm;

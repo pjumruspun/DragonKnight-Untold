@@ -24,11 +24,13 @@ public class GameStateManager : MonoSingleton<GameStateManager>
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        BossEvents.BossDead += PlayVictoryTheme;
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        BossEvents.BossDead -= PlayVictoryTheme;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -67,5 +69,11 @@ public class GameStateManager : MonoSingleton<GameStateManager>
             gameState = GameState.Gameplay;
             Debug.LogWarning("Loaded an unregistered scene");
         }
+    }
+
+    private void PlayVictoryTheme(Boss boss)
+    {
+        SoundManager.Stop(SFXName.BossBGM);
+        CoroutineUtility.ExecDelay(() => SoundManager.Play(SFXName.VictoryBGM), 0.3f);
     }
 }

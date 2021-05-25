@@ -23,21 +23,23 @@ public class ItemPickup : Interactable
     public void AssignItem(Item item)
     {
         this.item = item;
+        lightFromGround.color = GetColor();
+        EnableItem();
+    }
+
+    private Color GetColor()
+    {
         switch (item.rarity)
         {
             case ItemRarity.Common:
-                lightFromGround.color = normalItemColor;
-                break;
+                return normalItemColor;
             case ItemRarity.Rare:
-                lightFromGround.color = rareItemColor;
-                break;
+                return rareItemColor;
             case ItemRarity.UltraRare:
-                lightFromGround.color = ultraRareItemColor;
-                break;
+                return ultraRareItemColor;
             default:
                 throw new System.IndexOutOfRangeException($"Unhandled enum ItemRarity: {item.rarity}");
         }
-        EnableItem();
     }
 
     private void Start()
@@ -69,6 +71,10 @@ public class ItemPickup : Interactable
 
         // Play sound
         SoundManager.Play(SFXName.ItemPickup);
+
+        // Spawn guide text
+        Debug.Log(item.stats);
+        FloatingTextSpawner.Spawn(item.stats.GetDescription(), transform.position, GetColor());
 
         // Remove gameObject from the scene
         // Need to change to disable object pool later

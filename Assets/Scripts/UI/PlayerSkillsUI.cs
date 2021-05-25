@@ -15,16 +15,29 @@ public class PlayerSkillsUI : MonoBehaviour
     [SerializeField]
     private Sprite originalSkillSprite;
 
+    private List<TooltipTrigger> tooltips = new List<TooltipTrigger>();
+
     private void Start()
     {
         EventPublisher.PlayerChangeClass += ChangeSkillIcons;
         EventPublisher.PlayerShapeshift += ChangeSkillIcons;
+        EventPublisher.PlayerStatsChange += UpdateTooltips;
+
+        for (int i = 0; i < skillIcons.Length; ++i)
+        {
+            Image icon = skillIcons[i];
+            TooltipTrigger tooltipTrigger = icon.gameObject.AddComponent<TooltipTrigger>();
+            tooltips.Add(tooltipTrigger);
+        }
+
+        UpdateTooltips();
     }
 
     private void OnDestroy()
     {
-        EventPublisher.PlayerChangeClass += ChangeSkillIcons;
+        EventPublisher.PlayerChangeClass -= ChangeSkillIcons;
         EventPublisher.PlayerShapeshift -= ChangeSkillIcons;
+        EventPublisher.PlayerStatsChange -= UpdateTooltips;
     }
 
     private void Update()
@@ -101,6 +114,68 @@ public class PlayerSkillsUI : MonoBehaviour
                     skillIcons[i].sprite = originalSkillSprite;
                 }
             }
+        }
+
+        UpdateTooltipsOnClassChange(playerClass);
+    }
+
+    private void UpdateTooltips()
+    {
+        List<Skill> skills = SkillsRepository.GetSkillsWithDragon(PlayerClassStatic.currentClass).GetSkills.Cast<Skill>().ToList<Skill>();
+        float[] skillCooldowns = PlayerStats.Instance.SkillCooldown;
+
+        for (int i = 0; i < tooltips.Count; ++i)
+        {
+            string header = "";
+            switch (i)
+            {
+                case 0:
+                    header += $"<color=#FEAE10>[Space Bar]</color> {skills[i].skillName}";
+                    break;
+                case 1:
+                    header += $"<color=#FEAE10>[Z]</color> {skills[i].skillName}";
+                    break;
+                case 2:
+                    header += $"<color=#FEAE10>[X]</color> {skills[i].skillName}";
+                    break;
+                case 3:
+                    header += $"<color=#FEAE10>[C]</color> {skills[i].skillName}";
+                    break;
+            }
+
+            string content = skills[i].description;
+            content += $"\n\n Cooldown: {skillCooldowns[i]} seconds";
+            tooltips[i].SetText(content, header);
+        }
+    }
+
+    private void UpdateTooltipsOnClassChange(PlayerClass playerClass)
+    {
+        List<Skill> skills = SkillsRepository.GetSkillsWithDragon(playerClass).GetSkills.Cast<Skill>().ToList<Skill>();
+        float[] skillCooldowns = PlayerStats.Instance.SkillCooldown;
+
+        for (int i = 0; i < tooltips.Count; ++i)
+        {
+            string header = "";
+            switch (i)
+            {
+                case 0:
+                    header += $"<color=#FEAE10>[Space Bar]</color> {skills[i].skillName}";
+                    break;
+                case 1:
+                    header += $"<color=#FEAE10>[Z]</color> {skills[i].skillName}";
+                    break;
+                case 2:
+                    header += $"<color=#FEAE10>[X]</color> {skills[i].skillName}";
+                    break;
+                case 3:
+                    header += $"<color=#FEAE10>[C]</color> {skills[i].skillName}";
+                    break;
+            }
+
+            string content = skills[i].description;
+            content += $"\n\n Cooldown: {skillCooldowns[i]} seconds";
+            tooltips[i].SetText(content, header);
         }
     }
 }

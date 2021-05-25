@@ -679,7 +679,7 @@ MonoBehaviour:
   chasingInterval: 0.5
   canSeeThroughWalls: 0
   groundDetector: {fileID: 1476108719387095633}
-  startMaxHealth: 200
+  startMaxHealth: 150
   hpBar: {fileID: 936756153136151100}
   secondsToDespawn: 2
   showSuperArmorBar: 1
@@ -687,7 +687,7 @@ MonoBehaviour:
   superArmorBar: {fileID: 61168558472700212}
   secondsBeforeGetUp: 1.5
   stunStars: {fileID: 3209291099088129778}
-  attackDamage: 15
+  attackDamage: 20
   attackCooldown: 3
   attackRange: 5
   attackDelay: 0.3

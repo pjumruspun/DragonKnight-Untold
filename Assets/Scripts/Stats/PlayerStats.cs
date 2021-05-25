@@ -14,9 +14,19 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     public float HealthRegen => healthRegen.GetValue;
     public float CooldownReduction => cooldownReduction.GetValue;
     public float AttackSpeed => attackSpeed.GetValue;
-    public float MovementSpeed => (1.0f + (Mathf.Max(agi.GetValue, minAgiPossible) * 0.03f)) * baseMovementSpeed.GetValue;
+    public float DamageMultiplier => (1 + 0.02f * atk.GetValue);
+    public float MovementSpeed => (1.0f + (Mathf.Max(AGI, minAgiPossible) * 0.025f)) * baseMovementSpeed.GetValue;
+    public float MovementSpeedRatio => MovementSpeed / baseMoveSpeed;
+    public float MaxHealth => (1.0f + (Mathf.Max(VIT, minVitPossible) * 0.03f)) * basePlayerMaxHealth;
+    public float MaxDragonEnergyMultiplier => 1.0f + 0.02f * TAL;
+    public float DragonEnergyDrainMultiplier => 1.0f / (1.0f + 0.02f * TAL);
+    public float DragonDamageMultiplier => 1.0f + 0.02f * TAL;
 
-    public float MaxHealth => (1.0f + (Mathf.Max(vit.GetValue, minVitPossible) * 0.05f)) * basePlayerMaxHealth;
+    /// <summary>
+    /// Actual value of skill cooldowns after cooldown reduction
+    /// from items and stats.
+    /// </summary>
+    /// <returns>Array of float with length = 4</returns>
     public float[] SkillCooldown => CalculateSkillCooldown();
 
     public IReadOnlyList<float> BaseSkillDamage => baseSkillDamage;
@@ -37,23 +47,25 @@ public class PlayerStats : MonoSingleton<PlayerStats>
     [SerializeField]
     private Stats<float> critDamage = new Stats<float>(1.5f);
     [SerializeField]
-    private Stats<float> baseMovementSpeed = new Stats<float>(3.0f);
+    private Stats<float> baseMovementSpeed = new Stats<float>(baseMoveSpeed);
     [SerializeField]
     private Stats<float> healthRegen = new Stats<float>(1.0f);
     [SerializeField]
     private Stats<float> attackSpeed = new Stats<float>(1.0f); // Only affects skill 1, auto attack
     [SerializeField]
-    private Stats<float> cooldownReduction = new Stats<float>(1.0f); // Only affects skill 2, 3, and 4
+    private Stats<float> cooldownReduction = new Stats<float>(0.0f); // Only affects skill 2, 3, and 4
     private float basePlayerMaxHealth = 200;
     private float[] baseSkillCooldown = new float[4];
     private float[] baseSkillDamage = new float[4];
+    private float actualCooldownRatio => 1 / (1 + cooldownReduction.GetValue);
+    private const float baseMoveSpeed = 4.0f;
 
     public void CalculateDamage(float baseDamage, out float finalDamage, out bool crit, bool canCrit = true)
     {
         float random = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Damage +3% for each atk
-        float damage = baseDamage * (1 + 0.03f * atk.GetValue);
+        float damage = baseDamage * DamageMultiplier;
 
         // Handle crit
         if (random < CalculateCritChance() && canCrit)
@@ -199,10 +211,18 @@ public class PlayerStats : MonoSingleton<PlayerStats>
         for (int i = 0; i < 4; ++i)
         {
             results[i] = baseSkillCooldown[i];
+            if (i == 0)
+            {
+                // Only skill 1 is affected by attack speed
+                results[i] /= attackSpeed.GetValue;
+            }
+            else
+            {
+                // Skill 1 2 3 affected by cooldown reduction
+                results[i] *= actualCooldownRatio;
+            }
         }
 
-        // Only skill 1 is affected by attack speed
-        results[0] /= attackSpeed.GetValue;
         return results;
     }
 

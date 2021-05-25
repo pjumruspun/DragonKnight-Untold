@@ -6,13 +6,13 @@ public class ObjectManager : MonoSingleton<ObjectManager>
 {
     public ObjectPool SwordWaves;
     public ObjectPool FloatingDamage;
-    public ObjectPool CritFloatingDamage;
     public ObjectPool Arrows;
     public ObjectPool UltimateArrows;
     public ObjectPool ChargedArrows;
     public ObjectPool ItemPickups;
     public ObjectPool Keys;
     public ObjectPool HealthPotion;
+    public ObjectPool PerkUpgradePotion;
     public ObjectPool SlashEffect;
     public ObjectPool Explosion;
     public ObjectPool CurveRoute;
@@ -21,13 +21,8 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private GameObject floatingDamagePrefab;
     [SerializeField]
-    private int floatingDamagePoolSize = 20; // How many floating damage can there be at time?
+    private int floatingDamagePoolSize = 20;
 
-    [Header("Crit Floating Damage")]
-    [SerializeField]
-    private GameObject critFloatingDamagePrefab;
-    [SerializeField]
-    private int critFloatingDamagePoolSize = 20;
 
     [Header("Sword Waves")]
     [SerializeField]
@@ -71,6 +66,12 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     [SerializeField]
     private int healthPotionPoolsize = 10;
 
+    [Header("Health Potion")]
+    [SerializeField]
+    private GameObject perkUpgradePotionPrefab;
+    [SerializeField]
+    private int perkUpgradePotionPoolsize = 2;
+
     [Header("Slash Effect")]
     [SerializeField]
     private GameObject slashEffectPrefab;
@@ -104,13 +105,13 @@ public class ObjectManager : MonoSingleton<ObjectManager>
     private void Start()
     {
         FloatingDamage = new ObjectPool(floatingDamagePrefab, floatingDamagePoolSize);
-        CritFloatingDamage = new ObjectPool(critFloatingDamagePrefab, critFloatingDamagePoolSize);
         SwordWaves = new ObjectPool(swordWavePrefab, swordWavePoolSize);
         Arrows = new ObjectPool(arrowPrefab, arrowPoolSize);
         UltimateArrows = new ObjectPool(ultArrowPrefab, ultArrowPoolSize);
         ItemPickups = new ObjectPool(itemPickupPrefab, itemPickupPoolSize);
         Keys = new ObjectPool(keyPrefab, keyPoolsize);
         HealthPotion = new ObjectPool(healthPotionPrefab, healthPotionPoolsize);
+        PerkUpgradePotion = new ObjectPool(perkUpgradePotionPrefab, perkUpgradePotionPoolsize);
         SlashEffect = new ObjectPool(slashEffectPrefab, slashEffectPoolsize);
         Explosion = new ObjectPool(explosionEffectPrefab, explosionEffectPoolsize);
         ChargedArrows = new ObjectPool(chargedArrowsPrefab, chargedArrowsPoolSize);

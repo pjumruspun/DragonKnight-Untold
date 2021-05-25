@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b439f6d6399614c8b8f4ab42a6f920ba, type: 3}
   m_Name: Claw
   m_EditorClassIdentifier: 
-  skillName: New Skill
+  skillName: Claw Uppercut
   skillIcon: {fileID: 21300000, guid: 2966adb1df90b4914a3ae779fad9b553, type: 3}
+  description: Uppercut enemies in front of you with your powerful dragon claw. Stunning
+    and launching enemies into the air.
   baseDamage: 20
   baseCooldown: 1

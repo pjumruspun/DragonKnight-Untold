@@ -11,6 +11,6 @@ public class Difficulty
 
     private const float enemyHealthScalingPerWorld = 1.25f;
     private const float enemyHealthScalingPerLevel = 0.25f;
-    private const float enemyAttackScalingPerWorld = 0.75f;
-    private const float enemyAttackScalingPerLevel = 0.15f;
+    private const float enemyAttackScalingPerWorld = 1.00f;
+    private const float enemyAttackScalingPerLevel = 0.20f;
 }

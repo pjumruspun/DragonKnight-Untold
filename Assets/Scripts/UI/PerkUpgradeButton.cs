@@ -2,92 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PerkUpgradeButton : MonoBehaviour
 {
     [SerializeField]
-    private Perk perkDisplayPrefab;
-    [SerializeField]
-    private Image perkIcon;
-    [SerializeField]
-    private Text perkLevelText;
-    [SerializeField]
-    private Text soulCostText;
-    [SerializeField]
     private Button perkUpgradeButton;
-    private int perkLevel => PerkListStatic.GetPerkLevel(perkDisplayPrefab);
-    private int SoulCost()
-    {
-        if (perkLevel < 5)
-        {
-            return perkDisplayPrefab.soulToUpgrade[perkLevel];
-        }
 
-        return -1;
+    [SerializeField]
+    private TooltipTrigger tooltip;
+
+    [SerializeField]
+    private TextMeshProUGUI useText;
+
+    private string notEnoughPotionText = "You do not have any perk potion!".Color("F01010");
+    private string enoughPotionText = "Use one perk potion to gain a perk!".Color("10F010");
+    private Color originalUseTextColor;
+    private Color disabledUseTextColor = new Color(0.5f, 0.5f, 0.5f);
+
+    public void ShowUpgradeMenu()
+    {
+        PerkUpgradeMenu.Activate();
     }
 
     private void Start()
     {
-        Debug.Log(perkLevel);
-        Debug.Log(perkDisplayPrefab.soulToUpgrade[0]);
-        if (perkDisplayPrefab.icon != null)
-        {
-            perkIcon.sprite = perkDisplayPrefab.icon;
-        }
-
-        if (perkLevel == 5)
-        {
-            // Cannot upgrade anymore
-            perkUpgradeButton.gameObject.SetActive(false);
-        }
+        perkUpgradeButton.onClick.AddListener(ShowUpgradeMenu);
+        originalUseTextColor = useText.color;
     }
 
     private void Update()
     {
-        UpdateUI();
+        ProcessTokenAmount();
     }
 
-    private void UpdateUI()
+    private void ProcessTokenAmount()
     {
-        // Level text
-        string level = perkLevel.ToString();
-        perkLevelText.text = $"Lv {level}/5";
-
-        // Soul cost text
-        if (perkLevel < 5)
+        if (PerkStatic.upgradeToken < 1)
         {
-            soulCostText.text = $"Cost: {SoulCost()} Soul";
+            perkUpgradeButton.interactable = false;
+            tooltip.SetText(content: notEnoughPotionText);
+            useText.color = disabledUseTextColor;
         }
         else
         {
-            soulCostText.text = $"MAX LEVEL";
-        }
-    }
-
-    public void UpgradeLevel()
-    {
-        Debug.Log($"Soul cost = {SoulCost()}");
-        // Check if player have enough soul
-        if (SoulStatic.soul >= SoulCost())
-        {
-            // Pay soul
-            SoulStatic.soul -= SoulCost();
-            GameEvents.TriggerSoulChange();
-
-            // Upgrade
-            PerkList.Instance.Upgrade(perkDisplayPrefab);
-            Debug.Log(perkLevel);
-
-
-            if (perkLevel == 0)
-            {
-                PerkList.Instance.AddDevelopedPerk(perkDisplayPrefab);
-            }
-            else if (perkLevel == 5)
-            {
-                // Cannot upgrade anymore
-                perkUpgradeButton.gameObject.SetActive(false);
-            }
+            perkUpgradeButton.interactable = true;
+            tooltip.SetText(content: enoughPotionText);
+            useText.color = originalUseTextColor;
         }
     }
 }

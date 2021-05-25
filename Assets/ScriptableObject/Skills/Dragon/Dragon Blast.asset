@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Dragon Blast
   skillIcon: {fileID: 21300000, guid: 234d430e9e9714f548377acf8ab3f302, type: 3}
+  description: Shoots a powerful laser beam that damages and stagger multiple enemies
+    in front of you. Consume dragon energy over time when casting.
   baseDamage: 10
   baseCooldown: 10

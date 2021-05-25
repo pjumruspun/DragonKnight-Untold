@@ -1,15 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class PerkMenu : MonoBehaviour
+public class PerkMenu : MonoSingleton<PerkMenu>
 {
     [SerializeField]
     private GameObject perkMenuObject;
 
+    [SerializeField]
+    private Transform perkDisplayParent;
+
+    [SerializeField]
+    private GameObject perkDisplayPrefab;
+
+    [SerializeField]
+    private TextMeshProUGUI perkPotionCountText;
+
+    private List<PerkDisplay> perkDisplays = new List<PerkDisplay>();
+    private const bool shouldPauseWhenOpen = true;
+    private const string perkPotionTextPrefix = "Perk Potion: ";
+
+    public static void Open()
+    {
+        Instance.perkMenuObject.SetActive(true);
+        Instance.UpdatePerkDisplays();
+        Instance.UpdatePotionText();
+        if (shouldPauseWhenOpen)
+        {
+            Time.timeScale = 0.0f;
+        }
+    }
+
+    public static void Close()
+    {
+        Instance.perkMenuObject.SetActive(false);
+        if (shouldPauseWhenOpen)
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
+
     private void Start()
     {
         perkMenuObject.SetActive(false);
+        perkDisplays = new List<PerkDisplay>();
     }
 
     private void Update()
@@ -21,9 +56,71 @@ public class PerkMenu : MonoBehaviour
     {
         if (InputManager.PerkMenu)
         {
-            bool shouldActive = !perkMenuObject.activeInHierarchy;
-            perkMenuObject.SetActive(shouldActive);
-            Debug.Log($"Set active {shouldActive}");
+            bool shouldOpen = !perkMenuObject.activeInHierarchy;
+            if (shouldOpen)
+            {
+                Open();
+            }
+            else
+            {
+                Close();
+            }
+        }
+    }
+
+    private void UpdatePerkDisplays()
+    {
+        EnsurePerkDisplayCapacity();
+        ShowPerkDisplays();
+
+        int index = 0;
+        foreach (var perk in PerkStatic.perks)
+        {
+            perkDisplays[index].SetPerk(perk);
+            ++index;
+        }
+    }
+
+    private void UpdatePotionText()
+    {
+        perkPotionCountText.text = perkPotionTextPrefix + PerkStatic.upgradeToken.ToString();
+    }
+
+    private void ShowPerkDisplays()
+    {
+        int count = PerkStatic.perks.Count;
+        for (int i = 0; i < perkDisplays.Count; ++i)
+        {
+            if (i < count)
+            {
+                perkDisplays[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                perkDisplays[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void EnsurePerkDisplayCapacity()
+    {
+        int count = PerkStatic.perks.Count;
+        if (perkDisplays.Count < count)
+        {
+            int difference = count - perkDisplays.Count;
+            for (int i = 0; i < difference; ++i)
+            {
+                GameObject instantiatedPerkDisplay = Instantiate(perkDisplayPrefab);
+                instantiatedPerkDisplay.transform.SetParent(perkDisplayParent);
+                if (instantiatedPerkDisplay.TryGetComponent<PerkDisplay>(out var perkDisplay))
+                {
+                    perkDisplays.Add(perkDisplay);
+                }
+                else
+                {
+                    throw new System.Exception($"Error in EnsurePerkDisplayCapacity: PerkDisplay component not found in instantiated perkDisplayPrefab GameObject");
+                }
+            }
         }
     }
 }

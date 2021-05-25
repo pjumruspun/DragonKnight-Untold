@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39785d6c5e2aa45d1b371df8cf8cc804, type: 3}
+  m_Name: Mystic Staff
+  m_EditorClassIdentifier: 
+  name: Mystic Staff
+  icon: {fileID: 21300000, guid: d702cff2edde440f79deddd9a652e3c3, type: 3}
+  rarity: 2
+  stats:
+    AtkAddModifier: 4
+    AgiAddModifier: -4
+    VitAddModifier: 0
+    TalAddModifier: 0
+    LukAddModifier: 0
+    AtkMultModifier: 0
+    AgiMultModifier: 0
+    VitMultModifier: 0
+    TalMultModifier: 0
+    LukMultModifier: 0
+    CritDamageAddModifier: 0
+    MovementSpeedAddModifier: 0
+    HealthRegenAddModifier: 0
+    AttackSpeedAddModifier: 0
+    CooldownReductionAddModifier: 0.3
+    CritDamageMultModifier: 0
+    MovementSpeedMultModifier: 0
+    HealthRegenMultModifier: 0
+    AttackSpeedMultModifier: 0
+    CooldownReductionMultModifier: 0

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3350608748358710164}
   - component: {fileID: 3350608748358710167}
   - component: {fileID: 3955060668936504108}
+  - component: {fileID: -550930267717848159}
   m_Layer: 5
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -91,6 +92,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 3350608748358710167}
   count: {fileID: 3350608749973755225}
+  tooltipTrigger: {fileID: -550930267717848159}
+--- !u!114 &-550930267717848159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3350608748358710161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194c683f5386b472db0155285a9a273c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: 
+  content: 
 --- !u!1 &3350608749973755226
 GameObject:
   m_ObjectHideFlags: 0

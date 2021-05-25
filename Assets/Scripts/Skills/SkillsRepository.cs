@@ -15,6 +15,18 @@ public class SkillsRepository : MonoSingleton<SkillsRepository>
     [SerializeField]
     private DragonSkills dragonSkills;
 
+    public static PlayerSkills GetSkillsWithDragon(PlayerClass playerClass)
+    {
+        if (DragonGauge.Instance.IsDragonForm)
+        {
+            return Dragon;
+        }
+        else
+        {
+            return GetSkills(playerClass);
+        }
+    }
+
     public static PlayerSkills GetSkills(PlayerClass playerClass)
     {
         switch (playerClass)

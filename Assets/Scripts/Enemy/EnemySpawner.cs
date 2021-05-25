@@ -14,14 +14,17 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     [SerializeField]
     private float spawnInterval = 15.0f;
     [SerializeField]
-    private int spawnAmountPerInterval = 15;
+    private int baseSpawnAmountPerInterval = 30;
     [SerializeField]
-    private int maxSpawnAmountAtTime = 30;
+    private int baseMaxSpawnAmount = 150;
     private float lastTimeSpawned = 0.0f;
     private float currentSpawnAmount = 0;
     private Transform player;
     private const int maxSpawnAttempts = 500;
     private const float correctionOffsetY = 0.15f;
+    private const float spawnAmountIncrement = 0.08f;
+    private int maxSpawnAmount => Mathf.RoundToInt(baseMaxSpawnAmount * (1.0f + spawnAmountIncrement * StageManager.TrashStageCount));
+    private int spawnAmountPerInterval => Mathf.RoundToInt(baseSpawnAmountPerInterval * (1.0f + spawnAmountIncrement * StageManager.TrashStageCount));
 
     private void Start()
     {
@@ -39,8 +42,8 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         if (
             shouldSpawn &&
             Time.time - lastTimeSpawned >= spawnInterval &&
-            currentSpawnAmount < maxSpawnAmountAtTime &&
-            !LevelProgression.HasCompletedLevel
+            currentSpawnAmount < maxSpawnAmount &&
+            !LevelProgression.MetCriteriaToCompleteLevel
         )
         {
             // Try spawn
