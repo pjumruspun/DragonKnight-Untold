@@ -4,38 +4,36 @@ using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
+    [SerializeField]
+    private float parallaxEffect;
     private float backgroundLength;
-    
     private float startPosition;
-    
     private float distance;
-
     private float boundaryChecker;
-    
-    public GameObject Camera;
-    
-    public float parallaxEffect;
 
-    void Start()
+    private void Start()
     {
         startPosition = transform.position.x;
         backgroundLength = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
-    void Update()
+    private void Update()
     {
-        distance = (Camera.transform.position.x * parallaxEffect);
+        // We will be using main camera
+        Transform camTransform = Camera.main.transform;
+        distance = (camTransform.position.x * parallaxEffect);
         transform.position = new Vector3(startPosition + distance, transform.position.y, transform.position.z);
 
         // Extend the background when the camera is near the boundary
-        boundaryChecker = (Camera.transform.position.x * (1 - parallaxEffect));
+        boundaryChecker = (camTransform.position.x * (1 - parallaxEffect));
 
-        if (boundaryChecker > startPosition + backgroundLength) {
+        if (boundaryChecker > startPosition + backgroundLength)
+        {
             startPosition += backgroundLength;
         }
-        else if (boundaryChecker < startPosition - backgroundLength) {
+        else if (boundaryChecker < startPosition - backgroundLength)
+        {
             startPosition -= backgroundLength;
         }
-
     }
 }
